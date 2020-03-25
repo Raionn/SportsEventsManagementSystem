@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewData["Title"] = "Registration";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+<form class="text-center">
+    <img class="imgcontainer" src="~/Resources/Images/Registration.png" />
+    <div class="form-group">
+
+        <label class="mt-2" for="userName">Username</label>
+        <input type="text" class="form-control mx-auto mb-2" id="userName" placeholder="Username" style="max-width:50%" />
+        <label for="password">Password</label>
+        <input type="password" class="form-control mb-2" id="password" placeholder="Password" />
+        <label class="mt-2" for="name">Name</label>
+        <input type="text" class="form-control mx-auto mb-2" id="name" placeholder="Name" style="max-width:50%" />
+        <label for="surname">Surname</label>
+        <input type="text" class="form-control mb-2" id="surname" placeholder="Surname" />
+        <label class="mt-2" for="age">Age</label>
+        <input type="datetime" class="form-control mx-auto mb-2" id="date" />
+        <label for="mail">Mail</label>
+        <input type="email" class="form-control mb-2" id="mail" placeholder="Mail" />
+    </div>
+    <button type="submit" class="btn btn-dark" formaction=@Url.Action("RegistrationValidation") name="btnSubmit">Register</button>
+</form>
