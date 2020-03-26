@@ -5,17 +5,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SportBook.Data;
 using SportBook.Models;
 
 namespace SportBook.Controllers
 {
-    [Route("[action]")]
     public class GeneralController : Controller
     {
         private readonly ILogger<GeneralController> _logger;
-        public GeneralController(ILogger<GeneralController> logger)
+        private readonly SportBookContext _context;
+        public GeneralController(ILogger<GeneralController> logger, SportBookContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Login()
@@ -33,16 +35,32 @@ namespace SportBook.Controllers
             return View();
         }
 
-        public IActionResult LoginValidation()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LoginValidation(
+        [Bind("Name,Surname,Nickname,BirthDate,Mail")] User user)
         {
-            //validate login information
-            return RedirectToAction("Index", "Home");
+            if (ModelState.IsValid)
+            {
+                _context.Add(user);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index", "Home");
+            }
+            return View(user);
         }
 
-        public IActionResult RegistrationValidation()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegistrationValidation(
+        [Bind("Name,Password,Surname,Nickname,BirthDate,Mail")] User user)
         {
-            //validate login information
-            return RedirectToAction("Login", "General");
+            if (ModelState.IsValid)
+            {
+                _context.Add(user);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Login", "General");
+            }
+            return View("Registration",user);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
