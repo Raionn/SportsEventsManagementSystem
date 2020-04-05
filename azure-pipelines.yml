@@ -16,7 +16,7 @@ stages:
         - npm
 
     variables:
-      wwwrootDir: 'artpet1.Sportbook.Web/wwwroot'
+      wwwrootDir: 'Sportbook/wwwroot'
       dotnetSdkVersion: '3.1.100'
 
     steps:
