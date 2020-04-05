@@ -25,10 +25,6 @@ stages:
       inputs:
         version: '$(dotnetSdkVersion)'
 
-    - script: 'echo "$(Build.DefinitionName), $(Build.BuildId), $(Build.BuildNumber)" > buildinfo.txt'
-      displayName: 'Write build info'
-      workingDirectory: $(wwwrootDir)
-
     - task: DotNetCoreCLI@2
       displayName: 'Restore project dependencies'
       inputs:
