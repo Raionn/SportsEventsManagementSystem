@@ -72,10 +72,197 @@ body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
+
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
 }
+
+/*.darkmode--activated header, .darkmode--activated nav, .darkmode--activated p, .darkmode--activated li, .darkmode--activated a, .darkmode--activated div, .darkmode--activated span {
+    color: #000;
+}*/
+
+
+/* Dark Mode stuff
+-------------------------------------------------- */
+.toggle {
+    display: block;
+    text-align: left;
+    margin-top: 3px;
+    user-select: none;
+}
+
+.toggle--checkbox {
+    display: none;
+}
+
+.toggle--btn {
+    display: block;
+    margin: 0 auto;
+    font-size: 1.4em;
+    transition: all 350ms ease-in;
+}
+
+    .toggle--btn:hover {
+        cursor: pointer;
+    }
+
+    .toggle--btn, .toggle--btn:before, .toggle--btn:after,
+    .toggle--checkbox,
+    .toggle--checkbox:before,
+    .toggle--checkbox:after,
+    .toggle--feature,
+    .toggle--feature:before,
+    .toggle--feature:after {
+        transition: all 250ms ease-in;
+    }
+
+        .toggle--btn:before, .toggle--btn:after,
+        .toggle--checkbox:before,
+        .toggle--checkbox:after,
+        .toggle--feature:before,
+        .toggle--feature:after {
+            content: '';
+            display: block;
+        }
+
+/* ===================================================
+   Day/Night and Gender toggle buttons
+   =================================================== */
+.toggle--daynight .toggle--btn,
+.toggle--like .toggle--btn {
+    position: relative;
+    height: 35px;
+    width: 62.5px;
+    border-radius: 35px;
+}
+
+    .toggle--daynight .toggle--btn:before,
+    .toggle--like .toggle--btn:before {
+        position: absolute;
+        top: 1px;
+        left: 2px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+    }
+
+.toggle--daynight .toggle--btn {
+    border: 2.5px solid #1c1c1c;
+    background-color: #3c4145;
+}
+
+    .toggle--daynight .toggle--btn:before {
+        background-color: #fff;
+        border: 2.5px solid #e3e3c7;
+    }
+
+    .toggle--daynight .toggle--btn:after {
+        position: absolute;
+        top: 62%;
+        left: 19.5px;
+        z-index: 10;
+        width: 5.6px;
+        height: 5.6px;
+        opacity: 0;
+        background-color: #fff;
+        border-radius: 50%;
+        box-shadow: #fff 0 0, #fff 1.5px 0, #fff 3px 0, #fff 4.5px 0, #fff 5.5px 0, #fff 7px 0, #fff 8px 0, #fff 11.5px -0.5px 0 0.5px, #fff 8px -3.5px 0 -1px, #fff 3.5px -3.5px 0 0.5px, #d3d3d3 0 0 0 2px, #d3d3d3 3px 0 0 2px, #d3d3d3 5.5px 0 0 2px, #d3d3d3 8px 0 0 2px, #d3d3d3 11.5px -0.5px 0 2.5px, #d3d3d3 8px -3.5px 0 0.5px, #d3d3d3 3.5px -3.5px 0 2.5px;
+        transition: opacity 100ms ease-in;
+    }
+
+@keyframes starry_star {
+    50% {
+        background-color: rgba(255, 255, 255, 0.1);
+        box-shadow: #fff 15px -1.5px 0 0, #fff 6px 5px 0 -0.5px, rgba(255, 255, 255, 0.1) 19px 9px 0 0.5px, #fff 16px 17px 0 0, rgba(255, 255, 255, 0.1) 10px 12px 0 -0.75px, #fff 2.5px 19px 0 0.5px;
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+
+    50% {
+        opacity: 100;
+        transform: scale(1.1);
+    }
+
+    55% {
+        transform: scale(1.1);
+    }
+
+    75% {
+        transform: scale(0.9);
+    }
+
+    100% {
+        opacity: 100;
+        transform: scale(1);
+    }
+}
+
+.toggle--daynight .toggle--feature {
+    display: block;
+    position: absolute;
+    top: 4.5px;
+    left: 52.5%;
+    z-index: 20;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: rgba(255, 255, 255, 0.1) 15px -1.5px 0 0, rgba(255, 255, 255, 0.1) 6px 5px 0 -0.5px, #fff 19px 9px 0 0.5px, rgba(255, 255, 255, 0.1) 16px 17px 0 0, #fff 10px 12px 0 -0.75px, rgba(255, 255, 255, 0.1) 2.5px 19px 0 0.5px;
+    animation: starry_star 5s ease-in-out infinite;
+}
+
+    .toggle--daynight .toggle--feature:before {
+        position: absolute;
+        top: -1px;
+        left: -12.5px;
+        width: 9px;
+        height: 9px;
+        background-color: #fff;
+        border-radius: 50%;
+        border: 2.5px solid #e3e3c7;
+        box-shadow: #e3e3c7 -14px 0 0 -1.5px, #e3e3c7 -4px 12px 0 -1px;
+        transform-origin: -3px 130%;
+    }
+
+.toggle--daynight .toggle--checkbox:checked + .toggle--btn {
+    background-color: #9ee3fb;
+    border: 2.5px solid #86c3d7;
+}
+
+    .toggle--daynight .toggle--checkbox:checked + .toggle--btn:before {
+        left: 27.5px;
+        background-color: #ffdf6d;
+        border: 2.5px solid #e1c348;
+    }
+
+    .toggle--daynight .toggle--checkbox:checked + .toggle--btn:after {
+        opacity: 100;
+        animation-name: bounceIn;
+        animation-duration: 0.60s;
+        animation-delay: 0.10s;
+        animation-fill-mode: backwards;
+        animation-timing-function: ease-in-out;
+    }
+
+    .toggle--daynight .toggle--checkbox:checked + .toggle--btn > .toggle--feature {
+        opacity: 0;
+        box-shadow: rgba(255, 255, 255, 0.1) 15px -1.5px 0 -2px, rgba(255, 255, 255, 0.1) 6px 5px 0 -2.5px, #fff 19px 9px 0 -1.5px, rgba(255, 255, 255, 0.1) 16px 17px 0 -2px, #fff 10px 12px 0 -2.75px, rgba(255, 255, 255, 0.1) 2.5px 19px 0 -1.5px;
+        animation: none;
+    }
+
+        .toggle--daynight .toggle--checkbox:checked + .toggle--btn > .toggle--feature:before {
+            left: 17.5px;
+            transform: rotate(70deg);
+        }
+
+/* -------------------------------------------------- */
+
