@@ -9,8 +9,11 @@ namespace SportBook.Data
         public SportBookContext(DbContextOptions<SportBookContext> options)
            : base(options)
         {
+
         }
 
-        public DbSet<User> User { get; set; }
+        public DbSet<User> Users { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+            => options.UseSqlite("Data Source=Sportbook.db");
     }
 }
