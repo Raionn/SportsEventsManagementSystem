@@ -58,10 +58,10 @@ stages:
         command: 'restore'
         projects: '**/*.csproj'
 
-    - task: VSBuild@1
+    - task: MSBuild@1
       displayName: 'Build the database project'
       inputs:
-        solution: '**\*.sln'
+        solution: '**/*.sqlproj'
 
     - task: CopyFiles@2
       displayName: 'Copy dacpac file to staging directory'
