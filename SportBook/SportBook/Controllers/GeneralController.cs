@@ -37,7 +37,7 @@ namespace SportBook.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LoginValidation(
-        [Bind("Name,Surname,Nickname,BirthDate,Mail")] User user)
+        [Bind("Username,Firstname,Lastname,Birthdate,Password,Email")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -45,13 +45,13 @@ namespace SportBook.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "Home");
             }
-            return View(user);
+            return View("Login", user);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RegistrationValidation(
-        [Bind("Name,Password,Surname,Nickname,BirthDate,Mail")] User user)
+        [Bind("Username,Firstname,Lastname,Birthdate,Password,Email")] User user)
         {
             if (ModelState.IsValid)
             {

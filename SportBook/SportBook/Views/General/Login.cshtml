@@ -1,47 +1,30 @@
-﻿
+﻿@model SportBook.Models.User;
 @{
     ViewData["Title"] = "Login";
     Layout = "~/Views/Shared/_LoginLayout.cshtml";
 }
 
-@*<form action="action_page.php" method="post">
-        <div class="imgcontainer">
-            <img src="~/Resources/Images/Login.png" alt="Avatar" class="avatar">
-        </div>
+<div class="wrapper mt-40">
+    <form asp-action="LoginValidation" class="text-center login">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        <div class="container">
-            <label for="uname"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="uname" required>
+    <div class="form-group">
+        <label asp-for="Username" class="control-label mt-2">Username</label>
+        <input asp-for="Username" class="form-control mx-auto mb-2" placeholder="Username" style="max-width:80%" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+        <br />
+        <label asp-for="Password" class="control-label">Password</label>
+        <input asp-for="Password" class="form-control mb-2 mx-auto" placeholder="Password" style="max-width:80%" />
 
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
-
-            <button type="submit">Login</button>
-            <label>
-                <input type="checkbox" checked="checked" name="remember"> Remember me
-            </label>
-        </div>
-
-        <div class="container" style="background-color:#f1f1f1">
-            <button type="button" class="cancelbtn">Cancel</button>
-            <span class="psw">Forgot <a href="#">password?</a></span>
-        </div>
-    </form>*@
-
-    <form class="text-center">
-        <img class="imgcontainer" src="~/Resources/Images/Login.png" />
-        <div class="form-group">
-
-            <label class="mt-2" for="userName">Username</label>
-            @*@Html.TextBoxFor(m => m.FirstName)*@
-            <input type="text" class="form-control mx-auto mb-2" id="userName" placeholder="Username" style="max-width:50%" />
-            <label for="password">Password</label>
-            @*@Html.TextBoxFor(m => m.LastName)*@
-            <input type="password" class="form-control mb-2" id="password" placeholder="Password" />
-        </div>
-        <button type="submit" class="btn btn-dark" formaction=@Url.Action("LoginValidation") name="btnSubmit">Submit</button>
-    </form>
-
-<div class="text-center">
-    <label class="mt-2">Don't have an account? <a href="@Url.Action("Registration", "General")">Register now!</a></label>
+        <button type="submit" value="Login" class="btn btn-dark"  >Login</button>
+    </div>
+    <div class="text-center">
+        <label class="mt-2">
+            Don't have an account? <br />
+            <a href="@Url.Action("Registration", "General")">Register now!</a>
+        </label>
+    </div>
+</form>
 </div>
+
+

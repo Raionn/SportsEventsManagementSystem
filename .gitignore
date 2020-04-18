@@ -79,3 +79,10 @@ _[Ss]cripts
 *.dot[Cc]over
 SportBook/.vs/SportBook/DesignTimeBuild/.dtbcache.v2
 SportBook/.vs/SportBook/config/applicationhost.config
+SportBook/SportBook/node_modules/
+SportBook/SportBook/wwwroot/scss/
+.vs/
+SportBook/SportBook/compilerconfig.json
+SportBook/SportBook/compilerconfig.json.defaults
+SportBook/Sportbook.Database/Sportbook.Database.dbmdl
+SportBook/Sportbook.Database/Sportbook.Database.jfm

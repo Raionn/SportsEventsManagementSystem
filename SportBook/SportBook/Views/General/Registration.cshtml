@@ -4,48 +4,50 @@
     ViewData["Title"] = "Registration";
     Layout = "~/Views/Shared/_LoginLayout.cshtml";
 }
+    <div class="wrapper mt-20">
 
-    <form asp-action="RegistrationValidation" class="text-center">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <img class="imgcontainer" src="~/Resources/Images/Registration.png" />
 
-        <div class="form-group">
-            <label asp-for="Username" class="control-label mt-2">Username</label>
-            <input asp-for="Username" class="form-control mx-auto mb-2" placeholder="Username" style="max-width:50%" />
-            <span asp-validation-for="Username" class="text-danger"></span>
-        </div>
+        <form asp-action="RegistrationValidation" class="text-center login">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        <div class="form-group">
-            <label asp-for="Password" class="control-label">Password</label>
-            <input asp-for="Password" class="form-control mb-2" placeholder="Password" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
+            <div class="form-group">
+                <label asp-for="Username" class="control-label mt-2">Username</label>
+                <input asp-for="Username" class="form-control mx-auto mb-2" placeholder="Username" style="max-width:80%" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label asp-for="Firstname" class="control-label">Name</label>
-            <input asp-for="Firstname" class="form-control mx-auto mb-2" placeholder="Name" style="max-width:50%" />
-            <span asp-validation-for="Firstname" class="text-danger"></span>
-        </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label">Password</label>
+                <input asp-for="Password" class="form-control mx-auto mb-2" placeholder="Password" style="max-width:80%"/>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label asp-for="Lastname" class="control-label ">Lastname</label>
-            <input asp-for="Lastname" class="form-control mb-2" placeholder="Lastname" />
-            <span asp-validation-for="Lastname" class="text-danger"></span>
-        </div>
+            <div class="form-group">
+                <label asp-for="Firstname" class="control-label">Name</label>
+                <input asp-for="Firstname" class="form-control mx-auto mb-2" placeholder="Name" style="max-width:80%" />
+                <span asp-validation-for="Firstname" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label asp-for="Birthdate" class="control-label">BirthDate</label>
-            <input asp-for="Birthdate" class="form-control mx-auto mb-2" placeholder="01-01-1999" />
-            <span asp-validation-for="Birthdate" class="text-danger"></span>
-        </div>
+            <div class="form-group">
+                <label asp-for="Lastname" class="control-label ">Lastname</label>
+                <input asp-for="Lastname" class="form-control mx-auto mb-2" placeholder="Lastname" style="max-width:80%"/>
+                <span asp-validation-for="Lastname" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label asp-for="Email" class="control-label">Email</label>
-            <input asp-for="Email" class="form-control mb-2" placeholder="Email" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
+            <div class="form-group">
+                <label asp-for="Birthdate" class="control-label">BirthDate</label>
+                <input asp-for="Birthdate" class="form-control mx-auto mb-2" placeholder="01-01-1999" style="max-width:80%"/>
+                <span asp-validation-for="Birthdate" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <button type="submit" value="Register" class="btn btn-primary" />
-        </div>
-    </form>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label">Email</label>
+                <input asp-for="Email" class="form-control mx-auto mb-2" placeholder="Email" style="max-width:80%"/>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" value="Register" class="btn btn-primary" >Register</button>
+            </div>
+        </form>
+    </div>
