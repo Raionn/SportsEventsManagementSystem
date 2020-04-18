@@ -28,7 +28,7 @@ namespace SportBook
         {
             var remoteConnectionString = Configuration.GetValue<string>("ConnectionStrings:DefaultConnection");
             services.AddDbContext<SportbookContext>(options =>
-                               options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=sportbook;Integrated Security=True;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"));
+                               options.UseSqlServer(remoteConnectionString));
             services.AddControllersWithViews();
         }
 
