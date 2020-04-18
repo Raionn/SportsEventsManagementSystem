@@ -1,10 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
-using SportBook.Data;
-using SportBook.Models;
-using System;
 
 namespace SportBook
 {

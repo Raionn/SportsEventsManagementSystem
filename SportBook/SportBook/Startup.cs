@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SportBook.Data;
 using Microsoft.EntityFrameworkCore;
 using SportBook.Models;
 
@@ -26,9 +25,13 @@ namespace SportBook
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var remoteConnectionString = Configuration.GetValue<string>("ConnectionStrings:DefaultConnection");
+            var connectionString = Environment.GetEnvironmentVariable("LOCAL_CONNECTION");
+
+            if (connectionString == null)
+                connectionString = Configuration.GetValue<string>("ConnectionStrings:DefaultConnection");
+
             services.AddDbContext<SportbookContext>(options =>
-                               options.UseSqlServer(remoteConnectionString));
+                               options.UseSqlServer(connectionString));
             services.AddControllersWithViews();
         }
 
