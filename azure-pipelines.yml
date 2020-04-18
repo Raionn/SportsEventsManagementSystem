@@ -67,7 +67,7 @@ stages:
       displayName: 'Copy dacpac file to staging directory'
       inputs:
         contents: |
-          Sportbook.Database/bin/**/*.dacpac
+          SportBook/Sportbook.Database/bin/**/*.dacpac
         targetFolder: '$(Build.StagingDirectory)'
 
     - task: PublishBuildArtifacts@1
