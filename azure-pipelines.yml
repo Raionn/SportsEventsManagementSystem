@@ -61,8 +61,7 @@ stages:
     - task: VSBuild@1
       displayName: 'Build the database project'
       inputs:
-        solution: 'SportBook.sln'
-        project: '**/*.sqlproj'
+        solution: '**\*.sln'
 
     - task: CopyFiles@2
       displayName: 'Copy dacpac file to staging directory'
