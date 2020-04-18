@@ -61,6 +61,7 @@ stages:
     - task: VSBuild@1
       displayName: 'Build the database project'
       inputs:
+        solution: 'SportBook.sln'
         project: '**/*.sqlproj'
 
     - task: CopyFiles@2
