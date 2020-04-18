@@ -5,16 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using SportBook.Data;
 using SportBook.Models;
 
 namespace SportBook.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly SportBookContext _context;
+        private readonly SportbookContext _context;
 
-        public UsersController(SportBookContext context)
+        public UsersController(SportbookContext context)
         {
             _context = context;
         }
@@ -22,7 +21,7 @@ namespace SportBook.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            return View(await _context.User.ToListAsync());
         }
 
         // GET: Users/Details/5
@@ -33,8 +32,8 @@ namespace SportBook.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserID == id);
+            var user = await _context.User
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
                 return NotFound();
@@ -54,7 +53,7 @@ namespace SportBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserID,Firstname,Lastname,Username,BirthDate,Password,Email")] User user)
+        public async Task<IActionResult> Create([Bind("Id,Username,Firstname,Lastname,Birthdate,Password,Email")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -73,7 +72,7 @@ namespace SportBook.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.User.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -86,9 +85,9 @@ namespace SportBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserID,Firstname,Lastname,Username,BirthDate,Password,Email")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Username,Firstname,Lastname,Birthdate,Password,Email")] User user)
         {
-            if (id != user.UserID)
+            if (id != user.Id)
             {
                 return NotFound();
             }
@@ -102,7 +101,7 @@ namespace SportBook.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.UserID))
+                    if (!UserExists(user.Id))
                     {
                         return NotFound();
                     }
@@ -124,8 +123,8 @@ namespace SportBook.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserID == id);
+            var user = await _context.User
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
                 return NotFound();
@@ -139,15 +138,15 @@ namespace SportBook.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.Users.FindAsync(id);
-            _context.Users.Remove(user);
+            var user = await _context.User.FindAsync(id);
+            _context.User.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool UserExists(int id)
         {
-            return _context.Users.Any(e => e.UserID == id);
+            return _context.User.Any(e => e.Id == id);
         }
     }
 }

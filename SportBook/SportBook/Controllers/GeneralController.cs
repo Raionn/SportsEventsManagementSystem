@@ -13,8 +13,8 @@ namespace SportBook.Controllers
     public class GeneralController : Controller
     {
         private readonly ILogger<GeneralController> _logger;
-        private readonly SportBookContext _context;
-        public GeneralController(ILogger<GeneralController> logger, SportBookContext context)
+        private readonly SportbookContext _context;
+        public GeneralController(ILogger<GeneralController> logger, SportbookContext context)
         {
             _logger = logger;
             _context = context;
@@ -60,7 +60,7 @@ namespace SportBook.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Login", "General");
             }
-            return View("Registration",user);
+            return View("Registration", user);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

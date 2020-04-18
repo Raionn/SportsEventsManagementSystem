@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SportBook.Data;
 using Microsoft.EntityFrameworkCore;
+using SportBook.Models;
 
 namespace SportBook
 {
@@ -25,10 +26,10 @@ namespace SportBook
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var remoteConnectionString = Configuration.GetValue<string>("ConnectionStrings:DefaultConnection");
+            services.AddDbContext<SportbookContext>(options =>
+                               options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=sportbook;Integrated Security=True;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"));
             services.AddControllersWithViews();
-
-            services.AddDbContext<SportBookContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("SportbookContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
