@@ -15,6 +15,14 @@ namespace SportBook.Controllers
         {
             return View();
         }
+        public IActionResult Tournaments()
+        {
+            return View();
+        }
+        public IActionResult Teams()
+        {
+            return View();
+        }
 
         //public IActionResult Privacy()
         //{

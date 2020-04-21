@@ -4,12 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using System.Configuration;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using SportBook.Models;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace SportBook
 {
@@ -33,11 +38,83 @@ namespace SportBook
             services.AddDbContext<SportbookContext>(options =>
                                options.UseSqlServer(connectionString));
             services.AddControllersWithViews();
+
+            services.AddAuthentication(options => {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            }).AddCookie()
+            .AddOpenIdConnect("Auth0", options => {
+        // Set the authority to your Auth0 domain
+        options.Authority = $"https://{Configuration["Authentication:auth0Domain"]}";
+
+        // Configure the Auth0 Client ID and Client Secret
+        options.ClientId = Configuration["Authentication:auth0ClientId"];
+       options.ClientSecret = Configuration["Authentication:auth0ClientSecret"];
+
+        // Set response type to code
+        options.ResponseType = OpenIdConnectResponseType.Code;
+
+        // Configure the scope
+        options.Scope.Add("openid");
+
+        // Set the callback path, so Auth0 will call back to http://localhost:3000/callback
+        // Also ensure that you have added the URL as an Allowed Callback URL in your Auth0 dashboard
+        options.CallbackPath = new PathString("/Home/Index");
+
+        // Configure the Claims Issuer to be Auth0
+        options.ClaimsIssuer = "Auth0";
+
+       options.Events = new OpenIdConnectEvents
+       {
+            // handle the logout redirection
+            OnRedirectToIdentityProviderForSignOut = (context) =>
+           {
+               var logoutUri = $"https://{Configuration["Authentication:auth0Domain"]}/v2/logout?client_id={Configuration["Authentication:auth0ClientId"]}";
+
+               var postLogoutUri = context.Properties.RedirectUri;
+               if (!string.IsNullOrEmpty(postLogoutUri))
+               {
+                   if (postLogoutUri.StartsWith("/"))
+                   {
+                        // transform to absolute
+                        var request = context.Request;
+                       postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;
+                   }
+                   logoutUri += $"&returnTo={ Uri.EscapeDataString(postLogoutUri)}";
+               }
+
+               context.Response.Redirect(logoutUri);
+               context.HandleResponse();
+
+               return Task.CompletedTask;
+           },
+           OnRedirectToIdentityProvider = context =>
+           {
+               context.ProtocolMessage.SetParameter("audience", "https://localhost:44368/");
+
+               return Task.FromResult(0);
+           }
+       };
+   });
+
+
+
+
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            string auth0Domain = Configuration["Authentication:auth0Domain"];
+            string auth0ClientId = Configuration["Authentication:auth0ClientId"];
+            string auth0ClientSecret = Configuration["Authentication:auth0ClientSecret"];
+            string auth0RedirectUri = Configuration["Authentication:auth0RedirectUri"];
+            string auth0PostLogoutRedirectUri = Configuration["Authentication:auth0PostLogoutRedirectUri"];
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -53,6 +130,7 @@ namespace SportBook
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

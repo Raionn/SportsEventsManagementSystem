@@ -20,5 +20,10 @@ namespace SportBook.Controllers
         {
             return View();
         }
+        [Route("[controller]/[action]")]
+        public IActionResult Teams()
+        {
+            return View();
+        }
     }
 }

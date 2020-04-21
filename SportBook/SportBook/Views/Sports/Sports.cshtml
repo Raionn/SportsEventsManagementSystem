@@ -1,10 +1,19 @@
 ﻿
 @{
     ViewData["Title"] = "Sports Home";
+    Layout = "~/Views/Shared/_SportsLayout.cshtml";
 }
 
 <h1>Sports_home</h1>
 
-<div class="text-center container">
+<a>Select region: Select sport: Select time: Select something:</a><a href="@Url.Action("SportsEvents", "Sports")">Create event</a>
+
+
+<h2>Event_1</h2>
+<h2>Event_2</h2>
+<h2>Event_3</h2>
+<h2>Event_4</h2>
+<h2>Event_5</h2>
+@*<div class="text-center container">
     <a href="@Url.Action("SportsEvents")"><img class="imgcontainer" src="~/Resources/Images/Login.png" /></a>
-</div>
+</div>*@
