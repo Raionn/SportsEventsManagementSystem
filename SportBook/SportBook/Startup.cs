@@ -50,7 +50,7 @@ namespace SportBook
 
         // Configure the Auth0 Client ID and Client Secret
         options.ClientId = Configuration["Authentication:auth0ClientId"];
-       options.ClientSecret = Configuration["Authentication:auth0ClientSecret"];
+        options.ClientSecret = Configuration["Authentication:auth0ClientSecret"];
 
         // Set response type to code
         options.ResponseType = OpenIdConnectResponseType.Code;
@@ -60,13 +60,13 @@ namespace SportBook
 
         // Set the callback path, so Auth0 will call back to http://localhost:3000/callback
         // Also ensure that you have added the URL as an Allowed Callback URL in your Auth0 dashboard
-        options.CallbackPath = new PathString("/");
-
+        options.CallbackPath = new PathString("/General/Profile");
+        options.RequireHttpsMetadata = false;
         // Configure the Claims Issuer to be Auth0
         options.ClaimsIssuer = "Auth0";
 
-       options.Events = new OpenIdConnectEvents
-       {
+                options.Events = new OpenIdConnectEvents
+                {
             // handle the logout redirection
             OnRedirectToIdentityProviderForSignOut = (context) =>
            {
@@ -88,12 +88,6 @@ namespace SportBook
                context.HandleResponse();
 
                return Task.CompletedTask;
-           },
-           OnRedirectToIdentityProvider = context =>
-           {
-               context.ProtocolMessage.SetParameter("audience", "https://localhost:44368/");
-
-               return Task.FromResult(0);
            }
        };
    });

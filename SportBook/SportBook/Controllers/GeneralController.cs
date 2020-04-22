@@ -23,7 +23,7 @@ namespace SportBook.Controllers
             _context = context;
         }
 
-        public async Task Login(string returnUrl = "/")
+        public async Task Login(string returnUrl = "/General/Profile")
         {
             await HttpContext.ChallengeAsync("Auth0", new AuthenticationProperties() { RedirectUri = returnUrl });
         }
