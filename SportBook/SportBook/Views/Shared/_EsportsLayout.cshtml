@@ -47,7 +47,16 @@
                             <a class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="General" asp-action="MyTeams">My Teams</a>
                             <a class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="" asp-action="">Invitations (?)</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="General" asp-action="Login">Logout</a>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+
+                            <a id="qsLogoutBtn" class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                            }
+                            else
+                            {
+                            <a id="qsLoginBtn" class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+
+                            }
                         </div>
                     </li>
                     @*<li class="nav-item">

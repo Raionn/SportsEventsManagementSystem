@@ -41,11 +41,11 @@
                             @if (User.Identity.IsAuthenticated)
                             {
 
-                                <a id="qsLogoutBtn" class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="General" asp-action="Logout">Logout</a>
+                                <a id="qsLogoutBtn" class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
                             }
                             else
                             {
-                                <a id="qsLoginBtn" class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="General" asp-action="Login">Login</a>
+                                <a id="qsLoginBtn" class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
 
                             }
                         </div>
