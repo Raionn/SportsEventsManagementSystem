@@ -12,13 +12,13 @@ using SportBook.Models;
 
 namespace SportBook.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class GeneralController : Controller
     {
 
         private readonly ILogger<GeneralController> _logger;
-        private readonly SportbookContext _context;
-        public GeneralController(ILogger<GeneralController> logger, SportbookContext context)
+        private readonly SportbookDatabaseContext _context;
+        public GeneralController(ILogger<GeneralController> logger, SportbookDatabaseContext context)
         {
             _logger = logger;
             _context = context;

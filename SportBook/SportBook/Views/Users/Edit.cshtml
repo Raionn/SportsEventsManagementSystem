@@ -13,11 +13,15 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Username" class="control-label"></label>
                 <input asp-for="Username" class="form-control" />
                 <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Firstname" class="control-label"></label>
@@ -35,15 +39,16 @@
                 <span asp-validation-for="Birthdate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                <label asp-for="ExternalId" class="control-label"></label>
+                <input asp-for="ExternalId" class="form-control" />
+                <span asp-validation-for="ExternalId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <label asp-for="PictureUrl" class="control-label"></label>
+                <input asp-for="PictureUrl" class="form-control" />
+                <span asp-validation-for="PictureUrl" class="text-danger"></span>
             </div>
+            <input type="hidden" asp-for="UserId" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

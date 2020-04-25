@@ -19,6 +19,11 @@
                 <span asp-validation-for="Username" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Firstname" class="control-label"></label>
                 <input asp-for="Firstname" class="form-control" />
                 <span asp-validation-for="Firstname" class="text-danger"></span>
@@ -34,14 +39,19 @@
                 <span asp-validation-for="Birthdate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                <label asp-for="ExternalId" class="control-label"></label>
+                <input asp-for="ExternalId" class="form-control" />
+                <span asp-validation-for="ExternalId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <label asp-for="PictureUrl" class="control-label"></label>
+                <input asp-for="PictureUrl" class="form-control" />
+                <span asp-validation-for="PictureUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserId" class="control-label"></label>
+                <input asp-for="UserId" class="form-control" />
+                <span asp-validation-for="UserId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

@@ -1,0 +1,84 @@
+﻿@model IEnumerable<SportBook.Models.Event>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxParticipantAmt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsPrivate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsTeamEvent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FkGameTypeNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FkLocationNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FkOwnerNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxParticipantAmt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsPrivate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsTeamEvent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.GameTypeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FkLocationNavigation.LocationId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FkOwnerNavigation.UserId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.EventId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

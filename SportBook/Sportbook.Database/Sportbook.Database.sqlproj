@@ -60,6 +60,6 @@
     <Folder Include="dbo\Tables" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\User.sql" />
+    <None Include="dbo\Tables\DBScript.sql" />
   </ItemGroup>
 </Project>

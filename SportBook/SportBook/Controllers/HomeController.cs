@@ -10,7 +10,7 @@ using SportBook.Models;
 
 namespace SportBook.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

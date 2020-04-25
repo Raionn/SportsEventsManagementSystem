@@ -19,6 +19,12 @@
             @Html.DisplayFor(model => model.Username)
         </dd>
         <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Firstname)
         </dt>
         <dd class = "col-sm-10">
@@ -37,21 +43,21 @@
             @Html.DisplayFor(model => model.Birthdate)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Password)
+            @Html.DisplayNameFor(model => model.ExternalId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Password)
+            @Html.DisplayFor(model => model.ExternalId)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
+            @Html.DisplayNameFor(model => model.PictureUrl)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
+            @Html.DisplayFor(model => model.PictureUrl)
         </dd>
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="UserId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>

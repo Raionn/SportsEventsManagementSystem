@@ -13,7 +13,9 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "LOCAL_CONNECTION": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=sportbook;Integrated Security=True;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
+        "AUTH0_CLIENT_SECRET": "unBDhrUybZrsLKyYteOhg7PvIngyZbnntFZMDDcGNGjWZ774DrLSOWW1MSsf-oAP",
+        "LOCAL_CONNECTION": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Sportbook.Database;Integrated Security=True;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
+        "MAPS_API_URL": "https://maps.googleapis.com/maps/api/js?key=AIzaSyBL3PyFJmeFgNM84j9hFKO8c-PwS-4rGxM&callback=initMap"
       }
     },
     "SportBook": {

@@ -35,68 +35,64 @@ namespace SportBook
             if (connectionString == null)
                 connectionString = Configuration.GetValue<string>("ConnectionStrings:DefaultConnection");
 
-            services.AddDbContext<SportbookContext>(options =>
+            services.AddDbContext<SportbookDatabaseContext>(options =>
                                options.UseSqlServer(connectionString));
             services.AddControllersWithViews();
 
-            services.AddAuthentication(options => {
+            services.AddAuthentication(options =>
+            {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             }).AddCookie()
-            .AddOpenIdConnect("Auth0", options => {
-        // Set the authority to your Auth0 domain
-        options.Authority = $"https://{Configuration["Authentication:auth0Domain"]}";
+            .AddOpenIdConnect("Auth0", options =>
+            {
+                // Set the authority to your Auth0 domain
+                options.Authority = $"https://{Configuration["Authentication:auth0Domain"]}";
 
-        // Configure the Auth0 Client ID and Client Secret
-        options.ClientId = Configuration["Authentication:auth0ClientId"];
-        options.ClientSecret = Configuration["Authentication:auth0ClientSecret"];
+                // Configure the Auth0 Client ID and Client Secret
+                options.ClientId = Configuration["Authentication:auth0ClientId"];
+                options.ClientSecret = Environment.GetEnvironmentVariable("AUTH0_CLIENT_SECRET");
 
-        // Set response type to code
-        options.ResponseType = OpenIdConnectResponseType.Code;
+                // Set response type to code
+                options.ResponseType = OpenIdConnectResponseType.Code;
 
-        // Configure the scope
-        options.Scope.Add("openid");
+                // Configure the scope
+                options.Scope.Add("openid");
 
-        // Set the callback path, so Auth0 will call back to http://localhost:3000/callback
-        // Also ensure that you have added the URL as an Allowed Callback URL in your Auth0 dashboard
-        options.CallbackPath = new PathString("/General/Profile");
-        options.RequireHttpsMetadata = false;
-        // Configure the Claims Issuer to be Auth0
-        options.ClaimsIssuer = "Auth0";
+                // Set the callback path, so Auth0 will call back to http://localhost:3000/callback
+                // Also ensure that you have added the URL as an Allowed Callback URL in your Auth0 dashboard
+                options.CallbackPath = new PathString("/General/Profile");
+                options.RequireHttpsMetadata = false;
+                // Configure the Claims Issuer to be Auth0
+                options.ClaimsIssuer = "Auth0";
 
                 options.Events = new OpenIdConnectEvents
                 {
-            // handle the logout redirection
-            OnRedirectToIdentityProviderForSignOut = (context) =>
-           {
-               var logoutUri = $"https://{Configuration["Authentication:auth0Domain"]}/v2/logout?client_id={Configuration["Authentication:auth0ClientId"]}";
-
-               var postLogoutUri = context.Properties.RedirectUri;
-               if (!string.IsNullOrEmpty(postLogoutUri))
-               {
-                   if (postLogoutUri.StartsWith("/"))
+                    // handle the logout redirection
+                    OnRedirectToIdentityProviderForSignOut = (context) =>
                    {
-                        // transform to absolute
-                        var request = context.Request;
-                       postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;
+                       var logoutUri = $"https://{Configuration["Authentication:auth0Domain"]}/v2/logout?client_id={Configuration["Authentication:auth0ClientId"]}";
+
+                       var postLogoutUri = context.Properties.RedirectUri;
+                       if (!string.IsNullOrEmpty(postLogoutUri))
+                       {
+                           if (postLogoutUri.StartsWith("/"))
+                           {
+                       // transform to absolute
+                       var request = context.Request;
+                               postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;
+                           }
+                           logoutUri += $"&returnTo={ Uri.EscapeDataString(postLogoutUri)}";
+                       }
+
+                       context.Response.Redirect(logoutUri);
+                       context.HandleResponse();
+
+                       return Task.CompletedTask;
                    }
-                   logoutUri += $"&returnTo={ Uri.EscapeDataString(postLogoutUri)}";
-               }
-
-               context.Response.Redirect(logoutUri);
-               context.HandleResponse();
-
-               return Task.CompletedTask;
-           }
-       };
-   });
-
-
-
-
-
-
+                };
+            });
 
         }
 
