@@ -69,6 +69,13 @@ namespace SportBook
 
                 options.Events = new OpenIdConnectEvents
                 {
+                    OnTicketReceived = (context) =>
+                    {
+                        var request = context.Request;
+                        var homeurl = request.Scheme + "://" + request.Host + request.PathBase + "/";
+                        context.Response.Redirect(homeurl);
+                        return Task.CompletedTask;
+                    },
                     // handle the logout redirection
                     OnRedirectToIdentityProviderForSignOut = (context) =>
                    {
