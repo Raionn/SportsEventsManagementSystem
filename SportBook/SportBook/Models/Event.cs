@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportBook.Models
 {
@@ -17,6 +19,8 @@ namespace SportBook.Models
         public DateTime? EndTime { get; set; }
         public bool IsPrivate { get; set; }
         public bool IsTeamEvent { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int EventId { get; set; }
         public int FkOwner { get; set; }
         public int FkLocation { get; set; }

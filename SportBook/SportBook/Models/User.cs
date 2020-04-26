@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportBook.Models
 {
@@ -23,6 +25,8 @@ namespace SportBook.Models
         public DateTime? Birthdate { get; set; }
         public string ExternalId { get; set; }
         public string PictureUrl { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
 
         public virtual ICollection<Event> Event { get; set; }

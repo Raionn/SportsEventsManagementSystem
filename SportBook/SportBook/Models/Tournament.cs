@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportBook.Models
 {
@@ -14,6 +16,8 @@ namespace SportBook.Models
         public string Description { get; set; }
         public int? MaxParticipantAmt { get; set; }
         public DateTime? Start { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TournamentId { get; set; }
         public int FkGameType { get; set; }
         public int FkOwner { get; set; }

@@ -15,6 +15,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using SportBook.Helpers;
 
 namespace SportBook
 {
@@ -38,7 +39,9 @@ namespace SportBook
             services.AddDbContext<SportbookDatabaseContext>(options =>
                                options.UseSqlServer(connectionString));
             services.AddControllersWithViews();
-
+            services.AddScoped<IServiceSignUp, ServiceSignUp>();
+            var serviceProvider = services.BuildServiceProvider();
+            var serviceSignUp = serviceProvider.GetService<IServiceSignUp>();
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -62,22 +65,16 @@ namespace SportBook
 
                 // Set the callback path, so Auth0 will call back to http://localhost:3000/callback
                 // Also ensure that you have added the URL as an Allowed Callback URL in your Auth0 dashboard
-                options.CallbackPath = new PathString("/General/Profile");
+                options.CallbackPath = new PathString(Configuration["Authentication:auth0RedirectUri"]);
                 options.RequireHttpsMetadata = false;
                 // Configure the Claims Issuer to be Auth0
                 options.ClaimsIssuer = "Auth0";
 
                 options.Events = new OpenIdConnectEvents
                 {
-                    OnTicketReceived = (context) =>
-                    {
-                        var request = context.Request;
-                        var homeurl = request.Scheme + "://" + request.Host + request.PathBase + "/";
-                        context.Response.Redirect(homeurl);
-                        return Task.CompletedTask;
-                    },
-                    // handle the logout redirection
-                    OnRedirectToIdentityProviderForSignOut = (context) =>
+                    OnTicketReceived = serviceSignUp.CreateOnSignUp,
+                   // handle the logout redirection
+                   OnRedirectToIdentityProviderForSignOut = (context) =>
                    {
                        var logoutUri = $"https://{Configuration["Authentication:auth0Domain"]}/v2/logout?client_id={Configuration["Authentication:auth0ClientId"]}";
 

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportBook.Models
 {
@@ -7,6 +9,8 @@ namespace SportBook.Models
     {
         public string Text { get; set; }
         public bool IsAccepted { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TeamInvitationId { get; set; }
         public int FkUser { get; set; }
         public int FkTeam { get; set; }

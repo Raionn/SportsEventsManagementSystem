@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace SportBook.Models
@@ -34,7 +37,7 @@ namespace SportBook.Models
             {
                 entity.Property(e => e.CityId)
                     .HasColumnName("CityID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(255)
@@ -45,7 +48,7 @@ namespace SportBook.Models
             {
                 entity.Property(e => e.EventId)
                     .HasColumnName("EventID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.EndTime).HasColumnType("datetime");
 
@@ -84,7 +87,7 @@ namespace SportBook.Models
             {
                 entity.Property(e => e.EventInvitationId)
                     .HasColumnName("EventInvitationID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.FkEvent).HasColumnName("fk_Event");
 
@@ -107,7 +110,7 @@ namespace SportBook.Models
             {
                 entity.Property(e => e.GameTypeId)
                     .HasColumnName("GameTypeID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(255)
@@ -118,7 +121,7 @@ namespace SportBook.Models
             {
                 entity.Property(e => e.LocationId)
                     .HasColumnName("LocationID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Address)
                     .HasMaxLength(255)
@@ -149,7 +152,7 @@ namespace SportBook.Models
             {
                 entity.Property(e => e.ParticipantId)
                     .HasColumnName("ParticipantID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.FkEvent).HasColumnName("fk_Event");
 
@@ -180,7 +183,7 @@ namespace SportBook.Models
             {
                 entity.Property(e => e.TeamId)
                     .HasColumnName("TeamID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(255)
@@ -220,7 +223,7 @@ namespace SportBook.Models
             {
                 entity.Property(e => e.TeamInvitationId)
                     .HasColumnName("TeamInvitationID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.FkTeam).HasColumnName("fk_Team");
 
@@ -247,7 +250,7 @@ namespace SportBook.Models
             {
                 entity.Property(e => e.TeamMemberId)
                     .HasColumnName("TeamMemberID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.FkTeam).HasColumnName("fk_Team");
 
@@ -270,7 +273,7 @@ namespace SportBook.Models
             {
                 entity.Property(e => e.TournamentId)
                     .HasColumnName("TournamentID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(255)
@@ -303,7 +306,7 @@ namespace SportBook.Models
             {
                 entity.Property(e => e.TournamentMemberId)
                     .HasColumnName("TournamentMemberID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.FkTeam).HasColumnName("fk_Team");
 
@@ -326,7 +329,7 @@ namespace SportBook.Models
             {
                 entity.Property(e => e.UserId)
                     .HasColumnName("UserID")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Birthdate).HasColumnType("date");
 
@@ -361,5 +364,6 @@ namespace SportBook.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
     }
 }

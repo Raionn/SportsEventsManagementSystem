@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Controller;
 using SportBook.Models;
 
 namespace SportBook.Controllers
@@ -47,13 +51,21 @@ namespace SportBook.Controllers
         {
             return View();
         }
+        public IActionResult MyTeams()
+        {
+            return View();
+        }
+        public IActionResult Profile()
+        {
+            return View();
+        }
 
         // POST: Users/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Username,Email,Firstname,Lastname,Birthdate,ExternalId,PictureUrl,UserId")] User user)
+        public async Task<IActionResult> Create([Bind("Username,Email,Firstname,Lastname,Birthdate,ExternalId,PictureUrl")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -64,6 +76,23 @@ namespace SportBook.Controllers
             return View(user);
         }
 
+        //public static async Task<Task> CreateOnSignUp(TicketReceivedContext ticketReceivedContext)
+        //{
+        //    List<Claim> claims = ticketReceivedContext.Principal.Claims.ToList();
+        //    var claim = claims.FirstOrDefault(x => x.Type.EndsWith("isNewUser"));
+        //    bool isNewUser = bool.Parse(claim.Value);
+
+        //    if (isNewUser)
+        //    {
+        //        string userOId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+        //        User user = new User() { ExternalId = userOId };
+        //        //insert new value into DB
+        //        //_context.Add(user);
+        //        //await _context.SaveChangesAsync();
+        //    }
+
+        //    return Task.CompletedTask;
+        //}
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {

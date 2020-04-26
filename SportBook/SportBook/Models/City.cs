@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportBook.Models
 {
@@ -11,6 +13,8 @@ namespace SportBook.Models
         }
 
         public string Name { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CityId { get; set; }
 
         public virtual ICollection<Location> Location { get; set; }

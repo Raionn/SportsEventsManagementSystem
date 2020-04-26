@@ -3,14 +3,14 @@
 CREATE TABLE City
 (
 	Name varchar (255),
-	CityID integer,
+	CityID integer IDENTITY(1,1),
 	PRIMARY KEY(CityID)
 );
 
 CREATE TABLE GameType
 (
 	Name varchar (255),
-	GameTypeID integer,
+	GameTypeID integer IDENTITY(1,1),
 	PRIMARY KEY(GameTypeID)
 );
 
@@ -23,7 +23,7 @@ CREATE TABLE [User]
 	Birthdate date,
 	ExternalID varchar (255),
 	PictureURL varchar (255),
-	UserID integer,
+	UserID integer IDENTITY(1,1),
 	PRIMARY KEY(UserID)
 );
 
@@ -32,7 +32,7 @@ CREATE TABLE Location
 	Latitude decimal,
 	Longitude decimal,
 	Address varchar (255),
-	LocationID integer,
+	LocationID integer IDENTITY(1,1),
 	fk_City integer NOT NULL,
 	fk_GameType integer NOT NULL,
 	PRIMARY KEY(LocationID),
@@ -46,7 +46,7 @@ CREATE TABLE Team
 	Type varchar (255),
 	Description varchar (255),
 	LogoURL varchar (255),
-	TeamID integer,
+	TeamID integer IDENTITY(1,1),
 	fk_Owner integer NOT NULL,
 	fk_GameType integer NOT NULL,
 	PRIMARY KEY(TeamID),
@@ -60,7 +60,7 @@ CREATE TABLE Tournament
 	Description varchar (255),
 	MaxParticipantAmt int,
 	Start datetime,
-	TournamentID integer,
+	TournamentID integer IDENTITY(1,1),
 	fk_GameType integer NOT NULL,
 	fk_Owner integer NOT NULL,
 	PRIMARY KEY(TournamentID),
@@ -76,7 +76,7 @@ CREATE TABLE Event
 	EndTime datetime,
 	IsPrivate bit NOT NULL DEFAULT 0,
 	IsTeamEvent bit NOT NULL DEFAULT 0,
-	EventID integer,
+	EventID integer IDENTITY(1,1),
 	fk_Owner integer NOT NULL,
 	fk_Location integer NOT NULL,
 	fk_GameType integer NOT NULL,
@@ -90,7 +90,7 @@ CREATE TABLE TeamInvitation
 (
 	Text varchar (255),
 	IsAccepted bit NOT NULL DEFAULT 0,
-	TeamInvitationID integer,
+	TeamInvitationID integer IDENTITY(1,1),
 	fk_User integer NOT NULL,
 	fk_Team integer NOT NULL,
 	PRIMARY KEY(TeamInvitationID),
@@ -100,7 +100,7 @@ CREATE TABLE TeamInvitation
 
 CREATE TABLE TeamMember
 (
-	TeamMemberID integer,
+	TeamMemberID integer IDENTITY(1,1),
 	fk_User integer NOT NULL,
 	fk_Team integer NOT NULL,
 	PRIMARY KEY(TeamMemberID),
@@ -110,7 +110,7 @@ CREATE TABLE TeamMember
 
 CREATE TABLE TournamentMember
 (
-	TournamentMemberID integer,
+	TournamentMemberID integer IDENTITY(1,1),
 	fk_Tournament integer NOT NULL,
 	fk_Team integer NOT NULL,
 	PRIMARY KEY(TournamentMemberID),
@@ -121,7 +121,7 @@ CREATE TABLE TournamentMember
 CREATE TABLE EventInvitation
 (
 	IsAccepted bit NOT NULL DEFAULT 0,
-	EventInvitationID integer,
+	EventInvitationID integer IDENTITY(1,1),
 	fk_User integer NOT NULL,
 	fk_Event integer NOT NULL,
 	PRIMARY KEY(EventInvitationID),
@@ -131,7 +131,7 @@ CREATE TABLE EventInvitation
 
 CREATE TABLE Participant
 (
-	ParticipantID integer,
+	ParticipantID integer IDENTITY(1,1),
 	fk_User integer NOT NULL,
 	fk_Event integer NOT NULL,
 	fk_Team integer NOT NULL,
