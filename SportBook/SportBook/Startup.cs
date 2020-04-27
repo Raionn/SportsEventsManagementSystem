@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using SportBook.Helpers;
+using Microsoft.IdentityModel.Tokens;
 
 namespace SportBook
 {
@@ -40,7 +41,7 @@ namespace SportBook
                                options.UseSqlServer(connectionString));
             services.AddControllersWithViews();
             services.AddScoped<IServiceSignUp, ServiceSignUp>();
-            var serviceProvider = services.BuildServiceProvider();
+            IServiceProvider serviceProvider = services.BuildServiceProvider();
             var serviceSignUp = serviceProvider.GetService<IServiceSignUp>();
             services.AddAuthentication(options =>
             {
@@ -69,7 +70,12 @@ namespace SportBook
                 options.RequireHttpsMetadata = false;
                 // Configure the Claims Issuer to be Auth0
                 options.ClaimsIssuer = "Auth0";
-
+                // Set the correct name claim type
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = "Roles",
+                    RoleClaimType = Configuration["Authentication:auth0RoleNameSpace"]
+                };
                 options.Events = new OpenIdConnectEvents
                 {
                     OnTicketReceived = serviceSignUp.CreateOnSignUp,
@@ -121,7 +127,6 @@ namespace SportBook
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
 
             app.UseAuthentication();
@@ -134,5 +139,7 @@ namespace SportBook
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
+
+ 
     }
 }
