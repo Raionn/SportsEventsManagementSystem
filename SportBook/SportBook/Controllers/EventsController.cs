@@ -10,7 +10,7 @@ using SportBook.Models;
 
 namespace SportBook.Controllers
 {
-    [Authorize(Roles = "user, admin")]
+    //[Authorize(Roles = "user, admin")]
     public class EventsController : Controller
     {
         private readonly SportbookDatabaseContext _context;

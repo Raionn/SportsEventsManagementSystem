@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace SportBook.Controllers
 {
 
-    [Authorize(Roles ="admin")]
+    //[Authorize(Roles ="admin")]
     public class SportsController : Controller
     {
         [Route("[action]")]

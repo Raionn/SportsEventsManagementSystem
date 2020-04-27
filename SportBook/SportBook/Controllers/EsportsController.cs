@@ -9,7 +9,7 @@ using SportBook.Models;
 
 namespace SportBook.Controllers
 {
-    [Authorize(Roles = "user, admin")]
+    //[Authorize(Roles = "user, admin")]
     [Route("[action]")]
     public class EsportsController : Controller
     {
