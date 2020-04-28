@@ -523,6 +523,9 @@ namespace SportBook.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> TournamentsCreate([Bind("Name,Description,MaxParticipantAmt,Start,TournamentId,FkGameType,FkOwner")] Tournament tournament)
         {
+            var user = GetCurrentUser();
+            tournament.FkOwner = user.UserId;
+            tournament.FkOwnerNavigation = user;
             if (ModelState.IsValid)
             {
                 _context.Add(tournament);
@@ -625,5 +628,141 @@ namespace SportBook.Controllers
             return _context.Tournament.Any(e => e.TournamentId == id);
         }
         #endregion
+
+        #region Events
+        public async Task<IActionResult> Events(string title,string gametype, string address)
+        {
+            var sportbookDatabaseContext = _context.Event.Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation);
+            if (!String.IsNullOrEmpty(title))
+            {
+                sportbookDatabaseContext = sportbookDatabaseContext.Where(s => s.Title.Contains(title)).Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation);
+            }
+            if (!String.IsNullOrEmpty(gametype))
+            {
+                sportbookDatabaseContext = sportbookDatabaseContext.Where(s => s.FkGameTypeNavigation.Name.Contains(gametype)).Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation);
+            }
+            if (!String.IsNullOrEmpty(address))
+            {
+                sportbookDatabaseContext = sportbookDatabaseContext.Where(s => s.FkLocationNavigation.Address.Contains(address)).Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation);
+            }
+            return View("~/Views/Admin/Events/Index.cshtml",await sportbookDatabaseContext.ToListAsync());
+        }
+
+        // GET: Events/Details/5
+        public async Task<IActionResult> EventsDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var @event = await _context.Event
+                .Include(e => e.FkGameTypeNavigation)
+                .Include(e => e.FkLocationNavigation)
+                .Include(e => e.FkOwnerNavigation)
+                .FirstOrDefaultAsync(m => m.EventId == id);
+            if (@event == null)
+            {
+                return NotFound();
+            }
+
+            return View("~/Views/Admin/Events/Details.cshtml",@event);
+        }
+
+        // GET: Events/Edit/5
+        public async Task<IActionResult> EventsEdit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var @event = await _context.Event.FindAsync(id);
+            if (@event == null)
+            {
+                return NotFound();
+            }
+            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name", @event.FkGameType);
+            ViewData["FkLocation"] = new SelectList(_context.Location, "LocationId", "Address", @event.FkLocation);
+            ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username", @event.FkOwner);
+            return View("~/Views/Admin/Events/Edit.cshtml",@event);
+        }
+
+        // POST: Events/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EventsEdit(int id, [Bind("Title,MaxParticipantAmt,StartTime,EndTime,IsPrivate,IsTeamEvent,EventId,FkOwner,FkLocation,FkGameType")] Event @event)
+        {
+            if (id != @event.EventId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(@event);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!EventExists(@event.EventId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Events));
+            }
+            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name", @event.FkGameType);
+            ViewData["FkLocation"] = new SelectList(_context.Location, "LocationId", "Address", @event.FkLocation);
+            ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username", @event.FkOwner);
+            return View("~/Views/Admin/Events/Edit.cshtml",@event);
+        }
+
+        // GET: Events/Delete/5
+        public async Task<IActionResult> EventsDelete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var @event = await _context.Event
+                .Include(e => e.FkGameTypeNavigation)
+                .Include(e => e.FkLocationNavigation)
+                .Include(e => e.FkOwnerNavigation)
+                .FirstOrDefaultAsync(m => m.EventId == id);
+            if (@event == null)
+            {
+                return NotFound();
+            }
+
+            return View("~/Views/Admin/Events/Delete.cshtml",@event);
+        }
+
+        // POST: Events/Delete/5
+        [HttpPost, ActionName("EventsDelete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EventsDeleteConfirmed(int id)
+        {
+            var @event = await _context.Event.FindAsync(id);
+            _context.Event.Remove(@event);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Events));
+        }
+
+        private bool EventExists(int id)
+        {
+            return _context.Event.Any(e => e.EventId == id);
+        }
+        #endregion
+
     }
 }

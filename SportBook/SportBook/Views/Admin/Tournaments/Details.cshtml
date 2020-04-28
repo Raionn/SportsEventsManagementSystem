@@ -50,6 +50,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="TournamentsEdit" asp-route-id="@Model.TournamentId">Edit</a> |
-    <a asp-action="Tournaments">Back to List</a>
+    <a class="btn btn-secondary" asp-action="TournamentsEdit" asp-route-id="@Model.TournamentId">Edit</a> 
+    <a style="margin-left:5px" onclick="location.href='@Url.Action("Tournaments", "Admin")'" class="btn btn-secondary"><i class="fa fa-list"></i></a>
 </div>

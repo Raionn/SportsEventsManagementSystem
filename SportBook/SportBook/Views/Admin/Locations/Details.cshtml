@@ -44,6 +44,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="LocationsEdit" asp-route-id="@Model.LocationId">Edit</a> |
-    <a asp-action="Locations">Back to List</a>
+    <a class="btn btn-secondary" asp-action="LocationsEdit" asp-route-id="@Model.LocationId">Edit</a>              
+    <a style="margin-left:5px" onclick="location.href='@Url.Action("Locations", "Admin")'" class="btn btn-secondary"><i class="fa fa-list"></i></a>
 </div>

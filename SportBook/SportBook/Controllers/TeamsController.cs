@@ -58,7 +58,7 @@ namespace SportBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Type,Description,LogoUrl,TeamId,FkOwner,FkGameType")] Team team)
+        public async Task<IActionResult> Create([Bind("Name,Description,LogoUrl,TeamId,FkOwner,FkGameType")] Team team)
         {
             if (ModelState.IsValid)
             {
@@ -94,7 +94,7 @@ namespace SportBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Type,Description,LogoUrl,TeamId,FkOwner,FkGameType")] Team team)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Description,LogoUrl,TeamId,FkOwner,FkGameType")] Team team)
         {
             if (id != team.TeamId)
             {

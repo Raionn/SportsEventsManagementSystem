@@ -1,0 +1,96 @@
+﻿@model IEnumerable<SportBook.Models.Event>
+
+@{
+    ViewData["Title"] = "Events";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Events</h1>
+
+<form asp-controller="Admin" asp-action="Events">
+    <p>
+        <div class="input-group" style="width:40%">
+            <input type="text" class="form-control" name="title" placeholder="Title" style="margin-right:5px">
+            <input type="text" class="form-control" name="gametype" placeholder="Game type" style="margin-right:5px">
+            <input type="text" class="form-control" name="address" placeholder="Address" style="margin-right:5px">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-secondary"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+    </p>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxParticipantAmt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsPrivate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsTeamEvent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FkGameTypeNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FkLocationNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FkOwnerNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaxParticipantAmt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsPrivate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsTeamEvent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FkLocationNavigation.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FkOwnerNavigation.Username)
+                </td>
+                <td>
+                    <a asp-action="EventsEdit" asp-route-id="@item.EventId"><i class="fa fa-edit"></i></a>
+                    <a asp-action="EventsDetails" asp-route-id="@item.EventId"><i class="fa fa-info-circle"></i></a>
+                    <a asp-action="EventsDelete" asp-route-id="@item.EventId"><i class="fa fa-trash"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

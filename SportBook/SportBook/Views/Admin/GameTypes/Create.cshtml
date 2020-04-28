@@ -19,15 +19,13 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-secondary" />
+                <a style="margin-left:5px" onclick="location.href='@Url.Action("GameTypes", "Admin")'" class="btn btn-secondary"><i class="fa fa-list"></i></a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="GameTypes">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -21,14 +21,10 @@
             </div>
             <input type="hidden" asp-for="CityId" />
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-secondary" /><a style="margin-left:5px" onclick="location.href='@Url.Action("Cities", "Admin")'" class="btn btn-secondary"><i class="fa fa-list"></i></a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Cities">Back to List</a>
 </div>
 
 @section Scripts {

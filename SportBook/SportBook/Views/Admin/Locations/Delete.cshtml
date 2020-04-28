@@ -46,7 +46,7 @@
     
     <form asp-action="LocationsDelete">
         <input type="hidden" asp-for="LocationId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Locations">Back to List</a>
+        <input type="submit" value="Delete" class="btn btn-secondary" /> 
+        <a style="margin-left:5px" onclick="location.href='@Url.Action("Locations", "Admin")'" class="btn btn-secondary"><i class="fa fa-list"></i></a>
     </form>
 </div>

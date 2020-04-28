@@ -18,9 +18,6 @@ namespace SportBook.Models
         [MaxLength(60, ErrorMessage = "The {0} value cannot exceed {1} characters. ")]
         [RegularExpression(@"[A-Za-z0-9\s?]+", ErrorMessage = "Allowed characters letters and digits")]
         public string Name { get; set; }
-        [MaxLength(100, ErrorMessage = "The {0} value cannot exceed {1} characters. ")]
-        [RegularExpression(@"[A-Za-z0-9\s?.,!?]+", ErrorMessage = "Allowed letters,digits and ?.!, characters")]
-        public string Type { get; set; }
         [MaxLength(250, ErrorMessage = "The {0} value cannot exceed {1} characters. ")]
         [RegularExpression(@"[A-Za-z0-9\s?.,!?]+", ErrorMessage = "Allowed letters,digits and ?.!, characters")]
         public string Description { get; set; }

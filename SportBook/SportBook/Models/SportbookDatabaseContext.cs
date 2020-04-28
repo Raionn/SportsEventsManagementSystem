@@ -202,10 +202,6 @@ namespace SportBook.Models
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Type)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
                 entity.HasOne(d => d.FkGameTypeNavigation)
                     .WithMany(p => p.Team)
                     .HasForeignKey(d => d.FkGameType)

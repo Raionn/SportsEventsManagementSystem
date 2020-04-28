@@ -17,12 +17,17 @@ namespace SportBook.Models
         [RegularExpression(@"[A-Za-z0-9\s?.,!?]+", ErrorMessage = "Allowed letters,digits and ?.!, characters")]
         public string Title { get; set; }
         [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid number")]
+        [DisplayName("Max participants")]
         public int? MaxParticipantAmt { get; set; }
         [DataType(DataType.DateTime)]
+        [DisplayName("Start time")]
         public DateTime? StartTime { get; set; }
         [DataType(DataType.DateTime)]
+        [DisplayName("End time")]
         public DateTime? EndTime { get; set; }
+        [DisplayName("Private")]
         public bool IsPrivate { get; set; }
+        [DisplayName("Team Event")]
         public bool IsTeamEvent { get; set; }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -89,9 +89,9 @@ namespace SportBook.Controllers
             {
                 return NotFound();
             }
-            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "GameTypeId", @event.FkGameType);
-            ViewData["FkLocation"] = new SelectList(_context.Location, "LocationId", "LocationId", @event.FkLocation);
-            ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "UserId", @event.FkOwner);
+            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name", @event.FkGameType);
+            ViewData["FkLocation"] = new SelectList(_context.Location, "LocationId", "Address", @event.FkLocation);
+            ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username", @event.FkOwner);
             return View(@event);
         }
 
@@ -127,9 +127,9 @@ namespace SportBook.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "GameTypeId", @event.FkGameType);
-            ViewData["FkLocation"] = new SelectList(_context.Location, "LocationId", "LocationId", @event.FkLocation);
-            ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "UserId", @event.FkOwner);
+            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name", @event.FkGameType);
+            ViewData["FkLocation"] = new SelectList(_context.Location, "LocationId", "Address", @event.FkLocation);
+            ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username", @event.FkOwner);
             return View(@event);
         }
 

@@ -52,7 +52,7 @@
     
     <form asp-action="TournamentsDelete">
         <input type="hidden" asp-for="TournamentId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Tournaments">Back to List</a>
+        <input type="submit" value="Delete" class="btn btn-secondary" /> 
+        <a style="margin-left:5px" onclick="location.href='@Url.Action("Tournaments", "Admin")'" class="btn btn-secondary"><i class="fa fa-list"></i></a>
     </form>
 </div>
