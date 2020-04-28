@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using SportBook.Helpers;
 using Microsoft.IdentityModel.Tokens;
+using System.Globalization;
 
 namespace SportBook
 {
@@ -138,6 +139,10 @@ namespace SportBook
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            var cultureInfo = new CultureInfo("en-US");
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
         }
 
  

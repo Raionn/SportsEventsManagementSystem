@@ -57,8 +57,43 @@ namespace SportBook.Controllers
         {
             return View();
         }
+        [Authorize]
+
         public IActionResult Profile()
         {
+            User currentUser = (from s in _context.User
+                                select s).Where(s => s.ExternalId == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).FirstOrDefault();
+            ViewData["CurrentUser"] = currentUser;
+            return View();
+        }
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Profile([Bind("Username,Email,Firstname,Lastname,Birthdate,ExternalId,PictureUrl, UserId")] User user)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(user);
+                    await _context.SaveChangesAsync();
+                    
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!UserExists(user.UserId))
+                    {
+                        return NotFound();
+
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Profile));
+            }
+
             return View();
         }
 

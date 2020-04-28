@@ -28,6 +28,7 @@ namespace SportBook.Models
         [RegularExpression(@"([A-Z][a-z]* ?)*", ErrorMessage = "Name contains only letters and starts with capital!")]
         public string Lastname { get; set; }
         [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-mm-dd}")]
         [DisplayName("Birth Date")]
         public DateTime? Birthdate { get; set; }
         public string ExternalId { get; set; }

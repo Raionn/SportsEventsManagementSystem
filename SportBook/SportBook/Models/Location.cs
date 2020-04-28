@@ -12,6 +12,7 @@ namespace SportBook.Models
         {
             Event = new HashSet<Event>();
         }
+        //[RegularExpression(@"-?[0-9]+\.[0-9]*", ErrorMessage = "Incorrect format. Example: 54.231546")]
         [DisplayFormat(DataFormatString = "{0:F6}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "This field is required")]
         public decimal? Latitude { get; set; }
@@ -29,7 +30,7 @@ namespace SportBook.Models
         public int FkGameType { get; set; }
         [DisplayName("City")]
         public virtual City FkCityNavigation { get; set; }
-        [DisplayName("Game Type")]
+        [DisplayName("Game Type")]      // ?
         public virtual GameType FkGameTypeNavigation { get; set; }
         public virtual ICollection<Event> Event { get; set; }
     }

@@ -20,8 +20,8 @@
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                 <ul class="navbar-nav flex-grow-1">
                     @*<li class="nav-item">
-            <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </li>*@
+                            <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>*@
                     <li class="nav-item">
                         <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Home" asp-action="Schedule">Schedule</a>
                     </li>
@@ -95,10 +95,13 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.5/lib/darkmode-js.min.js"></script>
+    @*<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>*@
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
         var darkmode = new Darkmode();
         document.getElementById('toggle--daynight').addEventListener('click', function () {
             darkmode.toggle();
+<a href="D:\BetterBakalauras\SportBook\SportBook\Views\Users\Profile.cshtml">D:\BetterBakalauras\SportBook\SportBook\Views\Users\Profile.cshtml</a>
             const x = document.getElementsByName("navBar");
             const m = document.getElementById("navDrop");
             if (darkmode.isActivated()) {
