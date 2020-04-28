@@ -11,7 +11,7 @@ namespace SportBook.Models
         {
             Location = new HashSet<Location>();
         }
-
+        [RegularExpression(@"([A-Z][a-z]* ?)*", ErrorMessage ="Name contains only letters and starts with capital!")]
         public string Name { get; set; }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

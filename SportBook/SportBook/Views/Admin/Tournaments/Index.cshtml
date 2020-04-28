@@ -1,0 +1,79 @@
+﻿@model IEnumerable<SportBook.Models.Tournament>
+
+@{
+    ViewData["Title"] = "Tournaments";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+<h1>Tournaments</h1>
+<form asp-controller="Admin" asp-action="Tournaments">
+    <p>
+        <div class="input-group" style="width:40%">
+            <input type="text" class="form-control" name="name" placeholder="Name" style="margin-right:5px">
+            <input type="text" class="form-control" name="gametype" placeholder="Game type" style="margin-right:5px">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-secondary"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+    </p>
+</form>
+<p>
+    Create new
+    <button style="margin-left:5px" onclick="location.href='@Url.Action("TournamentsCreate", "Admin")'" class="btn btn-secondary"><i class="fa fa-plus"></i></button>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxParticipantAmt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Start)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FkGameTypeNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FkOwnerNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaxParticipantAmt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Start)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FkOwnerNavigation.Username)
+                </td>
+                <td>
+                    <a asp-action="TournamentsEdit" asp-route-id="@item.TournamentId"><i class="fa fa-edit"></i></a>
+                    <a asp-action="TournamentsDetails" asp-route-id="@item.TournamentId"><i class="fa fa-info-circle"></i></a>
+                    <a asp-action="TournamentsDelete" asp-route-id="@item.TournamentId"><i class="fa fa-trash"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

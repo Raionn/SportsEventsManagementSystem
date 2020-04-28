@@ -131,9 +131,9 @@ namespace SportBook.Models
 
                 entity.Property(e => e.FkGameType).HasColumnName("fk_GameType");
 
-                entity.Property(e => e.Latitude).HasColumnType("decimal(18, 0)");
+                entity.Property(e => e.Latitude).HasColumnType("decimal(8, 6)");
 
-                entity.Property(e => e.Longitude).HasColumnType("decimal(18, 0)");
+                entity.Property(e => e.Longitude).HasColumnType("decimal(8, 6)");
 
                 entity.HasOne(d => d.FkCityNavigation)
                     .WithMany(p => p.Location)

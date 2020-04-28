@@ -14,7 +14,7 @@ namespace SportBook.Models
             Team = new HashSet<Team>();
             Tournament = new HashSet<Tournament>();
         }
-
+        [RegularExpression(@"(\w* ?)*", ErrorMessage = "Name contains only letters!")]
         public string Name { get; set; }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

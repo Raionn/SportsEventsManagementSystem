@@ -59,12 +59,12 @@
     </header>
     <div class="container-fluid">
         <main role="main" class="pb-3">
-            <div id="mySidenav" class="sidenav">
+            <div id="mySidenav" class="sidenav" onmouseover="openNav()" onmouseout="closeNav()">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                <a href="#">About</a>
-                <a href="#">Services</a>
-                <a href="#">Clients</a>
-                <a href="#">Contact</a>
+                <a asp-controller="Admin" asp-action="Cities">Cities</a>
+                <a asp-controller="Admin" asp-action="Locations">Locations</a>
+                <a asp-controller="Admin" asp-action="GameTypes">Game Types</a>
+                <a asp-controller="Admin" asp-action="Tournaments">Tournaments</a>
             </div>
 
             <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
@@ -116,6 +116,15 @@
                     m.style.background = "#000000";
                 }
             }
+        }
+
+        function openNav() {
+            document.getElementById("main").style.marginLeft = "250px";
+        }
+
+        /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
+        function closeNav() {
+            document.getElementById("main").style.marginLeft = "0";
         }
     </script>
     @RenderSection("Scripts", required: false)

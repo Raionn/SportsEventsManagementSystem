@@ -1,0 +1,74 @@
+﻿@model IEnumerable<SportBook.Models.Location>
+
+@{
+    ViewData["Title"] = "Locations";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<h1>Locations</h1>
+<form asp-controller="Admin" asp-action="Locations">
+    <p>
+        <div class="input-group" style="width:40%">
+            <input type="text" class="form-control" name="address" placeholder="Address" style="margin-right:5px">
+            <input type="text" class="form-control" name="city" placeholder="City" style="margin-right:5px">
+            <input type="text" class="form-control" name="gametype" placeholder="Game type" style="margin-right:5px" >
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-secondary"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+    </p>
+</form>
+<p> Create new
+    <button style="margin-left:5px" onclick="location.href='@Url.Action("LocationsCreate", "Admin")'" class="btn btn-secondary"><i class="fa fa-plus"></i></button>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Latitude)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Longitude)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FkCityNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FkGameTypeNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Latitude)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Longitude)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FkCityNavigation.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.Name)
+                </td>
+                <td>
+                    <a asp-action="LocationsEdit" asp-route-id="@item.LocationId"><i class="fa fa-edit"></i></a> 
+                    <a asp-action="LocationsDetails" asp-route-id="@item.LocationId"><i class="fa fa-info-circle"></i></a> 
+                    <a asp-action="LocationsDelete" asp-route-id="@item.LocationId"><i class="fa fa-trash"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

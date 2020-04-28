@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,22 +13,31 @@ namespace SportBook.Models
             EventInvitation = new HashSet<EventInvitation>();
             Participant = new HashSet<Participant>();
         }
-
+        [MaxLength(60, ErrorMessage = "The {0} value cannot exceed {1} characters. ")] 
+        [RegularExpression(@"[A-Za-z0-9\s?.,!?]+", ErrorMessage = "Allowed letters,digits and ?.!, characters")]
         public string Title { get; set; }
+        [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid number")]
         public int? MaxParticipantAmt { get; set; }
+        [DataType(DataType.DateTime)]
         public DateTime? StartTime { get; set; }
+        [DataType(DataType.DateTime)]
         public DateTime? EndTime { get; set; }
         public bool IsPrivate { get; set; }
         public bool IsTeamEvent { get; set; }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int EventId { get; set; }
+        [DisplayName("Owner")]
         public int FkOwner { get; set; }
+        [DisplayName("Location")]
         public int FkLocation { get; set; }
+        [DisplayName("Game Type")]
         public int FkGameType { get; set; }
-
+        [DisplayName("Game Type")]
         public virtual GameType FkGameTypeNavigation { get; set; }
+        [DisplayName("Location")]
         public virtual Location FkLocationNavigation { get; set; }
+        [DisplayName("Owner")]
         public virtual User FkOwnerNavigation { get; set; }
         public virtual ICollection<EventInvitation> EventInvitation { get; set; }
         public virtual ICollection<Participant> Participant { get; set; }
