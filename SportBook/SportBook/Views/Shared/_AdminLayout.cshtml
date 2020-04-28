@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - SportBook</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/admin.css" />
 </head>
 <body onload="checkDarkMode()">
     <header>
@@ -20,47 +21,23 @@
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                 <ul class="navbar-nav flex-grow-1">
                     @*<li class="nav-item">
-            <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </li>*@
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Home" asp-action="Schedule">Schedule</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Sports" asp-action="Teams">Teams</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Sports" asp-action="Sports">Events</a>
-                    </li>
-                    @if (User.IsInRole("admin"))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Admin" asp-action="Index">Administration</a>
-                        </li>
-                    }
+                            <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>*@
                 </ul>
             </div>
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Settings
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Users" asp-action="Profile">Profile</a>
-                            <a class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Users" asp-action="MyTeams">My Teams</a>
-                            <a class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="" asp-action="">Invitations (?)</a>
-                            <div class="dropdown-divider"></div>
-                            @if (User.Identity.IsAuthenticated)
-                            {
+                    <li class="nav-item ">
+                        @if (User.Identity.IsAuthenticated)
+                        {
 
                             <a id="qsLogoutBtn" class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
-                            }
-                            else
-                            {
+                        }
+                        else
+                        {
                             <a id="qsLoginBtn" class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
 
-                            }
-                        </div>
+                        }
                     </li>
                     @*<li class="nav-item">
                             <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="General" asp-action="Profile">Profile</a>
@@ -82,7 +59,19 @@
     </header>
     <div class="container-fluid">
         <main role="main" class="pb-3">
-            @RenderBody()
+            <div id="mySidenav" class="sidenav">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                <a href="#">About</a>
+                <a href="#">Services</a>
+                <a href="#">Clients</a>
+                <a href="#">Contact</a>
+            </div>
+
+            <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+            <div id="main">
+                @RenderBody()
+            </div>
+
         </main>
     </div>
 
@@ -100,26 +89,31 @@
         document.getElementById('toggle--daynight').addEventListener('click', function () {
             darkmode.toggle();
             const x = document.getElementsByName("navBar");
+            const m = document.getElementById("navDrop");
             if (darkmode.isActivated()) {
                 for (let e of x) {
                     e.classList.add("text-white");
                     e.classList.remove("text-dark");
+                    m.style.background = "#000000";
                 }
             }
             else {
                 for (let e of x) {
                     e.classList.remove("text-white");
                     e.classList.add("text-dark");
+                    m.style.background = "#FFFFFF";
                 }
             }
         });
 
         function checkDarkMode() {
             const x = document.getElementsByName("navBar");
+            const m = document.getElementById("navDrop");
             if (darkmode.isActivated()) {
                 for (let e of x) {
                     e.classList.add("text-white");
                     e.classList.remove("text-dark");
+                    m.style.background = "#000000";
                 }
             }
         }
