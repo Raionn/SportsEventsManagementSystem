@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+//using FoolProof.Core;
+using SportBook.Helpers;
 
 namespace SportBook.Models
 {
@@ -21,9 +23,14 @@ namespace SportBook.Models
         public int? MaxParticipantAmt { get; set; }
         [DataType(DataType.DateTime)]
         [DisplayName("Start time")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd hh:mm}")]
+        [DateValidator]
         public DateTime? StartTime { get; set; }
         [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd hh:mm}")]
         [DisplayName("End time")]
+        //[GreaterThan("StartTime", ErrorMessage ="End time must be greater than start time")]
+        [DateValidator]
         public DateTime? EndTime { get; set; }
         [DisplayName("Private")]
         public bool IsPrivate { get; set; }

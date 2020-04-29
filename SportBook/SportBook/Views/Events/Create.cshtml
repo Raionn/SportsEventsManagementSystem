@@ -44,22 +44,18 @@
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="EventId" class="control-label"></label>
-                <input asp-for="EventId" class="form-control" />
-                <span asp-validation-for="EventId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="FkOwner" class="control-label"></label>
-                <select asp-for="FkOwner" class ="form-control" asp-items="ViewBag.FkOwner"></select>
+                <select asp-for="FkOwner" class="form-control" asp-items="ViewBag.FkOwner"></select>
             </div>
             <div class="form-group">
                 <label asp-for="FkLocation" class="control-label"></label>
-                <select asp-for="FkLocation" class ="form-control" asp-items="ViewBag.FkLocation"></select>
+                <select asp-for="FkLocation" class="form-control" asp-items="ViewBag.FkLocation"></select>
             </div>
             <div class="form-group">
                 <label asp-for="FkGameType" class="control-label"></label>
-                <select asp-for="FkGameType" class ="form-control" asp-items="ViewBag.FkGameType"></select>
+                <select asp-for="FkGameType"  class="form-control" asp-items="ViewBag.FkGameType"></select>
             </div>
+            <input type="hidden" asp-for="EventId"/>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -73,4 +69,42 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
 }
+
+@*<script>
+    // checkDateRange - Checks to ensure that the values entered are dates and 
+    // are of a valid range. By this, the dates must be no more than the 
+    // built-in number of days appart.
+    function checkDateRange() {
+        // Parse the entries
+        console.log("Laikai:");
+        
+        var start = document.getElementById("startTime").value;
+        var end = document.getElementById("endTime").value
+        console.log(start);
+        console.log(end);
+        var startDate = Date.parse(start); 
+        var endDate = Date.parse(end);
+        console.log(startDate);
+        console.log(endDate);
+        //// Make sure they are valid
+        if (isNaN(startDate)) {
+            alert("The start date provided is not valid, please enter a valid date.");
+            return false;
+        }
+        if (isNaN(endDate)) {
+            alert("The end date provided is not valid, please enter a valid date.");
+            return false;
+        }
+        var difference = endDate - startDate;
+        if (difference < 0) {
+            alert("The start date must come before the end date.");
+            document.getElementById("endSpan").value = "Nu blet kaip gerai";
+            return false;
+        }
+       // document.getElementById("submitForm").classList.remove("disabled");
+       return true;
+    }
+</script>*@

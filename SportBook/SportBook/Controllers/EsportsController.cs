@@ -19,7 +19,7 @@ namespace SportBook.Controllers
         }
         public IActionResult Tournaments()
         {
-            return View();
+            return RedirectToAction("Index", "Events");
         }
         public IActionResult Teams()
         {
