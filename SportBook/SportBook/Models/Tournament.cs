@@ -21,6 +21,7 @@ namespace SportBook.Models
         public string Description { get; set; }
         [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid number")]
         [Required(ErrorMessage = "This field is required")]
+        [DisplayName("Max participants")]
         public int? MaxParticipantAmt { get; set; }
         [DataType(DataType.DateTime)]
         [Required(ErrorMessage = "This field is required")]
