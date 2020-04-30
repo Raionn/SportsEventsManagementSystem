@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using SportBook.Helpers;
 using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 
 namespace SportBook
 {
@@ -40,7 +42,9 @@ namespace SportBook
 
             services.AddDbContext<SportbookDatabaseContext>(options =>
                                options.UseSqlServer(connectionString));
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddFluentValidation();
+            services.AddTransient<IValidator<Event>, EventDateValidator>();
+
             services.AddScoped<IServiceSignUp, ServiceSignUp>();
             IServiceProvider serviceProvider = services.BuildServiceProvider();
             var serviceSignUp = serviceProvider.GetService<IServiceSignUp>();

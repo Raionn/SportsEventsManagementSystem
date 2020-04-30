@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SportBook.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -24,7 +25,9 @@ namespace SportBook.Models
         [DisplayName("Max participants")]
         public int? MaxParticipantAmt { get; set; }
         [DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-mm-dd hh:mm}")]
         [Required(ErrorMessage = "This field is required")]
+        [DateValidator]
         public DateTime? Start { get; set; }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

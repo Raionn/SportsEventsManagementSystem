@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SportBook.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -28,8 +29,9 @@ namespace SportBook.Models
         [RegularExpression(@"([A-Z][a-z]* ?)*", ErrorMessage = "Name contains only letters and starts with capital!")]
         public string Lastname { get; set; }
         [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-mm-dd}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         [DisplayName("Birth Date")]
+        [BirthdayValidator]
         public DateTime? Birthdate { get; set; }
         public string ExternalId { get; set; }
         [RegularExpression(@"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)", ErrorMessage = "Provided url is in wrong format!")]

@@ -71,6 +71,7 @@ namespace SportBook.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Profile([Bind("Username,Email,Firstname,Lastname,Birthdate,ExternalId,PictureUrl, UserId")] User user)
         {
+            ViewData["CurrentUser"] = user;
             if (ModelState.IsValid)
             {
                 try

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SportBook.Helpers;
 using SportBook.Models;
 
 namespace SportBook.Controllers
@@ -51,9 +52,9 @@ namespace SportBook.Controllers
         // GET: Events/Create
         public IActionResult Create()
         {
-            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "GameTypeId");
-            ViewData["FkLocation"] = new SelectList(_context.Location, "LocationId", "LocationId");
-            ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "UserId");
+            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name");
+            ViewData["FkLocation"] = new SelectList(_context.Location, "LocationId", "Address");
+            ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username");
             return View();
         }
 
@@ -62,7 +63,7 @@ namespace SportBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,MaxParticipantAmt,StartTime,EndTime,IsPrivate,IsTeamEvent,EventId,FkOwner,FkLocation,FkGameType")] Event @event)
+        public async Task<IActionResult> Create([Bind("Title,MaxParticipantAmt,StartTime,EndTime,IsPrivate,IsTeamEvent,FkOwner,FkLocation,FkGameType")] Event @event)
         {
             if (ModelState.IsValid)
             {
@@ -70,9 +71,9 @@ namespace SportBook.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "GameTypeId", @event.FkGameType);
-            ViewData["FkLocation"] = new SelectList(_context.Location, "LocationId", "LocationId", @event.FkLocation);
-            ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "UserId", @event.FkOwner);
+            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name", @event.FkGameType);
+            ViewData["FkLocation"] = new SelectList(_context.Location, "LocationId", "Address", @event.FkLocation);
+            ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username", @event.FkOwner);
             return View(@event);
         }
 
