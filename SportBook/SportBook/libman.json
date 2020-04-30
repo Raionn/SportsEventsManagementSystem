@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "moment.js@2.24.0",
+      "destination": "wwwroot/lib/moment/moment.js/"
+    },
+    {
+      "library": "jquery-datetimepicker@2.5.20",
+      "destination": "wwwroot/lib/jquery-datetimepicker/"
+    }
+  ,
+{
+  "library": "popper.js@2.4.0",
+  "destination": "wwwroot/lib/popper.js/",
+  "files": [
+    "umd/popper.min.js"
+  ]
+}
+,
+{
+  "library": "font-awesome@5.13.0",
+  "destination": "wwwroot/lib/font-awesome/"
+}
+]
+}

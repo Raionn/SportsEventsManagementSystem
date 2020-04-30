@@ -25,7 +25,7 @@ namespace SportBook.Models
         [DisplayName("Max participants")]
         public int? MaxParticipantAmt { get; set; }
         [DataType(DataType.DateTime)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-mm-dd hh:mm}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd hh:mm}")]
         [Required(ErrorMessage = "This field is required")]
         [DateValidator]
         public DateTime? Start { get; set; }

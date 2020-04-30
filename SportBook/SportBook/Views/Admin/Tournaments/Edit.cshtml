@@ -3,9 +3,11 @@
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Edit</h1>
+
 
 <h4>Tournament</h4>
 <hr />
@@ -30,7 +32,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="Start" class="control-label"></label>
-                <input asp-for="Start" class="form-control" />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button type="button" id="toggle" class="input-group-text"><i class="fa fa-calendar-alt"></i></button>
+                    </div>
+                    <input type="text" asp-for="Start" id="datepicker" class="form-control" />
+                </div>
+               
                 <span asp-validation-for="Start" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="TournamentId" />
@@ -48,6 +56,38 @@
     </div>
 </div>
 
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
+
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+
+<script>
+
+    $('#datepicker').datetimepicker({
+        timepicker: true,
+        datepicker: true,
+        format: 'Y-m-d H:i',
+        hours12: false,
+        step: 15,
+        onShow: function (ct) {
+            this.setOptions({
+                minDate: new Date()
+            })
+        }
+    });
+    $('#toggle').on('click', function () {
+        $('#datepicker').datetimepicker('toggle')
+    })
+
+</script>
+
+
+
+
+
+
+
