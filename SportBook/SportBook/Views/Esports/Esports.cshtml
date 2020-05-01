@@ -78,7 +78,6 @@
                         <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a>
                     }
                     <a asp-action="ViewEvent" asp-route-id="@item.EventId">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
                     @if (item.FkOwner == currentUser.UserId)
                     {
                         <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
