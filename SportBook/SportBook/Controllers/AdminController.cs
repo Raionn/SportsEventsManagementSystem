@@ -534,7 +534,7 @@ namespace SportBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> TournamentsCreate([Bind("Name,Description,MaxParticipantAmt,Start,TournamentId,FkGameType,FkOwner")] Tournament tournament)
+        public async Task<IActionResult> TournamentsCreate([Bind("Name,Description,MaxParticipantAmt,StartTime,TournamentId,FkGameType,FkOwner")] Tournament tournament)
         {
             var user = GetCurrentUser();
             tournament.FkOwner = user.UserId;
@@ -573,7 +573,7 @@ namespace SportBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> TournamentsEdit(int id, [Bind("Name,Description,MaxParticipantAmt,Start,TournamentId,FkGameType,FkOwner")] Tournament tournament)
+        public async Task<IActionResult> TournamentsEdit(int id, [Bind("Name,Description,MaxParticipantAmt,StartTime,TournamentId,FkGameType,FkOwner")] Tournament tournament)
         {
             if (id != tournament.TournamentId)
             {

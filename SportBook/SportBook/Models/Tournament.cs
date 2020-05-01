@@ -30,6 +30,7 @@ namespace SportBook.Models
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd hh:mm}")]
         [Required(ErrorMessage = "This field is required")]
         [DateValidator]
+        [DisplayName("Start time")]
         public DateTime StartTime { get; set; }
         [DisplayName("External ID")]
         public int ExternalID { get; set; }
