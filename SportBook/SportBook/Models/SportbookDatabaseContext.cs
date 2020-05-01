@@ -292,7 +292,7 @@ namespace SportBook.Models
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Start).HasColumnType("datetime");
+                entity.Property(e => e.StartTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.FkGameTypeNavigation)
                     .WithMany(p => p.Tournament)
