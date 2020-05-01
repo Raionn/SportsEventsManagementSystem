@@ -53,7 +53,7 @@ namespace SportBook.Controllers
             ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username", @event.FkOwner);
             return View(@event);
         }
-        public async Task<IActionResult> ViewEvent(int id)
+        public async Task<IActionResult> ViewEvent(int? id)
         {
             if (id == null)
             {
