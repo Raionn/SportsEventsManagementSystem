@@ -14,9 +14,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Text)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.IsAccepted)
             </th>
             <th>
@@ -31,9 +28,6 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Text)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IsAccepted)
             </td>

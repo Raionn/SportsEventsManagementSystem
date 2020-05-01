@@ -6,7 +6,9 @@
 
 <h1>Esports_home</h1>
 
-@*<a>Select region: Select sport: Select time: Select something:</a><a href="#">Create game</a>*@
+<p>
+    <a asp-action="CreateEvent">Create New</a>
+</p>
 
 <table class="table">
     <thead>
@@ -31,9 +33,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FkGameTypeNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FkLocationNavigation)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FkOwnerNavigation)
@@ -64,13 +63,10 @@
                     @Html.DisplayFor(modelItem => item.IsTeamEvent)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.GameTypeId)
+                    @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FkLocationNavigation.LocationId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FkOwnerNavigation.UserId)
+                    @Html.DisplayFor(modelItem => item.FkOwnerNavigation.Username)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a> |

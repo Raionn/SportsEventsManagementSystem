@@ -11,6 +11,7 @@ CREATE TABLE GameType
 (
 	Name varchar (255),
 	GameTypeID integer IDENTITY(1,1),
+	IsOnline bit,
 	PRIMARY KEY(GameTypeID)
 );
 
@@ -78,7 +79,7 @@ CREATE TABLE Event
 	IsTeamEvent bit NOT NULL DEFAULT 0,
 	EventID integer IDENTITY(1,1),
 	fk_Owner integer NOT NULL,
-	fk_Location integer NOT NULL,
+	fk_Location integer NULL,
 	fk_GameType integer NOT NULL,
 	PRIMARY KEY(EventID),
 	FOREIGN KEY(fk_Owner) REFERENCES [User] (UserID),
@@ -88,7 +89,6 @@ CREATE TABLE Event
 
 CREATE TABLE TeamInvitation
 (
-	Text varchar (255),
 	IsAccepted bit NOT NULL DEFAULT 0,
 	TeamInvitationID integer IDENTITY(1,1),
 	fk_User integer NOT NULL,

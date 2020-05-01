@@ -66,13 +66,13 @@
                     @Html.DisplayFor(modelItem => item.IsTeamEvent)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.GameTypeId)
+                    @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FkLocationNavigation.LocationId)
+                    @Html.DisplayFor(modelItem => item.FkLocationNavigation.Address)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FkOwnerNavigation.UserId)
+                    @Html.DisplayFor(modelItem => item.FkOwnerNavigation.Username)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a> |

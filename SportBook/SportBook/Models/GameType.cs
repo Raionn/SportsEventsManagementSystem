@@ -19,6 +19,7 @@ namespace SportBook.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int GameTypeId { get; set; }
+        public bool IsOnline { get; set; }
 
         public virtual ICollection<Event> Event { get; set; }
         public virtual ICollection<Location> Location { get; set; }

@@ -22,6 +22,7 @@ namespace SportBook.Models
         [DisplayName("Max participants")]
         public int? MaxParticipantAmt { get; set; }
         [DataType(DataType.DateTime)]
+        [Required(ErrorMessage = "This field is required")]
         [DisplayName("Start time")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd hh:mm}")]
         [DateValidator]
@@ -29,6 +30,7 @@ namespace SportBook.Models
         [DataType(DataType.DateTime)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd hh:mm}")]
         [DisplayName("End time")]
+        [Required(ErrorMessage = "This field is required")]
         //[GreaterThan("StartTime", ErrorMessage ="End time must be greater than start time")]
         [DateValidator]
         public DateTime? EndTime { get; set; }

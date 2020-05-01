@@ -225,10 +225,6 @@ namespace SportBook.Models
 
                 entity.Property(e => e.FkUser).HasColumnName("fk_User");
 
-                entity.Property(e => e.Text)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
                 entity.HasOne(d => d.FkTeamNavigation)
                     .WithMany(p => p.TeamInvitation)
                     .HasForeignKey(d => d.FkTeam)
