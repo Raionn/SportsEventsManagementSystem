@@ -7,6 +7,8 @@ namespace SportBook.Models
     public partial class TournamentMember
     {
         public int TournamentMemberId { get; set; }
+        [DisplayName("External ID")]
+        public int ExternalID { get; set; }
         [DisplayName("Tournament")]
         public int FkTournament { get; set; }
         [DisplayName("Team")]
