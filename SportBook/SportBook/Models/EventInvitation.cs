@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel;
 
 namespace SportBook.Models
 {
     public partial class EventInvitation
     {
-        public bool IsAccepted { get; set; }
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int EventInvitationId { get; set; }
+        public bool IsAccepted { get; set; }
         [DisplayName("User")]
         public int FkUser { get; set; }
         [DisplayName("Event")]

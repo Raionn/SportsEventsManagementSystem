@@ -13,6 +13,8 @@ namespace SportBook.Models
         {
             TournamentMember = new HashSet<TournamentMember>();
         }
+
+        public int TournamentId { get; set; }
         [MaxLength(60, ErrorMessage = "The {0} value cannot exceed {1} characters. ")]
         [RegularExpression(@"[A-Za-z0-9\s?.,!?]+", ErrorMessage = "Allowed letters,digits and ?.!, characters")]
         [Required(ErrorMessage = "This field is required")]
@@ -23,15 +25,12 @@ namespace SportBook.Models
         [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid number")]
         [Required(ErrorMessage = "This field is required")]
         [DisplayName("Max participants")]
-        public int? MaxParticipantAmt { get; set; }
+        public int MaxParticipantAmt { get; set; }
         [DataType(DataType.DateTime)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd hh:mm}")]
         [Required(ErrorMessage = "This field is required")]
         [DateValidator]
-        public DateTime? Start { get; set; }
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int TournamentId { get; set; }
+        public DateTime Start { get; set; }
         [DisplayName("Game Type")]
         public int FkGameType { get; set; }
         [DisplayName("Owner")]

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,8 +6,6 @@ namespace SportBook.Models
 {
     public partial class TournamentMember
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TournamentMemberId { get; set; }
         [DisplayName("Tournament")]
         public int FkTournament { get; set; }

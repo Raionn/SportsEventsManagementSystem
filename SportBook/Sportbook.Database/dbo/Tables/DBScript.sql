@@ -62,6 +62,8 @@ CREATE TABLE Tournament
 	MaxParticipantAmt int,
 	Start datetime,
 	TournamentID integer IDENTITY(1,1),
+	ExternalID integer,
+	TournamentUrl varchar(255),
 	fk_GameType integer NOT NULL,
 	fk_Owner integer NOT NULL,
 	PRIMARY KEY(TournamentID),
@@ -111,6 +113,7 @@ CREATE TABLE TeamMember
 CREATE TABLE TournamentMember
 (
 	TournamentMemberID integer IDENTITY(1,1),
+	ExternalID integer,
 	fk_Tournament integer NOT NULL,
 	fk_Team integer NOT NULL,
 	PRIMARY KEY(TournamentMemberID),
