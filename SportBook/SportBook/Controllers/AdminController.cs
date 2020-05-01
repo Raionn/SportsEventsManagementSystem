@@ -218,7 +218,7 @@ namespace SportBook.Controllers
         public IActionResult LocationsCreate()
         {
             ViewData["FkCity"] = new SelectList(_context.City, "CityId", "Name");
-            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name");
+            ViewData["FkGameType"] = new SelectList(GetOfflineGames(), "GameTypeId", "Name");
             return View("~/Views/Admin/Locations/Create.cshtml");
         }
 
@@ -236,7 +236,7 @@ namespace SportBook.Controllers
                 return RedirectToAction(nameof(Locations));
             }
             ViewData["FkCity"] = new SelectList(_context.City, "CityId", "Name", location.FkCity);
-            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name", location.FkGameType);
+            ViewData["FkGameType"] = new SelectList(GetOfflineGames(), "GameTypeId", "Name", location.FkGameType);
             return View("~/Views/Admin/Locations/Create.cshtml",location);
         }
 
@@ -254,7 +254,7 @@ namespace SportBook.Controllers
                 return NotFound();
             }
             ViewData["FkCity"] = new SelectList(_context.City, "CityId", "Name", location.FkCity);
-            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name", location.FkGameType);
+            ViewData["FkGameType"] = new SelectList(GetOfflineGames(), "GameTypeId", "Name", location.FkGameType);
             return View("~/Views/Admin/Locations/Edit.cshtml",location);
         }
 
@@ -291,7 +291,7 @@ namespace SportBook.Controllers
                 return RedirectToAction(nameof(Locations));
             }
             ViewData["FkCity"] = new SelectList(_context.City, "CityId", "Name", location.FkCity);
-            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name", location.FkGameType);
+            ViewData["FkGameType"] = new SelectList(GetOfflineGames(), "GameTypeId", "Name", location.FkGameType);
             return View("~/Views/Admin/Locations/Edit.cshtml",location);
         }
 
@@ -313,6 +313,12 @@ namespace SportBook.Controllers
             }
 
             return View("~/Views/Admin/Locations/Delete.cshtml",location);
+        }
+
+        private IQueryable<GameType> GetOfflineGames()
+        {
+            var offlineGames = _context.GameType.Where(x => x.IsOnline == false);
+            return offlineGames;
         }
 
         // POST: Locations/Delete/5
@@ -374,7 +380,7 @@ namespace SportBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GameTypesCreate([Bind("Name,GameTypeId")] GameType gameType)
+        public async Task<IActionResult> GameTypesCreate([Bind("Name,IsOnline,GameTypeId")] GameType gameType)
         {
             if (ModelState.IsValid)
             {
@@ -406,7 +412,7 @@ namespace SportBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GameTypesEdit(int id, [Bind("Name,GameTypeId")] GameType gameType)
+        public async Task<IActionResult> GameTypesEdit(int id, [Bind("Name,IsOnline,GameTypeId")] GameType gameType)
         {
             if (id != gameType.GameTypeId)
             {
@@ -473,6 +479,13 @@ namespace SportBook.Controllers
         #endregion
 
         #region Tournaments
+
+        private IQueryable<GameType> GetOnlineGames()
+        {
+            var offlineGames = _context.GameType.Where(x => x.IsOnline == true);
+            return offlineGames;
+        }
+
         public async Task<IActionResult> Tournaments(string name, string gametype)
         {
             var sportbookDatabaseContext = _context.Tournament.Include(t => t.FkGameTypeNavigation).Include(t => t.FkOwnerNavigation);
@@ -511,7 +524,7 @@ namespace SportBook.Controllers
         // GET: Tournaments/Create
         public IActionResult TournamentsCreate()
         {
-            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name");
+            ViewData["FkGameType"] = new SelectList(GetOnlineGames(), "GameTypeId", "Name");
             ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username", GetCurrentUser());
             return View("~/Views/Admin/Tournaments/Create.cshtml");
         }
@@ -532,7 +545,7 @@ namespace SportBook.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Tournaments));
             }
-            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name", tournament.FkGameType);
+            ViewData["FkGameType"] = new SelectList(GetOnlineGames(), "GameTypeId", "Name", tournament.FkGameType);
             ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username", tournament.FkOwner);
             return View("~/Views/Admin/Tournaments/Create.cshtml",tournament);
         }
@@ -550,7 +563,7 @@ namespace SportBook.Controllers
             {
                 return NotFound();
             }
-            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name", tournament.FkGameType);
+            ViewData["FkGameType"] = new SelectList(GetOnlineGames(), "GameTypeId", "Name", tournament.FkGameType);
             ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username", tournament.FkOwner);
             return View("~/Views/Admin/Tournaments/Edit.cshtml",tournament);
         }
@@ -587,7 +600,7 @@ namespace SportBook.Controllers
                 }
                 return RedirectToAction(nameof(Tournaments));
             }
-            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name", tournament.FkGameType);
+            ViewData["FkGameType"] = new SelectList(GetOnlineGames(), "GameTypeId", "Name", tournament.FkGameType);
             ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username", tournament.FkOwner);
             return View("~/Views/Admin/Tournaments/Edit.cshtml",tournament);
         }

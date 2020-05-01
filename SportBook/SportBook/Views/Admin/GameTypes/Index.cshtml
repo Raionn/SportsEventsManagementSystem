@@ -40,7 +40,7 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <th>
-                @Html.DisplayNameFor(model => model.IsOnline)
+                @Html.DisplayFor(modelItem => item.IsOnline)
             </th>
             <td>
                 <a asp-action="GameTypesEdit" asp-route-id="@item.GameTypeId"><i class="fa fa-edit"></i></a>
