@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,8 @@ namespace SportBook.Controllers
         public IActionResult Esports()
         {
             var events = _context.Event.Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation).Where(e => e.FkGameTypeNavigation.IsOnline);
+            User currentUser = (from s in _context.User select s).Where(s => s.ExternalId == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).FirstOrDefault();
+            ViewData["CurrentUser"] = currentUser;
             return View(events);
         }
         public IActionResult CreateEvent()
@@ -48,6 +51,25 @@ namespace SportBook.Controllers
             }
             ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name", @event.FkGameType);
             ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username", @event.FkOwner);
+            return View(@event);
+        }
+        public async Task<IActionResult> ViewEvent(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var @event = await _context.Event
+                .Include(e => e.FkGameTypeNavigation)
+                .Include(e => e.FkOwnerNavigation)
+                .FirstOrDefaultAsync(m => m.EventId == id);
+
+            if (@event == null)
+            {
+                return NotFound();
+            }
+
             return View(@event);
         }
         public IActionResult Tournaments()

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,6 +11,8 @@ namespace SportBook.Models
         {
             Event = new HashSet<Event>();
         }
+
+        public int LocationId { get; set; }
         //[RegularExpression(@"-?[0-9]+\.[0-9]*", ErrorMessage = "Incorrect format. Example: 54.231546")]
         [DisplayFormat(DataFormatString = "{0:F6}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "This field is required")]
@@ -21,9 +22,6 @@ namespace SportBook.Models
         public decimal? Longitude { get; set; }
         [MaxLength(100, ErrorMessage = "The {0} value cannot exceed {1} characters. ")]
         public string Address { get; set; }
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int LocationId { get; set; }
         [DisplayName("City")]
         public int FkCity { get; set; }
         [DisplayName("Game Type")]

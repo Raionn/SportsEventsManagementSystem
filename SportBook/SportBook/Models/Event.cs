@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-//using FoolProof.Core;
 using SportBook.Helpers;
 
 namespace SportBook.Models
@@ -15,7 +14,9 @@ namespace SportBook.Models
             EventInvitation = new HashSet<EventInvitation>();
             Participant = new HashSet<Participant>();
         }
-        [MaxLength(60, ErrorMessage = "The {0} value cannot exceed {1} characters. ")] 
+
+        public int EventId { get; set; }
+        [MaxLength(60, ErrorMessage = "The {0} value cannot exceed {1} characters. ")]
         [RegularExpression(@"[A-Za-z0-9\s?.,!?]+", ErrorMessage = "Allowed letters,digits and ?.!, characters")]
         public string Title { get; set; }
         [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid number")]
@@ -38,13 +39,10 @@ namespace SportBook.Models
         public bool IsPrivate { get; set; }
         [DisplayName("Team Event")]
         public bool IsTeamEvent { get; set; }
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int EventId { get; set; }
         [DisplayName("Owner")]
         public int FkOwner { get; set; }
         [DisplayName("Location")]
-        public int FkLocation { get; set; }
+        public int? FkLocation { get; set; }
         [DisplayName("Game Type")]
         public int FkGameType { get; set; }
         [DisplayName("Game Type")]

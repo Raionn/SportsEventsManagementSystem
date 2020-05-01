@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace SportBook.Models
@@ -35,9 +32,7 @@ namespace SportBook.Models
         {
             modelBuilder.Entity<City>(entity =>
             {
-                entity.Property(e => e.CityId)
-                    .HasColumnName("CityID")
-                    .ValueGeneratedOnAdd();
+                entity.Property(e => e.CityId).HasColumnName("CityID").ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(255)
@@ -46,9 +41,13 @@ namespace SportBook.Models
 
             modelBuilder.Entity<Event>(entity =>
             {
-                entity.Property(e => e.EventId)
-                    .HasColumnName("EventID")
-                    .ValueGeneratedOnAdd();
+                entity.HasIndex(e => e.FkGameType);
+
+                entity.HasIndex(e => e.FkLocation);
+
+                entity.HasIndex(e => e.FkOwner);
+
+                entity.Property(e => e.EventId).HasColumnName("EventID").ValueGeneratedOnAdd();
 
                 entity.Property(e => e.EndTime).HasColumnType("datetime");
 
@@ -73,7 +72,6 @@ namespace SportBook.Models
                 entity.HasOne(d => d.FkLocationNavigation)
                     .WithMany(p => p.Event)
                     .HasForeignKey(d => d.FkLocation)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Event__fk_Locati__3B75D760");
 
                 entity.HasOne(d => d.FkOwnerNavigation)
@@ -85,9 +83,11 @@ namespace SportBook.Models
 
             modelBuilder.Entity<EventInvitation>(entity =>
             {
-                entity.Property(e => e.EventInvitationId)
-                    .HasColumnName("EventInvitationID")
-                    .ValueGeneratedOnAdd();
+                entity.HasIndex(e => e.FkEvent);
+
+                entity.HasIndex(e => e.FkUser);
+
+                entity.Property(e => e.EventInvitationId).HasColumnName("EventInvitationID").ValueGeneratedOnAdd();
 
                 entity.Property(e => e.FkEvent).HasColumnName("fk_Event");
 
@@ -108,9 +108,7 @@ namespace SportBook.Models
 
             modelBuilder.Entity<GameType>(entity =>
             {
-                entity.Property(e => e.GameTypeId)
-                    .HasColumnName("GameTypeID")
-                    .ValueGeneratedOnAdd();
+                entity.Property(e => e.GameTypeId).HasColumnName("GameTypeID").ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(255)
@@ -119,9 +117,11 @@ namespace SportBook.Models
 
             modelBuilder.Entity<Location>(entity =>
             {
-                entity.Property(e => e.LocationId)
-                    .HasColumnName("LocationID")
-                    .ValueGeneratedOnAdd();
+                entity.HasIndex(e => e.FkCity);
+
+                entity.HasIndex(e => e.FkGameType);
+
+                entity.Property(e => e.LocationId).HasColumnName("LocationID").ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Address)
                     .HasMaxLength(255)
@@ -150,9 +150,13 @@ namespace SportBook.Models
 
             modelBuilder.Entity<Participant>(entity =>
             {
-                entity.Property(e => e.ParticipantId)
-                    .HasColumnName("ParticipantID")
-                    .ValueGeneratedOnAdd();
+                entity.HasIndex(e => e.FkEvent);
+
+                entity.HasIndex(e => e.FkTeam);
+
+                entity.HasIndex(e => e.FkUser);
+
+                entity.Property(e => e.ParticipantId).HasColumnName("ParticipantID").ValueGeneratedOnAdd();
 
                 entity.Property(e => e.FkEvent).HasColumnName("fk_Event");
 
@@ -181,9 +185,11 @@ namespace SportBook.Models
 
             modelBuilder.Entity<Team>(entity =>
             {
-                entity.Property(e => e.TeamId)
-                    .HasColumnName("TeamID")
-                    .ValueGeneratedOnAdd();
+                entity.HasIndex(e => e.FkGameType);
+
+                entity.HasIndex(e => e.FkOwner);
+
+                entity.Property(e => e.TeamId).HasColumnName("TeamID").ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(255)
@@ -217,9 +223,11 @@ namespace SportBook.Models
 
             modelBuilder.Entity<TeamInvitation>(entity =>
             {
-                entity.Property(e => e.TeamInvitationId)
-                    .HasColumnName("TeamInvitationID")
-                    .ValueGeneratedOnAdd();
+                entity.HasIndex(e => e.FkTeam);
+
+                entity.HasIndex(e => e.FkUser);
+
+                entity.Property(e => e.TeamInvitationId).HasColumnName("TeamInvitationID").ValueGeneratedOnAdd();
 
                 entity.Property(e => e.FkTeam).HasColumnName("fk_Team");
 
@@ -240,9 +248,11 @@ namespace SportBook.Models
 
             modelBuilder.Entity<TeamMember>(entity =>
             {
-                entity.Property(e => e.TeamMemberId)
-                    .HasColumnName("TeamMemberID")
-                    .ValueGeneratedOnAdd();
+                entity.HasIndex(e => e.FkTeam);
+
+                entity.HasIndex(e => e.FkUser);
+
+                entity.Property(e => e.TeamMemberId).HasColumnName("TeamMemberID").ValueGeneratedOnAdd();
 
                 entity.Property(e => e.FkTeam).HasColumnName("fk_Team");
 
@@ -263,9 +273,11 @@ namespace SportBook.Models
 
             modelBuilder.Entity<Tournament>(entity =>
             {
-                entity.Property(e => e.TournamentId)
-                    .HasColumnName("TournamentID")
-                    .ValueGeneratedOnAdd();
+                entity.HasIndex(e => e.FkGameType);
+
+                entity.HasIndex(e => e.FkOwner);
+
+                entity.Property(e => e.TournamentId).HasColumnName("TournamentID").ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(255)
@@ -276,6 +288,7 @@ namespace SportBook.Models
                 entity.Property(e => e.FkOwner).HasColumnName("fk_Owner");
 
                 entity.Property(e => e.Name)
+                    .IsRequired()
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
@@ -296,9 +309,11 @@ namespace SportBook.Models
 
             modelBuilder.Entity<TournamentMember>(entity =>
             {
-                entity.Property(e => e.TournamentMemberId)
-                    .HasColumnName("TournamentMemberID")
-                    .ValueGeneratedOnAdd();
+                entity.HasIndex(e => e.FkTeam);
+
+                entity.HasIndex(e => e.FkTournament);
+
+                entity.Property(e => e.TournamentMemberId).HasColumnName("TournamentMemberID").ValueGeneratedOnAdd();
 
                 entity.Property(e => e.FkTeam).HasColumnName("fk_Team");
 
@@ -319,9 +334,7 @@ namespace SportBook.Models
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.Property(e => e.UserId)
-                    .HasColumnName("UserID")
-                    .ValueGeneratedOnAdd();
+                entity.Property(e => e.UserId).HasColumnName("UserID").ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Birthdate).HasColumnType("date");
 
@@ -356,6 +369,5 @@ namespace SportBook.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
     }
 }

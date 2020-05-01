@@ -10,6 +10,10 @@
     <a asp-action="CreateEvent">Create New</a>
 </p>
 
+@{
+    var currentUser = ViewData["CurrentUser"] as SportBook.Models.User;
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -69,9 +73,16 @@
                     @Html.DisplayFor(modelItem => item.FkOwnerNavigation.Username)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.EventId">Details</a> |
+                    @if (item.FkOwner == currentUser.UserId)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a>
+                    }
+                    <a asp-action="ViewEvent" asp-route-id="@item.EventId">Details</a>
                     <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
+                    @if (item.FkOwner == currentUser.UserId)
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
+                    }
                 </td>
             </tr>
         }
