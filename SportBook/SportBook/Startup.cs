@@ -43,6 +43,7 @@ namespace SportBook
             services.AddDbContext<SportbookDatabaseContext>(options =>
                                options.UseSqlServer(connectionString));
             services.AddControllersWithViews().AddFluentValidation();
+            services.AddHttpClient();
             services.AddTransient<IValidator<Event>, EventDateValidator>();
 
             services.AddScoped<IServiceSignUp, ServiceSignUp>();
