@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using SportBook.Helpers;
 using SportBook.Models;
 using SportBook.ViewModels;
 
@@ -18,10 +21,16 @@ namespace SportBook.Controllers
     public class EsportsController : Controller
     {
         private readonly SportbookDatabaseContext _context;
+        private ChallongeService chall;
+        private readonly IHttpClientFactory _clientFactory;
+        private readonly IConfiguration _configuration;
 
-        public EsportsController(SportbookDatabaseContext context)
+        public EsportsController(SportbookDatabaseContext context, IHttpClientFactory clientFactory, IConfiguration config)
         {
             _context = context;
+            _clientFactory = clientFactory;
+            _configuration = config;
+            chall = new ChallongeService(_clientFactory, _configuration);
         }
         public IActionResult Esports()
         {
@@ -80,13 +89,35 @@ namespace SportBook.Controllers
         }
         public async Task<IActionResult> Tournaments()
         {
-            var sportbookDatabaseContext = _context.Tournament.Include(t => t.FkGameTypeNavigation).Include(t => t.FkOwnerNavigation);
+            var sportbookDatabaseContext = _context.Tournament.Include(t => t.FkGameTypeNavigation).Include(t => t.FkOwnerNavigation).Include(t => t.TournamentMember);
             return View(await sportbookDatabaseContext.ToListAsync());
         }
         public async Task<IActionResult> Tournament(int id)
         {
-            var data = await _context.Tournament.FindAsync(id);
+            var tournaments = _context.Tournament.Include(t => t.TournamentMember);
+            var tournament = await tournaments.Where(t => t.TournamentId == id).FirstOrDefaultAsync();
+            var teams = new SelectList(_context.Team, "TeamId", "Name");
+
+            TournamentData data = new TournamentData(tournament, teams, new TournamentMember());
             return View(data);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Tournament([Bind("TournamentMemberId", "FkTeam", "FkTournament")] TournamentMember tournamentMember)
+        {
+            var tournament = await _context.Tournament.FindAsync(tournamentMember.FkTournament);
+            var teams = new SelectList(_context.Team, "TeamId", "Name");
+            var team = await _context.Team.FindAsync(tournamentMember.FkTeam);
+            if (ModelState.IsValid)
+            {    
+                tournamentMember.ExternalID = await chall.OnPostParticipant(tournament.ExternalID, team.Name);
+                _context.Add(tournamentMember);
+                await _context.SaveChangesAsync();
+                TournamentData data = new TournamentData(tournament, teams, tournamentMember);
+                return View(data);
+            }
+
+            return View();
         }
         public IActionResult Teams()
         {

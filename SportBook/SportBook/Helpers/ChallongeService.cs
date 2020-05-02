@@ -152,5 +152,39 @@ namespace SportBook.Helpers
 
             return Task.CompletedTask;
         }
+
+        public async Task<int> OnPostParticipant(int tournamentExternalId, string participantName)
+        {
+            string api_key = Configuration.GetValue<string>("API_Keys:Challonge_Key");
+            string url = String.Format("https://api.challonge.com/v1/tournaments/{1}/participants.json?api_key={0}", api_key, tournamentExternalId);
+            var result = 0;
+
+            var participant = new Participant()
+            {
+                Name = participantName
+            };
+
+            //var request = new HttpRequestMessage(HttpMethod.Post, url);
+            var client = _clientFactory.CreateClient();
+            var requestMessage = JsonSerializer.Serialize<Participant>(participant);
+            var response = await client.PostAsync(url, new StringContent(requestMessage, Encoding.UTF8, "application/json"));
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            var reponseString = await response.Content.ReadAsStringAsync();
+            try
+            {
+                var data = await JsonSerializer.DeserializeAsync<ParticipantItem>(responseStream);
+                result = (int)data.Participant.Id;
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                string exce = ex.Message;
+            }
+
+            return result;
+        }
+
+
     }
 }

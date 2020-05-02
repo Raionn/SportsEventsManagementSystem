@@ -79,4 +79,30 @@ namespace SportBook.Helpers
         public string Name { get; set; }
 
     }
+
+    public class Participant
+    {
+        [JsonPropertyName("tournament_id")]
+        public long? TournamentId { get; set; }
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+        [JsonPropertyName("id")]
+        public long? Id { get; set; }
+
+    }
+
+    public class ParticipantItem
+    {
+        [JsonPropertyName("participant")]
+        public Participant Participant { get; set; }
+    }
+
+    public class PostParticipant
+    {
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+
+    }
 }
