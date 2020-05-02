@@ -1,14 +1,29 @@
-﻿
+﻿@model SportBook.Models.Tournament
 @{
     ViewData["Title"] = "Tournament";
     Layout = "~/Views/Shared/_EsportsLayout.cshtml";
 }
+<div class="d-flex flex-row">
+    <h1 class="p-2">@Html.DisplayFor(model => model.Name)</h1>
 
-<h1>Tournament</h1>
+    <a class="btn btn-primary ml-auto p-2">Register</a>
+</div>
+<h3>@Html.DisplayFor(model => model.Description)</h3>
+
+<h4>@Html.DisplayFor(model => model.StartTime)</h4>
+
+@if (Model.TournamentMember.Count < 2)
+{
+    <h2 class="text-danger">
+        Brackets not ready! Atleast 2 teams need to register!
+    </h2>
+}
+else
+{
+    <iframe src="@Model.TournamentUrl/module" style="width:100%" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
+}
 
 
-
-<iframe src="https://challonge.com/fvfspsvo/module" style="width:100%" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
 
 
 @section Scripts {

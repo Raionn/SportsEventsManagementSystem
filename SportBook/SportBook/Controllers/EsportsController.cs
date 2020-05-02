@@ -74,13 +74,15 @@ namespace SportBook.Controllers
 
             return View(@event);
         }
-        public IActionResult Tournaments()
+        public async Task<IActionResult> Tournaments()
         {
-            return View();
+            var sportbookDatabaseContext = _context.Tournament.Include(t => t.FkGameTypeNavigation).Include(t => t.FkOwnerNavigation);
+            return View(await sportbookDatabaseContext.ToListAsync());
         }
-        public IActionResult Tournament()
+        public async Task<IActionResult> Tournament(int id)
         {
-            return View();
+            var data = await _context.Tournament.FindAsync(id);
+            return View(data);
         }
         public IActionResult Teams()
         {
