@@ -11,7 +11,7 @@ namespace SportBook.Models
         [DisplayName("Event")]
         public int FkEvent { get; set; }
         [DisplayName("Team")]
-        public int FkTeam { get; set; }
+        public int? FkTeam { get; set; }
         [DisplayName("Event")]
         public virtual Event FkEventNavigation { get; set; }
         [DisplayName("Team")]

@@ -1,67 +1,234 @@
-﻿@model SportBook.Models.Event
+﻿@model SportBook.ViewModels.EventData
 
 @{
     ViewData["Title"] = "ViewEvent";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>ViewEvent</h1>
 
-<div>
-    <h4>Event</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MaxParticipantAmt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MaxParticipantAmt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsPrivate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsPrivate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsTeamEvent)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsTeamEvent)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FkGameTypeNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FkGameTypeNavigation.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FkOwnerNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FkOwnerNavigation.Username)
-        </dd>
-    </dl>
-</div>
-<div>
-    @*<a asp-action="Edit" asp-route-id="@Model.EventId">Edit</a> |*@
-    <a asp-action="Esports">Back to List</a>
-</div>
+    @*<style>
+            /* Pen-specific styles */
+        section {
+          width: 100%;
+        }
+
+        article {
+          position: relative;
+          top: 50%;
+          left: 50%;
+          padding: 1rem;
+          text-align: center;
+          transform: translate(-50%, -50%);
+        }
+
+        /* Pattern styles */
+        .left-half {
+          background-color: #A9A9A9;
+          float: left;
+          width: 50%;
+        }
+        .right-half {
+          background-color: #A9A9A9;
+          float: left;
+          width: 50%;
+        }
+        </style>*@
+
+
+
+    <h1>ViewEvent</h1>
+
+    <div class="d-flex flex-row">
+        <div class="d-flex flex-column">
+            <div class="p-2">
+                @Html.DisplayNameFor(model => model.Event.Title)
+            </div>
+            <div class="p-2">
+                @Html.DisplayNameFor(model => model.Event.MaxParticipantAmt)
+            </div>
+            <div class="p-2">
+                @Html.DisplayNameFor(model => model.Event.StartTime)
+            </div>
+            <div class="p-2">
+                @Html.DisplayNameFor(model => model.Event.EndTime)
+            </div>
+            <div class="p-2">
+                @Html.DisplayNameFor(model => model.Event.IsPrivate)ё
+            </div>
+            <div class="p-2">
+                @Html.DisplayNameFor(model => model.Event.IsTeamEvent)
+            </div>
+            <div class="p-2">
+                @Html.DisplayNameFor(model => model.Event.FkGameTypeNavigation)
+            </div>
+            <div class="p-2">
+                @Html.DisplayNameFor(model => model.Event.FkOwnerNavigation)
+            </div>
+        </div>
+        <div class="d-flex flex-column">
+            <div class="p-2">
+                @Html.DisplayFor(model => model.Event.Title)
+            </div>
+            <div class="p-2">
+                @Html.DisplayFor(model => model.Event.MaxParticipantAmt)
+            </div>
+            <div class="p-2">
+                @Html.DisplayFor(model => model.Event.StartTime)
+            </div>
+            <div class="p-2">
+                @Html.DisplayFor(model => model.Event.EndTime)
+            </div>
+            <div class="p-2">
+                @Html.DisplayFor(model => model.Event.IsPrivate)
+            </div>
+            <div class="p-2">
+                @Html.DisplayFor(model => model.Event.IsTeamEvent)
+            </div>
+            <div class="p-2">
+                @Html.DisplayFor(model => model.Event.FkGameTypeNavigation.Name)
+            </div>
+            <div class="p-2">
+                @Html.DisplayFor(model => model.Event.FkOwnerNavigation.Username)
+            </div>
+        </div>
+        <div class="d-flex flex-column justify-content-end">
+            @*@foreach (var item in Model.Participants)*@
+            @for (int i = 0; i < 6; i++)
+            {
+                <div class="p-2">    
+                    @Model.Participants.FindLast(x => x.FkUser == 1).FkUserNavigation.Username;
+                    @*@item.FkUserNavigation.Username;*@
+                </div>
+                @*<div class="p-2">
+                    @Html.DisplayFor(model => model.Event.MaxParticipantAmt)
+                </div>
+                <div class="p-2">
+                    @Html.DisplayFor(model => model.Event.StartTime)
+                </div>
+                <div class="p-2">
+                    @Html.DisplayFor(model => model.Event.EndTime)
+                </div>
+                <div class="p-2">
+                    @Html.DisplayFor(model => model.Event.IsPrivate)
+                </div>
+                <div class="p-2">
+                    @Html.DisplayFor(model => model.Event.IsTeamEvent)
+                </div>
+                <div class="p-2">
+                    @Html.DisplayFor(model => model.Event.FkGameTypeNavigation.Name)
+                </div>
+                <div class="p-2">
+                    @Html.DisplayFor(model => model.Event.FkOwnerNavigation.Username)
+                </div>*@
+            }
+        </div>
+    </div>
+    @*<div class="right-half">
+            <div class="row">
+                <div class="col">
+                    <div class="container">
+                        <div class="col">
+                            <div class="row">
+                                1 of 2
+                            </div>
+                            <div class="row">
+                                2 of 2
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="row">
+                                1 of 2
+                            </div>
+                            <div class="row">
+                                2 of 2
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+    @*<div>
+            <h4>Event</h4>
+            <hr />
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <dl class="row">
+                            <dt class="col-md-6 align-content-start">
+                                @Html.DisplayNameFor(model => model.Title)
+                            </dt>
+                            <dd class="col-sm-6">
+                                @Html.DisplayFor(model => model.Title)
+                            </dd>
+                            <dt class="col-md-6">
+                                @Html.DisplayNameFor(model => model.MaxParticipantAmt)
+                            </dt>
+                            <dd class="col-sm-6">
+                                @Html.DisplayFor(model => model.MaxParticipantAmt)
+                            </dd>
+                            <dt class="col-md-6">
+                                @Html.DisplayNameFor(model => model.StartTime)
+                            </dt>
+                            <dd class="col-sm-6">
+                                @Html.DisplayFor(model => model.StartTime)
+                            </dd>
+                            <dt class="col-md-6">
+                                @Html.DisplayNameFor(model => model.EndTime)
+                            </dt>
+                            <dd class="col-sm-6">
+                                @Html.DisplayFor(model => model.EndTime)
+                            </dd>
+                            <dt class="col-md-6">
+                                @Html.DisplayNameFor(model => model.IsPrivate)
+                            </dt>
+                            <dd class="col-sm-6">
+                                @Html.DisplayFor(model => model.IsPrivate)
+                            </dd>
+                            <dt class="col-md-6">
+                                @Html.DisplayNameFor(model => model.IsTeamEvent)
+                            </dt>
+                            <dd class="col-sm-6">
+                                @Html.DisplayFor(model => model.IsTeamEvent)
+                            </dd>
+                            <dt class="col-md-6">
+                                @Html.DisplayNameFor(model => model.FkGameTypeNavigation)
+                            </dt>
+                            <dd class="col-sm-6">
+                                @Html.DisplayFor(model => model.FkGameTypeNavigation.Name)
+                            </dd>
+                            <dt class="col-md-6">
+                                @Html.DisplayNameFor(model => model.FkOwnerNavigation)
+                            </dt>
+                            <dd class="col-sm-6">
+                                @Html.DisplayFor(model => model.FkOwnerNavigation.Username)
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="col">
+                        <div class="container">
+                            <div class="col">
+                                <div class="row">
+                                    1 of 2
+                                </div>
+                                <div class="row">
+                                    2 of 2
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    1 of 2
+                                </div>
+                                <div class="row">
+                                    2 of 2
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+    <div>
+        @*<a asp-action="Edit" asp-route-id="@Model.EventId">Edit</a> |*@
+        <a asp-action="Esports">Back to List</a>
+    </div>

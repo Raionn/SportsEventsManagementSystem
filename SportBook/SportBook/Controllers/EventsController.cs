@@ -133,7 +133,7 @@ namespace SportBook.Controllers
             ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username", @event.FkOwner);
             return View(@event);
         }
-
+        
         // GET: Events/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
