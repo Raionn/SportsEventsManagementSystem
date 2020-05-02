@@ -17,20 +17,14 @@ namespace SportBook.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private ChallongeService chall;
-        private readonly IHttpClientFactory _clientFactory;
 
-        public HomeController(ILogger<HomeController> logger, IHttpClientFactory clientFactory)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _clientFactory = clientFactory;
-            chall = new ChallongeService(_clientFactory);
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            
-            var response = await chall.OnGet();
             return View();
         }
 

@@ -62,8 +62,7 @@ namespace SportBook
 
                 // Configure the Auth0 Client ID and Client Secret
                 options.ClientId = Configuration["Authentication:auth0ClientId"];
-                options.ClientSecret = Environment.GetEnvironmentVariable("AUTH0_CLIENT_SECRET");
-
+                options.ClientSecret = Configuration.GetValue<string>("API_Keys:AUTH0_CLIENT_SECRET");
                 // Set response type to code
                 options.ResponseType = OpenIdConnectResponseType.Code;
 

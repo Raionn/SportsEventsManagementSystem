@@ -11,9 +11,9 @@ namespace SportBook.Helpers
     public class TournamentItem
     {
         [JsonPropertyName("tournament")]
-        public Tournament Tournament { get; set; }
+        public ChallongeTournament Tournament { get; set; }
     }
-    public class Tournament
+    public class ChallongeTournament
     {
         [JsonPropertyName("full_challonge_url")]
         public string FullChallongeUrl { get; set; }
@@ -54,6 +54,29 @@ namespace SportBook.Helpers
         public string Name { get; set; }
 
 
+
+    }
+
+    public class PostTournament
+    {
+        [JsonPropertyName("start_at")]
+        public DateTime? StartAt { get; set; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [JsonPropertyName("url")]
+        public string Url { get; set; }
+
+    }
+
+    public class PutTournament
+    {
+        [JsonPropertyName("start_at")]
+        public DateTime? StartAt { get; set; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
 
     }
 }

@@ -4,64 +4,29 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using ChallongeSharp.Clients;
-using ChallongeSharp.Models;
-using ChallongeSharp.Clients.Interfaces;
-using ChallongeSharp.Models.Configurations;
-using ChallongeSharp.Helpers;
-using ChallongeSharp;
-using Microsoft.Extensions.Options;
-using ChallongeSharp.Models.ViewModels;
-
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.Json;
-using System.Xml.Serialization;
+using SportBook.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace SportBook.Helpers
 {
     public class ChallongeService
     {
         private readonly IHttpClientFactory _clientFactory;
+        private readonly IConfiguration Configuration;
 
         //public IEnumerable<ChallongeData> ChallongeTourney { get; private set; }
 
         public bool GetBranchesError { get; private set; }
 
-        public ChallongeService(IHttpClientFactory clientFactory)
+        public ChallongeService(IHttpClientFactory clientFactory, IConfiguration config)
         {
             _clientFactory = clientFactory;
+            Configuration = config;
         }
 
         public async Task<Task> OnGet()
         {
-            //ChallongeConfigurations config = new ChallongeConfigurations();
-            //config.ApiKey = "Hgtdj8IxMetjfk7zbJNQDLHKbzduQxqKACLlVKAl";
-            //config.Username = "Smacl3r";
-            //HttpClient http = new HttpClient();
-            //http.BaseAddress = new Uri("https://api.challonge.com/v1/tournaments/8402383.json");
-            //ChallongeNameAttribute challongeNameAttribute = new ChallongeNameAttribute("id");
-            //ChallongeConnection challongeConnection = new ChallongeConnection();
-            //ChallongeClientFactory challongeClientFactory = new ChallongeClientFactory();
-            //challongeClientFactory.Create("",);
-            //TournamentOptions tournamentOptions = new TournamentOptions();
-            //tournamentOptions.IncludeParticipants = false;
-            //var options = Options.Create<ChallongeConfigurations>(config);
-            //try
-            //{
-            //    //ChallongeClient challongeClient = new ChallongeClient(http, options);
-            //    //var response1 = await challongeClient.GetAsync<IEnumerable<Tournament>>("", tournamentOptions);
-            //}
-            //catch (Exception ex)
-            //{
-
-            //    string message = ex.Message;
-            //}
-
-
-
-
-
 
             var request = new HttpRequestMessage(HttpMethod.Get,
                 "https://api.challonge.com/v1/tournaments.json?include_participants=1&api_key=Hgtdj8IxMetjfk7zbJNQDLHKbzduQxqKACLlVKAl");
@@ -79,7 +44,6 @@ namespace SportBook.Helpers
             {
                 using var responseStream = await response.Content.ReadAsStreamAsync();
                 var reponseString = await response.Content.ReadAsStringAsync();
-                var stuff1 = Newtonsoft.Json.JsonConvert.DeserializeObject(reponseString);
                 try
                 {
                     var data = await JsonSerializer.DeserializeAsync<IEnumerable<TournamentItem>>(responseStream, options);
@@ -98,6 +62,93 @@ namespace SportBook.Helpers
                 GetBranchesError = true;
             }
 
+
+            return Task.CompletedTask;
+        }
+
+        public async Task<Tournament> OnPostTournament(Tournament tour, int id)
+        {
+            string api_key = Configuration.GetValue<string>("API_Keys:Challonge_Key");
+            string url = String.Format("https://api.challonge.com/v1/tournaments.json?api_key={0}",api_key);
+            var result = tour;
+
+            var tournament = new PostTournament() {
+                StartAt = tour.StartTime,
+                Name = tour.Name,
+                Url = "Sportbook" + id
+            };
+
+            //var request = new HttpRequestMessage(HttpMethod.Post, url);
+            var client = _clientFactory.CreateClient();
+            var requestMessage = JsonSerializer.Serialize<PostTournament>(tournament);
+            var response = await client.PostAsync(url, new StringContent(requestMessage, Encoding.UTF8, "application/json"));
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            var reponseString = await response.Content.ReadAsStringAsync();
+            try
+            {
+                var data = await JsonSerializer.DeserializeAsync<TournamentItem>(responseStream);
+                result.ExternalID = (int)data.Tournament.Id; result.TournamentUrl = data.Tournament.FullChallongeUrl;
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                string exce = ex.Message;
+            }
+
+            return result;
+        }
+
+        public async Task<Task> OnPutTournament(Tournament tour)
+        {
+            string api_key = Configuration.GetValue<string>("API_Keys:Challonge_Key");
+            string url = String.Format("https://api.challonge.com/v1/tournaments/{1}.json?api_key={0}", api_key, tour.ExternalID);
+
+            var tournament = new PutTournament()
+            {
+                StartAt = tour.StartTime,
+                Name = tour.Name
+            };
+
+            //var request = new HttpRequestMessage(HttpMethod.Post, url);
+            var client = _clientFactory.CreateClient();
+            var requestMessage = JsonSerializer.Serialize<PutTournament>(tournament);
+            var response = await client.PutAsync(url, new StringContent(requestMessage, Encoding.UTF8, "application/json"));
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            var reponseString = await response.Content.ReadAsStringAsync();
+            try
+            {
+                var data = await JsonSerializer.DeserializeAsync<TournamentItem>(responseStream);
+            }
+            catch (Exception ex)
+            {
+
+                string exce = ex.Message;
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public async Task<Task> OnDeleteTournament(Tournament tour)
+        {
+            string api_key = Configuration.GetValue<string>("API_Keys:Challonge_Key");
+            string url = String.Format("https://api.challonge.com/v1/tournaments/{1}.json?api_key={0}", api_key, tour.ExternalID);
+
+            //var request = new HttpRequestMessage(HttpMethod.Post, url);
+            var client = _clientFactory.CreateClient();
+
+            var response = await client.DeleteAsync(url);
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            var reponseString = await response.Content.ReadAsStringAsync();
+            try
+            {
+                var data = await JsonSerializer.DeserializeAsync<TournamentItem>(responseStream);
+            }
+            catch (Exception ex)
+            {
+
+                string exce = ex.Message;
+            }
 
             return Task.CompletedTask;
         }
