@@ -31,9 +31,11 @@ namespace SportBook.Controllers
         }
         public IActionResult CreateEvent()
         {
+            User currentUser = (from s in _context.User select s).Where(s => s.ExternalId == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).FirstOrDefault();
             var sportsGameTypes = _context.GameType.Where(x => x.IsOnline == true);
             ViewData["FkGameType"] = new SelectList(sportsGameTypes, "GameTypeId", "Name");
-            ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username");
+            //ViewData["FkOwner"] = currentUser;
+            ViewData["FkOwner"] = currentUser;
             return View();
         }
         // POST: Esports/CreateEvent
@@ -50,7 +52,7 @@ namespace SportBook.Controllers
                 return RedirectToAction(nameof(Esports));
             }
             ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name", @event.FkGameType);
-            ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username", @event.FkOwner);
+            ViewData["FkOwner"] = @event.FkOwner;     //new SelectList(_context.User, "UserId", "Username", @event.FkOwner);
             return View(@event);
         }
         public async Task<IActionResult> ViewEvent(int? id)
