@@ -80,7 +80,16 @@ namespace SportBook.Helpers
                 using var responseStream = await response.Content.ReadAsStreamAsync();
                 var reponseString = await response.Content.ReadAsStringAsync();
                 var stuff1 = Newtonsoft.Json.JsonConvert.DeserializeObject(reponseString);
-                //var data = await JsonSerializer.DeserializeAsync<IEnumerable<ChallongeData>>(responseStream, options);
+                try
+                {
+                    var data = await JsonSerializer.DeserializeAsync<IEnumerable<TournamentItem>>(responseStream, options);
+                }
+                catch (Exception ex)
+                {
+
+                    string exce = ex.Message;
+                }
+                
 
                 //var data1 = JsonSerializer.Deserialize<IEnumerable<ChallongeData>>(reponseString);
             }
