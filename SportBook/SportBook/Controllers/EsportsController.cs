@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SportBook.Models;
+using SportBook.ViewModels;
 
 namespace SportBook.Controllers
 {
@@ -33,8 +34,8 @@ namespace SportBook.Controllers
         {
             User currentUser = (from s in _context.User select s).Where(s => s.ExternalId == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).FirstOrDefault();
             var sportsGameTypes = _context.GameType.Where(x => x.IsOnline == true);
+
             ViewData["FkGameType"] = new SelectList(sportsGameTypes, "GameTypeId", "Name");
-            //ViewData["FkOwner"] = currentUser;
             ViewData["FkOwner"] = currentUser;
             return View();
         }
@@ -72,7 +73,10 @@ namespace SportBook.Controllers
                 return NotFound();
             }
 
-            return View(@event);
+            var eventMembers = await _context.Participant.Where(x => x.FkEvent == id).ToListAsync();
+            EventData eventData = new EventData(@event, eventMembers);
+
+            return View(@eventData);
         }
         public async Task<IActionResult> Tournaments()
         {

@@ -173,7 +173,7 @@ namespace SportBook.Models
                 entity.HasOne(d => d.FkTeamNavigation)
                     .WithMany(p => p.Participant)
                     .HasForeignKey(d => d.FkTeam)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                  //  .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Participa__fk_Te__52593CB8");
 
                 entity.HasOne(d => d.FkUserNavigation)
