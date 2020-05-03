@@ -3,20 +3,21 @@
     ViewData["Title"] = "Tournament";
     Layout = "~/Views/Shared/_EsportsLayout.cshtml";
 }
+
 <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+
 <div class="d-flex flex-row">
     <h1 class="p-2">@Html.DisplayFor(model => model.Tournament.Name)</h1>
-    @if (Model.TournamentMember != null)
+    @if (Model.TournamentMember == null || Model.TournamentMember.TournamentMemberId == 0)
     {
-        <form class="p-2" asp-action="LeaveTournament">
-            <input type="hidden" asp-for="TournamentMember.FkTournament" value="@Model.Tournament.TournamentId" />
-            <input type="hidden" asp-for="TournamentMember.TournamentMemberId" />
-            <input type="submit" value="Leave" class="btn btn-secondary" />
-        </form>
-    }
-    else
-    {
-        <a class="btn btn-primary ml-auto p-2" data-toggle="modal" data-target="#myModal">Register</a>
+        if ((Model.Tournament.StartTime < DateTime.Now) || (Model.Tournament.MaxParticipantAmt <= Model.Tournament.TournamentMember.Count))
+        {
+            <a class="btn btn-secondary ml-auto" data-toggle="popover" data-trigger="hover" data-content="Too late ¯\_(ツ)_/¯" data-target="#myModal">Register</a>
+        }
+        else
+        {
+            <a class="btn btn-primary ml-auto" data-toggle="modal" data-target="#myModal">Register</a>
+        }
         <form id="tournamentMembForm" method="post" class="col-sm-6 custom-close" data-ajax="true" data-ajax-method="post" data-ajax-complete="completed">
             <div class="modal" id="myModal">
                 <div class="modal-dialog">
@@ -40,7 +41,7 @@
                         <!-- Modal footer -->
                         <div class="modal-footer">
                             <div class="form-group">
-                                <input id="btnSave" type="submit" value="Create" class="btn btn-secondary" />
+                                <input id="btnSave" type="submit" value="Join" class="btn btn-secondary" />
                             </div>
                         </div>
                     </div>
@@ -48,6 +49,15 @@
             </div>
         </form>
     }
+    else
+    {
+        <form class="p-2" method="post" data-ajax="true" data-ajax-method="post" data-ajax-complete="completedLeave" data-ajax-url="@Url.Action("LeaveTournament", "Esports")">
+            <input type="hidden" asp-for="TournamentMember.FkTournament" value="@Model.Tournament.TournamentId" />
+            <input type="hidden" asp-for="TournamentMember.TournamentMemberId" />
+            <input type="submit" value="Leave" class="btn btn-secondary" />
+        </form>
+    }
+
 </div>
 <h3>@Html.DisplayFor(model => model.Tournament.Description)</h3>
 
@@ -66,10 +76,19 @@ else
 
 @section Scripts {
     <script>
-        completed = () => {
-            alert('Posted using Unobtrusive AJAX');
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover();
+        });
 
+        completed = () => {
+            location.reload();
         };
+
+        completedLeave = () => {
+            location.reload()
+        };
+
+
         //(function () {
         //    function displaymsg() {
         //        $("#tournament").modal('hide');

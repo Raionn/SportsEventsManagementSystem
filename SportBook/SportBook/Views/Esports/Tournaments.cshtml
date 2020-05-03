@@ -54,15 +54,35 @@
     }
 </style>
 
+<form asp-controller="Esports" asp-action="Tournaments">
+    <p>
+        <div class="input-group" style="width:40%">
+            <input type="text" class="form-control" name="name" placeholder="Name" style="margin-right:5px">
+            <input type="text" class="form-control" name="gametype" placeholder="Game type" style="margin-right:5px">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-secondary"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+    </p>
+</form>
+
 <div class="container ml-2 mr-2">
     <div class="row list-group">
         @foreach (var item in Model)
         {
         <div class="item list-group-item" >
             <a asp-action="Tournament" asp-route-id="@item.TournamentId" style="text-decoration:none; color:black">
-                <div class="thumbnail">
+                <div class="thumbnail" style="min-height:250px">
+                    @if (item.FkGameType == 3)
+                    {
                     <img class="group list-group-image" src="~/Resources/Images/league-of-legends.jpg" alt="" />
-                    <div class="caption d-flex flex-column col-md-7 h-100 mb-0">
+                    }
+                    else
+                    {
+                <img class="group list-group-image" src="~/Resources/Images/csgo.jpg" alt="" />
+                    }
+
+                    <div class="caption d-flex flex-column col-md-7 h-100 mb-0" style="min-height:250px">
                         <div class="d-flex flex-row">
                             <h4 class="group inner list-group-item-heading mb-auto p-2 align-items-start">
                                 @Html.DisplayFor(modelItem => item.Name)
@@ -72,7 +92,7 @@
                             </div>
                         </div>
 
-                        <p class="group inner list-group-item-text align-items-center p-2">
+                        <p class="group inner list-group-item-text align-items-center p-2 align-content-center">
                             @Html.DisplayFor(modelItem => item.Description)
                         </p>
                         <div class="mt-auto p-2">

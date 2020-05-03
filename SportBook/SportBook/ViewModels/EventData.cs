@@ -10,11 +10,13 @@ namespace SportBook.ViewModels
     {
         public Event Event { get; set; }
         public List<Participant> Participants { get; set; }
+        public Participant NewParticipant { get; set; }
 
-        public EventData(Event pEvent, List<Participant> participants)
+        public EventData(Event pEvent, List<Participant> participants, Participant participant)
         {
             this.Event = pEvent;
             this.Participants = participants;
+            this.NewParticipant = participant;
         }
     }
 }
