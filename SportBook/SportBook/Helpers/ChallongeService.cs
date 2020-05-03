@@ -185,6 +185,30 @@ namespace SportBook.Helpers
             return result;
         }
 
+        public async Task<Task> OnDeleteParticipant(TournamentMember member, int tournamentId)
+        {
+            string api_key = Configuration.GetValue<string>("API_Keys:Challonge_Key");
+            string url = String.Format("https://api.challonge.com/v1/tournaments/{1}/participants/{2}.json?api_key={0}", api_key, tournamentId, member.ExternalID);
+
+            //var request = new HttpRequestMessage(HttpMethod.Post, url);
+            var client = _clientFactory.CreateClient();
+
+            var response = await client.DeleteAsync(url);
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            var reponseString = await response.Content.ReadAsStringAsync();
+            try
+            {
+                var data = await JsonSerializer.DeserializeAsync<TournamentItem>(responseStream);
+            }
+            catch (Exception ex)
+            {
+
+                string exce = ex.Message;
+            }
+
+            return Task.CompletedTask;
+        }
+
 
     }
 }

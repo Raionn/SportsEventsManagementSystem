@@ -96,29 +96,53 @@ namespace SportBook.Controllers
         {
             var tournaments = _context.Tournament.Include(t => t.TournamentMember);
             var tournament = await tournaments.Where(t => t.TournamentId == id).FirstOrDefaultAsync();
-            var teams = new SelectList(_context.Team, "TeamId", "Name");
+            var tournamentTeams = _context.TournamentMember.Where(x => x.FkTournament == id);
+            var user = GetCurrentUser();
+            var userTeams = _context.Team.Where(x => x.TeamMember.Any(y => y.FkUser == user.UserId));
+            var tournamentMember = new TournamentMember();
+            if (tournamentTeams.Count() > 0)
+            {
+                var alreadyParticipant = from first in tournamentTeams
+                                   join second in userTeams
+                                           on first.FkTeam equals second.TeamId
+                                   select first;
+                tournamentMember = alreadyParticipant.FirstOrDefault();
+            }
 
-            TournamentData data = new TournamentData(tournament, teams, new TournamentMember());
+            var teams = new SelectList(userTeams, "TeamId", "Name");
+
+            TournamentData data = new TournamentData(tournament, teams, tournamentMember);
             return View(data);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Tournament([Bind("TournamentMemberId", "FkTeam", "FkTournament")] TournamentMember tournamentMember)
+        public async Task<Task> Tournament([Bind("TournamentMemberId", "FkTeam", "FkTournament")] TournamentMember tournamentMember)
         {
             var tournament = await _context.Tournament.FindAsync(tournamentMember.FkTournament);
-            var teams = new SelectList(_context.Team, "TeamId", "Name");
             var team = await _context.Team.FindAsync(tournamentMember.FkTeam);
             if (ModelState.IsValid)
             {    
                 tournamentMember.ExternalID = await chall.OnPostParticipant(tournament.ExternalID, team.Name);
                 _context.Add(tournamentMember);
                 await _context.SaveChangesAsync();
-                TournamentData data = new TournamentData(tournament, teams, tournamentMember);
-                return View(data);
             }
-
-            return View();
+            return Task.CompletedTask;
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<Task> LeaveTournament([Bind("TournamentMemberId", "FkTeam", "FkTournament")] TournamentMember tournamentMember)
+        {
+            var tournament = _context.Tournament.Where(x => x.TournamentId == tournamentMember.FkTournament).FirstOrDefault();
+            var deleteMember = _context.TournamentMember.FirstOrDefault(x => x.TournamentMemberId == tournamentMember.TournamentMemberId);
+            await chall.OnDeleteParticipant(deleteMember,tournament.ExternalID);
+
+
+            _context.TournamentMember.Remove(deleteMember);
+            await _context.SaveChangesAsync();
+            return Task.CompletedTask;
+        }
+
         public IActionResult Teams()
         {
             return View();
@@ -127,6 +151,15 @@ namespace SportBook.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        private User GetCurrentUser()
+        {
+            var externalId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var user = _context.User
+                           .Where(s => s.ExternalId == externalId)
+                           .FirstOrDefaultAsync();
+            user.Wait();
+            return user.Result;
         }
     }
 }
