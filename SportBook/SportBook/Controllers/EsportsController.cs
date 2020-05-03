@@ -82,7 +82,7 @@ namespace SportBook.Controllers
                 return NotFound();
             }
 
-            var eventMembers = await _context.Participant.Where(x => x.FkEvent == id).ToListAsync();
+            var eventMembers = await _context.Participant.Include(x => x.FkUserNavigation).Include(x => x.FkEventNavigation).Where(x => x.FkEvent == id).ToListAsync();
             EventData eventData = new EventData(@event, eventMembers);
 
             return View(@eventData);
