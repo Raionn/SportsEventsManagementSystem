@@ -37,7 +37,7 @@
                 <label asp-for="EndTime" class="control-label"></label>
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <button type="button" id="toggle" class="input-group-text"><i class="fa fa-calendar-alt"></i></button>
+                        <button type="button" id="toggle2" class="input-group-text"><i class="fa fa-calendar-alt"></i></button>
                     </div>
                     <input type="text" asp-for="EndTime" id="datepicker2" class="form-control" />
                 </div>
@@ -98,7 +98,7 @@
             })
         }
     });
-    $('#toggle').on('click', function () {
+    $('#toggle2').on('click', function () {
         $('#datepicker2').datetimepicker('toggle')
     })
 

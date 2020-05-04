@@ -6,6 +6,8 @@
     <title>@ViewData["Title"] - SportBook</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+    <link rel="stylesheet" href="~/lib/jquery-datetimepicker/jquery.datetimepicker.min.css" />
 </head>
 <body onload="checkDarkMode()">
     <header>
@@ -20,8 +22,8 @@
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                 <ul class="navbar-nav flex-grow-1">
                     @*<li class="nav-item">
-            <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </li>*@
+                            <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>*@
                     <li class="nav-item">
                         <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Home" asp-action="Schedule">Schedule</a>
                     </li>
@@ -53,11 +55,11 @@
                             @if (User.Identity.IsAuthenticated)
                             {
 
-                            <a id="qsLogoutBtn" class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                                <a id="qsLogoutBtn" class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
                             }
                             else
                             {
-                            <a id="qsLoginBtn" class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                                <a id="qsLoginBtn" class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
 
                             }
                         </div>
@@ -93,6 +95,10 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
+    <script src="~/lib/popper.js/umd/popper.min.js"></script>
+
+    <script src="~/lib/moment/moment.js/moment-with-locales.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.5/lib/darkmode-js.min.js"></script>
     <script>
         var darkmode = new Darkmode();
