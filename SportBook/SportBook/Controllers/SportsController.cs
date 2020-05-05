@@ -233,8 +233,8 @@ namespace SportBook.Controllers
         {
             return _context.Event.Any(e => e.EventId == id);
         }
-
-        public async Task<IActionResult> Details(int? id)
+        [Route("[controller]/[action]")]
+        public async Task<IActionResult> ViewEvent(int? id)
         {
             if (id == null)
             {
@@ -253,8 +253,11 @@ namespace SportBook.Controllers
             {
                 return NotFound();
             }
+            var users = new SelectList(_context.User.Where(u => u.UserId != GetCurrentUser().UserId), "UserId", "Username");
+            var modelData = new EventDetailData(users, @event, new Participant(), new EventInvitation());
+            
 
-            return View(@event);
+            return View(modelData);
         }
         #endregion
     }

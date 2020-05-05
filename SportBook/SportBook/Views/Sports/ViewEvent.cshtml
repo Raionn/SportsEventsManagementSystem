@@ -1,0 +1,135 @@
+﻿@model SportBook.ViewModels.EventDetailData
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+<div class="d-flex">
+    <h1 class="col-md-2">Details</h1>
+    <div class="ml-auto">
+        <button style="margin-left:5px" data-toggle="modal" data-target="#myModal" class="btn btn-secondary ml-auto"><i class="fa fa-address-book"></i></button>
+        <button style="margin-left:5px" class="btn btn-secondary ml-auto"><i class="fa fa-user-plus"></i></button>
+    </div>
+</div>
+<form id="tournamentMembForm" method="post" class="col-sm-6 custom-close" data-ajax="true" data-ajax-method="post" data-ajax-complete="completed">
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Select user</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <input class="form-control p-2 mb-2" id="myInput" type="text" placeholder="Search..">
+                    <h4 class="align-content-center">Users</h4>
+                    <div class="form-group">
+                        <table>
+                            <tbody id="myField">
+                                @foreach (var item in Model.Users)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Text)
+                                            <input id="btnSave" type="submit" value="Join" class="btn btn-secondary" />
+                                        </td>
+                                    </tr>
+                                }
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="Invitation.FkEvent" value="@Model.Event.EventId" />
+                @*<input type="hidden" asp-for="TournamentMember.TournamentMemberId" />*@
+                <!-- Modal footer -->
+            </div>
+        </div>
+    </div>
+</form>
+<div>
+    <h4>Event</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.MaxParticipantAmt)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.MaxParticipantAmt)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.StartTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.StartTime)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.EndTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.EndTime)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.IsPrivate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.IsPrivate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.IsTeamEvent)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.IsTeamEvent)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.FkGameTypeNavigation)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.FkGameTypeNavigation.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.FkLocationNavigation)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.FkLocationNavigation.Address)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.FkOwnerNavigation)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.FkOwnerNavigation.Username)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Event.EventId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myField tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    completed = () => {
+        alert("Ivyko zmogaus pakvietimas");
+    };
+</script>

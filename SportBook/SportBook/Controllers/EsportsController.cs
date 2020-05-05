@@ -17,7 +17,6 @@ using SportBook.ViewModels;
 namespace SportBook.Controllers
 {
     //[Authorize(Roles = "user, admin")]
-    [Route("[action]")]
     public class EsportsController : Controller
     {
         private readonly SportbookDatabaseContext _context;
@@ -77,6 +76,7 @@ namespace SportBook.Controllers
             //await _context.SaveChangesAsync();
             return Task.CompletedTask;
         }
+        [Route("[controller]/[action]")]
         public async Task<IActionResult> ViewEvent(int? id)
         {
             if (id == null)

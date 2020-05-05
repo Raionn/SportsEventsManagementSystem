@@ -2,12 +2,14 @@
 @{
     ViewData["Title"] = "Schedule";
     Layout = null;
+    var events = ViewData["events"];
+
 }
 
-<h1>Schedule</h1>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
 <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
 <link rel="stylesheet" href="~/css/Schedule.css" />
 
@@ -31,8 +33,6 @@
 
         $('#external-events div.external-event').each(function () {
 
-            // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
-            // it doesn't need to have a start or end
             var eventObject = {
                 title: $.trim($(this).text()) // use the element's text as the event title
             };
@@ -117,55 +117,9 @@
                 }
 
             },
-
-            events: [
-                {
-                    title: 'All Day Event',
-                    start: new Date(y, m, 1)
-                },
-                {
-                    id: 999,
-                    title: 'Repeating Event',
-                    start: new Date(y, m, d - 3, 16, 0),
-                    allDay: false,
-                    className: 'info'
-                },
-                {
-                    id: 999,
-                    title: 'Repeating Event',
-                    start: new Date(y, m, d + 4, 16, 0),
-                    allDay: false,
-                    className: 'info'
-                },
-                {
-                    title: 'Meeting',
-                    start: new Date(y, m, d, 10, 30),
-                    allDay: false,
-                    className: 'important'
-                },
-                {
-                    title: 'Lunch',
-                    start: new Date(y, m, d, 12, 0),
-                    end: new Date(y, m, d, 14, 0),
-                    allDay: false,
-                    className: 'important'
-                },
-                {
-                    title: 'Birthday Party',
-                    start: new Date(y, m, d + 1, 19, 0),
-                    end: new Date(y, m, d + 1, 22, 30),
-                    allDay: false,
-                },
-                {
-                    title: 'Click for Google',
-                    start: new Date(y, m, 28),
-                    end: new Date(y, m, 29),
-                    url: 'https://ccp.cloudaccess.net/aff.php?aff=5188',
-                    className: 'success'
-                }
-            ],
+            events: @Html.Raw(Json.Serialize(events)),
         });
-
+        console.log(@Html.Raw(Json.Serialize(events)));
 
     });</script>
 <style>
@@ -176,12 +130,6 @@
         text-align: center;
         font-size: 14px;
         font-family: 'Roboto', sans-serif;
-        background: url(http://www.digiphotohub.com/wp-content/uploads/2015/09/bigstock-Abstract-Blurred-Background-Of-92820527.jpg);
-    }
-
-    #wrap {
-        width: 1100px;
-        margin: 0 auto;
     }
 
     #external-events {
@@ -200,7 +148,7 @@
     .external-event { /* try to mimick the look of a real event */
         margin: 10px 0;
         padding: 2px 4px;
-        background: #3366CC;
+        background: green;
         color: #fff;
         font-size: .85em;
         cursor: pointer;
@@ -220,7 +168,7 @@
     #calendar {
         /* 		float: right; */
         margin: 0 auto;
-        width: 900px;
+        max-width: 1200px;
         background-color: #FFFFFF;
         border-radius: 6px;
         box-shadow: 0 1px 2px #C3C3C3;
@@ -230,11 +178,118 @@
     }
 </style>
 
-<div id='wrap'>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Schedule</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body onload="checkDarkMode()">
+    <header>
+        @*delete bg-white for header to have darkmode*@
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
+            @*<div class="container">*@
+            <a class="navbar-brand" name="navBar" asp-area="" asp-controller="Home" asp-action="Index">SportBook</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <ul class="navbar-nav flex-grow-1">
+                    @if (User.IsInRole("admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Admin" asp-action="Index">Administration</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <ul class="navbar-nav ml-auto">
 
-    <div id='calendar'></div>
+                    <li class="nav-item ">
 
-    <div style='clear:both'></div>
-</div>
+
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+
+                            <a id="qsLogoutBtn" class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                        }
+                        else
+                        {
+                            <a id="qsLoginBtn" class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+
+                        }
+
+                    </li>
+
+                    <li class="nav-item">
+                        <div class="toggle toggle--daynight">
+                            <input type="checkbox" id="toggle--daynight" class="toggle--checkbox">
+                            <label class="toggle--btn" for="toggle--daynight"><span class="toggle--feature"></span></label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            @*</div>*@
+        </nav>
+    </header>
+
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            <div>
+
+                <div id='calendar'></div>
+
+                <div style='clear:both'></div>
+            </div>
+        </main>
+    </div>
+
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2020 - SportBook
+        </div>
+    </footer>
+</body>
 
 <script src="~/js/schedule.js" asp-append-version="true"></script>
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.5/lib/darkmode-js.min.js"></script>
+<script>
+    var darkmode = new Darkmode();
+    document.getElementById('toggle--daynight').addEventListener('click', function () {
+        darkmode.toggle();
+        const x = document.getElementsByName("navBar");
+        const m = document.getElementById("navDrop");
+        if (darkmode.isActivated()) {
+            for (let e of x) {
+                e.classList.add("text-white");
+                e.classList.remove("text-dark");
+                m.style.background = "#000000";
+            }
+        }
+        else {
+            for (let e of x) {
+                e.classList.remove("text-white");
+                e.classList.add("text-dark");
+                m.style.background = "#FFFFFF";
+            }
+        }
+    });
+
+    function checkDarkMode() {
+        const x = document.getElementsByName("navBar");
+        const m = document.getElementById("navDrop");
+        if (darkmode.isActivated()) {
+            for (let e of x) {
+                e.classList.add("text-white");
+                e.classList.remove("text-dark");
+                m.style.background = "#000000";
+            }
+        }
+    }
+</script>
