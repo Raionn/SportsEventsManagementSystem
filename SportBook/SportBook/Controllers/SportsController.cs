@@ -44,9 +44,9 @@ namespace SportBook.Controllers
 
             //ViewData["joinedEvents"];
             ViewData["joinedEvents"] = from first in sportbookDatabaseContext
-                                     join second in eventParticipations
-                                     on first.EventId equals second.FkEvent
-                                     select first;
+                                       join second in eventParticipations
+                                       on first.EventId equals second.FkEvent
+                                       select first;
 
             ViewData["myEvents"] = sportbookDatabaseContext.Where(e => e.FkOwner == GetCurrentUser().UserId);
 
@@ -255,10 +255,38 @@ namespace SportBook.Controllers
             }
             var users = new SelectList(_context.User.Where(u => u.UserId != GetCurrentUser().UserId), "UserId", "Username");
             var modelData = new EventDetailData(users, @event, new Participant(), new EventInvitation());
-            
+
+            List<LocationData> locations = new List<LocationData>
+            {
+                new LocationData(@event.FkLocationNavigation.Longitude, @event.FkLocationNavigation.Latitude, @event.FkLocationNavigation.Address, @event.FkGameTypeNavigation.Name, 0, 0)
+            };
+
+            ViewData["Locations"] = locations;
 
             return View(modelData);
         }
         #endregion
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<Task> SendInvitation()
+        {
+
+
+            return Task.CompletedTask;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<Task> SendInvitation([Bind("FkUser, FkEvent, EventInvitationId")] EventInvitation eventInvitation)
+        {
+            if (eventInvitation.FkEvent > 0 && eventInvitation.FkUser > 0)
+            {
+                _context.Add(eventInvitation);
+                await _context.SaveChangesAsync();
+            }
+
+            return Task.CompletedTask;
+        }
     }
 }
