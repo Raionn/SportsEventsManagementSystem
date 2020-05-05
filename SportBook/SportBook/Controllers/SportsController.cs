@@ -76,8 +76,9 @@ namespace SportBook.Controllers
         [Route("[controller]/[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SportsEvents([Bind("Title,MaxParticipantAmt,StartTime,EndTime,IsPrivate,IsTeamEvent,FkLocation,FkGameType")] Event @event)
+        public async Task<IActionResult> SportsEvents([Bind("Title,MaxParticipantAmt,StartTime,EndTime,IsPrivate,FkLocation,FkGameType")] Event @event)
         {
+            @event.IsTeamEvent = false;
             var user = GetCurrentUser();
             @event.FkOwner = user.UserId;
             if (ModelState.IsValid)

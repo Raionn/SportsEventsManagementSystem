@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var locations = ViewData["Locations"] as List<SportBook.ViewModels.LocationData>;
 }
 <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
 <div class="d-flex">
@@ -12,111 +13,175 @@
         <button style="margin-left:5px" class="btn btn-secondary ml-auto"><i class="fa fa-user-plus"></i></button>
     </div>
 </div>
-<form id="tournamentMembForm" method="post" class="col-sm-6 custom-close" data-ajax="true" data-ajax-method="post" data-ajax-complete="completed">
-    <div class="modal" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
 
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Select user</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Select user</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="tournamentMembForm" method="post" class="col-sm-6 custom-close" data-ajax="true" data-ajax-method="post" data-ajax-complete="completed" data-ajax-url="@Url.Action("SendInvitation", "Sports")">
+                <input type="hidden" asp-for="Invitation.FkEvent" value="@Model.Event.EventId" />
+                <input type="hidden" asp-for="Invitation.EventInvitationId" />
                 <!-- Modal body -->
                 <div class="modal-body">
                     <input class="form-control p-2 mb-2" id="myInput" type="text" placeholder="Search..">
                     <h4 class="align-content-center">Users</h4>
                     <div class="form-group">
-                        <table>
+                        <table class="w-100">
                             <tbody id="myField">
+                                @{int i = 0; }
                                 @foreach (var item in Model.Users)
                                 {
                                     <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Text)
-                                            <input id="btnSave" type="submit" value="Join" class="btn btn-secondary" />
+                                        <td class="d-flex">
+                                            <div> @Html.DisplayFor(modelItem => item.Text) </div>
+                                            <input type="hidden" asp-for="Invitation.FkUser" value="@item.Value" />
+                                            <div class="ml-auto">
+                                                <input id="btnSave\@i" type="submit" value="Invite" class="btn btn-success" />
+                                            </div>
                                         </td>
                                     </tr>
+                                    ++i;
+
                                 }
-                                </tbody>
+                            </tbody>
                         </table>
                     </div>
                 </div>
-                <input type="hidden" asp-for="Invitation.FkEvent" value="@Model.Event.EventId" />
-                @*<input type="hidden" asp-for="TournamentMember.TournamentMemberId" />*@
-                <!-- Modal footer -->
-            </div>
+            </form>
         </div>
     </div>
-</form>
-<div>
-    <h4>Event</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Event.Title)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Event.Title)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Event.MaxParticipantAmt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Event.MaxParticipantAmt)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Event.StartTime)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Event.StartTime)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Event.EndTime)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Event.EndTime)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Event.IsPrivate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Event.IsPrivate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Event.IsTeamEvent)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Event.IsTeamEvent)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Event.FkGameTypeNavigation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Event.FkGameTypeNavigation.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Event.FkLocationNavigation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Event.FkLocationNavigation.Address)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Event.FkOwnerNavigation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Event.FkOwnerNavigation.Username)
-        </dd>
-    </dl>
+</div>
+
+
+@*<input type="hidden" asp-for="TournamentMember.TournamentMemberId" />*@
+<!-- Modal footer -->
+
+<div class="d-flex">
+    <div class="col-md-6 col-xs-6">
+        <h4>Event</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Event.Title)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Event.Title)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Event.MaxParticipantAmt)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Event.MaxParticipantAmt)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Event.StartTime)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Event.StartTime)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Event.EndTime)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Event.EndTime)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Event.IsPrivate)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Event.IsPrivate)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Event.IsTeamEvent)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Event.IsTeamEvent)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Event.FkGameTypeNavigation)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Event.FkGameTypeNavigation.Name)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Event.FkLocationNavigation)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Event.FkLocationNavigation.Address)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Event.FkOwnerNavigation)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Event.FkOwnerNavigation.Username)
+            </dd>
+        </dl>
+    </div>
+
+
+    <div class="container-fluid" id="eventMap">
+
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Event.EventId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+<script async defer
+        src="">
+</script>
+<script>
+    // Initialize and add the map
+    function initMap() {
+        var locationsObj = @Html.Raw(Json.Serialize(locations));
+        // The location of Uluru
+        var kaunas = { lat: locationsObj[0].latitude, lng: locationsObj[0].longitude };
+        // The map, centered at Uluru
+        var map = new google.maps.Map(
+            document.getElementById('eventMap'), { zoom: 6, center: kaunas });
 
+        //// The marker, positioned at Uluru
+        //var marker = new google.maps.Marker({ position: kaunas, map: map });
+        lmao(map);
+    }
+    function lmao(map) {
+        var locationsObj = @Html.Raw(Json.Serialize(locations));
+        var allMarkers = [];
+        // Create some markers
+        for (var i = 0; i < locationsObj.length; i++) {
+            var pos = { lat: locationsObj[i].latitude, lng: locationsObj[i].longitude };
+            var marker = new google.maps.Marker({ position: pos, map: map });
+            marker.myData = i;
+            allMarkers.push(marker);
+            let infowindow = new google.maps.InfoWindow({
+                content: locationsObj[i].address + '</br>' + '<h4>' + locationsObj[i].game + '</h4>',
+                map: map
+            });
+            marker.addListener('mouseover', function () {
+                infowindow.open(map, this);
+            });
+            marker.addListener('mouseout', function () {
+                infowindow.close();
+            });
 
+        }
 
+        //for (let marker of allMarkers) {
+        //marker.addListener('mouseover', function () {
+        //    infowindow.open(map, this);
+        //});
+        //// assuming you also want to hide the infowindow when user mouses-out
+        //marker.addListener('mouseout', function () {
+        //    infowindow.close();
+        //});
+    };
+
+</script>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
@@ -130,6 +195,6 @@
     });
 
     completed = () => {
-        alert("Ivyko zmogaus pakvietimas");
+        alert("User invited");
     };
 </script>
