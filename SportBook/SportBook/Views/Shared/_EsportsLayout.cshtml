@@ -33,9 +33,6 @@
                         <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Home" asp-action="Schedule">Schedule</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Esports" asp-action="Teams">Teams</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Esports" asp-action="Esports">Events</a>
                     </li>
                     <li class="nav-item">
@@ -58,7 +55,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Users" asp-action="Profile">Profile</a>
                             <a class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Users" asp-action="MyTeams">My Teams</a>
-                            <a class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="" asp-action="">Invitations @await Component.InvokeAsync("Invitations")</a>
+                            <a tabindex="0" class="dropdown-item text-dark pop" data-container="body" data-html="true" title="Your invitations" data-toggle="popover" data-placement="left" data-content="@await Component.InvokeAsync("InvitationList")" name="navBar" style="cursor: pointer;">Invitations @await Component.InvokeAsync("Invitations")</a>
                             <div class="dropdown-divider"></div>
                             @if (User.Identity.IsAuthenticated)
                             {

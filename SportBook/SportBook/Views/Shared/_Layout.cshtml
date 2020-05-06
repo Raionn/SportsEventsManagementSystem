@@ -32,12 +32,12 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Home" asp-action="Schedule">Schedule</a>
                     </li>
-                    <li class="nav-item">
+                    @*<li class="nav-item">
                         <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Events" asp-action="Index">Events</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
-                    </li>
+                    </li>*@
                     @if (User.IsInRole("admin"))
                     {
                         <li class="nav-item">
