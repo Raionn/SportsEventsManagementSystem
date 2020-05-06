@@ -6,6 +6,13 @@
     <title>@ViewData["Title"] - SportBook</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    @*<script src="~/lib/tooltip.js/umd/tooltip.min.js"></script>*@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    @*<script src="~/lib/popper.js/umd/popper.min.js"></script>*@
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.5/lib/darkmode-js.min.js"></script>
 </head>
 <body onload="checkDarkMode()">
     <header>
@@ -48,7 +55,7 @@
                         <div class="dropdown-menu" id="navDrop" name="navBar" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Users" asp-action="Profile">Profile</a>
                             <a class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Users" asp-action="MyTeams">My Teams</a>
-                            <a class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="" asp-action="">Invitations (?)</a>
+                            <a tabindex="0" class="dropdown-item text-dark pop" data-container="body" data-html="true" title="Your invitations" data-toggle="popover" data-placement="left" data-content="@await Component.InvokeAsync("InvitationList")" name="navBar" style="cursor: pointer;">Invitations @await Component.InvokeAsync("Invitations")</a>
                             <div class="dropdown-divider"></div>
                             @if (User.Identity.IsAuthenticated)
                             {
@@ -91,10 +98,25 @@
             &copy; 2020 - SportBook
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.5/lib/darkmode-js.min.js"></script>
     <script>
+        $('.pop').popover({
+            trigger: 'manual',
+            html: true
+        })
+            .on('mouseenter', function () {
+                var _this = this;
+                $(this).popover('show');
+                $('.popover').on('mouseleave', function () {
+                    $(_this).popover('hide');
+                });
+            }).on('mouseleave', function () {
+                var _this = this;
+                setTimeout(function () {
+                    if (!$('.popover:hover').length) {
+                        $(_this).popover('hide');
+                    }
+                }, 300);
+            });
         var darkmode = new Darkmode();
         document.getElementById('toggle--daynight').addEventListener('click', function () {
             darkmode.toggle();
@@ -127,7 +149,9 @@
                 }
             }
         }
+
     </script>
     @RenderSection("Scripts", required: false)
 </body>
+
 </html>

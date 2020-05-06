@@ -1,0 +1,27 @@
+﻿@model SportBook.ViewModels.InvitationData;
+
+    <div class='list-group'>
+
+        @foreach (var item in Model.EventInvitation)
+        {
+
+            <a onclick='doSomething(@item.EventInvitationId);' href='@item.Url' class='btn list-group-item list-group-item-action mb-1'>You have been invited to join event: <b>@item.EventName</b></a>
+
+        }
+
+        @foreach (var item in Model.TeamInvitation)
+        {
+
+            <a id='lmao' href='#' onclick='doSomething(@item.TeamInvitationId);' class='list-group-item list-group-item-action mb-1'>You have been invited to join team: <b>@item.TeamName</b></a>
+        }
+    </div>
+
+<script>
+    $('#lmao').click(function () { MyFunction(); return false; });
+
+    function MyFunction() {
+        alert('hello');
+        console.log(data);
+        console.log(this);
+    }
+</script>

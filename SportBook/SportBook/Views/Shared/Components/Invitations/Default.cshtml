@@ -1,0 +1,18 @@
+﻿@*@model IEnumerable<ViewComponentSample.Models.TodoItem>*@
+@model int
+
+
+@if (Model > 0)
+{
+    <span class="badge badge-primary badge-pill">@Model</span>
+}
+else
+{
+
+}
+@*<ul>
+        @foreach (var todo in Model)
+        {
+            <li>@todo.Name</li>
+        }
+    </ul>*@

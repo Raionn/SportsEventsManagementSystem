@@ -88,6 +88,27 @@ namespace SportBook.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<Task> AcceptInvite(int? id)
+        {
+            var invite = await _context.EventInvitation.FindAsync(id);
+            if (invite == null)
+            {
+                var teamInvite = await _context.TeamInvitation.FindAsync(id);
+                teamInvite.IsAccepted = true;
+                _context.Update(teamInvite);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                invite.IsAccepted = true;
+                _context.Update(invite);
+                await _context.SaveChangesAsync();
+            }
+
+            return Task.CompletedTask;
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
