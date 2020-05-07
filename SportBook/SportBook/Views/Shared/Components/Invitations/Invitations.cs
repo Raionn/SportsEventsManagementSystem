@@ -24,20 +24,20 @@ namespace SportBook.Views.Components.Invitations
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var userId = GetCurrentUser().UserId;
+            var user = await GetCurrentUser();
+            var userId = user.UserId;
             var amountEvent = await _context.EventInvitation.Where(u => u.FkUser == userId).Where(u => u.IsAccepted == false).CountAsync();
             var amountTeam = await _context.TeamInvitation.Where(u => u.FkUser == userId).Where(u => u.IsAccepted == false).CountAsync();
             //var items = await GetItemsAsync(maxPriority, isDone);
             return View(amountEvent + amountTeam);
         }
-        private User GetCurrentUser()
+        private async Task<User> GetCurrentUser()
         {
             var externalId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var user = _context.User
+            var user = await _context.User
                            .Where(s => s.ExternalId == externalId)
                            .FirstOrDefaultAsync();
-            user.Wait();
-            return user.Result;
+            return user;
         }
 
         //private Task<List<TodoItem>> GetItemsAsync(int maxPriority, bool isDone)
@@ -58,7 +58,8 @@ namespace SportBook.Views.Components.Invitations
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var userId = GetCurrentUser().UserId;
+            var user = await GetCurrentUser();
+            var userId = user.UserId;
             var amountEvent = await _context.EventInvitation.Where(u => u.FkUser == userId).Where(u => u.IsAccepted == false).Include(e => e.FkEventNavigation).Include(e => e.FkEventNavigation.FkGameTypeNavigation).ToListAsync();
             var amountTeam = await _context.TeamInvitation.Where(u => u.FkUser == userId).Where(u => u.IsAccepted == false).Include(t => t.FkTeamNavigation).ToListAsync();
             var eventList = new List<EventDataInvitation>();
@@ -80,14 +81,13 @@ namespace SportBook.Views.Components.Invitations
             //var items = await GetItemsAsync(maxPriority, isDone);
             return View(data);
         }
-        private User GetCurrentUser()
+        private async Task<User> GetCurrentUser()
         {
             var externalId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var user = _context.User
+            var user = await _context.User
                            .Where(s => s.ExternalId == externalId)
                            .FirstOrDefaultAsync();
-            user.Wait();
-            return user.Result;
+            return user;
         }
 
 

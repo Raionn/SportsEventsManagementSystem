@@ -23,7 +23,7 @@
                 <h4 class="modal-title">Select user</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <form id="tournamentMembForm" method="post" class="col-sm-6 custom-close" data-ajax="true" data-ajax-method="post" data-ajax-complete="completed" data-ajax-url="@Url.Action("SendInvitation", "Sports")">
+            <form id="eventMembForm" method="post" class="col-sm-6 custom-close" data-ajax="true" data-ajax-method="post" data-ajax-complete="completed" data-ajax-url="@Url.Action("SendInvitation", "Sports")">
                 <input type="hidden" asp-for="Invitation.FkEvent" value="@Model.Event.EventId" />
                 <input type="hidden" asp-for="Invitation.EventInvitationId" />
                 <!-- Modal body -->
@@ -32,7 +32,7 @@
                     <h4 class="align-content-center">Users</h4>
                     <div class="form-group">
                         <table class="w-100">
-                            <tbody id="myField">
+                            <tbody id="myField" name="usersList">
                                 @{int i = 0; }
                                 @foreach (var item in Model.Users)
                                 {
@@ -40,9 +40,7 @@
                                         <td class="d-flex">
                                             <div> @Html.DisplayFor(modelItem => item.Text) </div>
                                             <input type="hidden" asp-for="Invitation.FkUser" value="@item.Value" />
-                                            <div class="ml-auto">
-                                                <input id="btnSave\@i" type="submit" value="Invite" class="btn btn-success" />
-                                            </div>
+                                            <input id="btnSave" name="submitBtn" type="submit" value="Invite" class="btn btn-success ml-auto" />
                                         </td>
                                     </tr>
                                     ++i;
@@ -56,7 +54,6 @@
         </div>
     </div>
 </div>
-
 
 @*<input type="hidden" asp-for="TournamentMember.TournamentMemberId" />*@
 <!-- Modal footer -->
@@ -182,8 +179,7 @@
     };
 
 </script>
-
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
         $("#myInput").on("keyup", function () {
@@ -192,9 +188,55 @@
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
             });
         });
-    });
+        $("[name=submitBtn]").click(function () {
+            event.preventDefault();
+            var obj = {
+                FkUser: $($(this).parent().children()[1]).val(),
+                FkEvent: $("#Invitation_FkEvent").val()
+            };
+            var t = $("input[name='__RequestVerificationToken']").val();
+            //$("[name=submitBtn]").attr("disabled", true);
+            var mybutton = $(this);
+            $.ajax({
+                url: $("#eventMembForm").attr("data-ajax-url"),
+                type: "POST",
+                method: 'post',
+                headers:
+                {
+                    "RequestVerificationToken": t
+                },
+                data: JSON.stringify(obj),
+                dataType: "json",
+                contentType: "application/json",
+                success: function (responseData) {
+                    var $myField = $("#myField tr");
+                    var url = $("#myField tr").data("url");
+                    mybutton.attr("disabled", true);
+                    console.log(responseData);
+                    $("#myField tr").html(responseData);
+                    //$myField.load(url);
+                    //$("#myField tr").html(
+                    //    $.each(JSON.parse(responseData), function (key, value) {
 
-    completed = () => {
-        alert("User invited");
-    };
+                    //            //<td class="d-flex">
+                    //            //    <div> key </div>
+                    //            //    <div> value </div>
+                    //            //</td>
+                    //    })
+                    //);
+                    //console.log(responseData[0]);
+                    //$.each(JSON.parse(responseData), function(key ,value) {
+                    //    alert(value.Text + '---' + value.Value);// + '---' + value.date[0]); //and so on
+                    //});
+                },
+                failure: function(response) {
+                    alert("failure");
+                },
+                error: function(response) {
+                    alert("error");
+                },
+            })
+
+        });
+    });
 </script>

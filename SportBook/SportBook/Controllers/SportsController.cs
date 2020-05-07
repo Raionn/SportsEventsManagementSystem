@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SportBook.Helpers;
 using SportBook.Models;
 using SportBook.ViewModels;
 
 namespace SportBook.Controllers
 {
-
     //[Authorize(Roles ="admin")]
     public class SportsController : Controller
     {
@@ -42,19 +43,12 @@ namespace SportBook.Controllers
             // user - eventmember - event 
             var eventParticipations = _context.Participant.Where(e => e.FkUser == GetCurrentUser().UserId);
 
-            //ViewData["joinedEvents"];
             ViewData["joinedEvents"] = from first in sportbookDatabaseContext
                                        join second in eventParticipations
                                        on first.EventId equals second.FkEvent
                                        select first;
 
             ViewData["myEvents"] = sportbookDatabaseContext.Where(e => e.FkOwner == GetCurrentUser().UserId);
-
-            //var a = from filteredParticipant in (from participants in _context.Participant
-            //                                     where participants.FkUser == GetCurrentUser().UserId
-            //                                     select participants)
-            //        join events in sportbookDatabaseContext on filteredParticipant.FkEvent equals events.EventId
-            //        select events;
 
             User currentUser = (from s in _context.User select s).Where(s => s.ExternalId == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).FirstOrDefault();
             ViewData["CurrentUser"] = currentUser;
@@ -234,6 +228,7 @@ namespace SportBook.Controllers
         {
             return _context.Event.Any(e => e.EventId == id);
         }
+
         [Route("[controller]/[action]")]
         public async Task<IActionResult> ViewEvent(int? id)
         {
@@ -255,7 +250,7 @@ namespace SportBook.Controllers
                 return NotFound();
             }
             var users = new SelectList(_context.User.Where(u => u.UserId != GetCurrentUser().UserId), "UserId", "Username");
-            var modelData = new EventDetailData(users, @event, new Participant(), new EventInvitation());
+            var modelData = new EventDetailData(users, @event, new Models.Participant(), new EventInvitation());
 
             List<LocationData> locations = new List<LocationData>
             {
@@ -270,24 +265,20 @@ namespace SportBook.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<Task> SendInvitation()
+        public async Task<JsonResult> SendInvitation([FromBody]JsonElement jsonbody)
         {
+            var data = JsonSerializer.Deserialize<EventInvite>(jsonbody.GetRawText());
+            EventInvitation invitation = new EventInvitation() { FkUser = int.Parse(data.FkUser), FkEvent = int.Parse(data.FkEvent)};
 
-
-            return Task.CompletedTask;
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<Task> SendInvitation([Bind("FkUser, FkEvent, EventInvitationId")] EventInvitation eventInvitation)
-        {
-            if (eventInvitation.FkEvent > 0 && eventInvitation.FkUser > 0)
+            if (invitation.FkEvent > 0 && invitation.FkUser > 0)
             {
-                _context.Add(eventInvitation);
+                _context.Add(invitation);
                 await _context.SaveChangesAsync();
             }
 
-            return Task.CompletedTask;
+            var users = new SelectList(_context.User.Where(u => u.UserId != GetCurrentUser().UserId), "UserId", "Username");
+
+            return new JsonResult(JsonSerializer.Serialize(users));
         }
     }
 }

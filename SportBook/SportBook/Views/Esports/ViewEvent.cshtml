@@ -61,76 +61,25 @@
             @Html.DisplayFor(model => model.Event.FkOwnerNavigation.Username)
         </div>
     </div>
-    <div class="d-flex flex-column col-md-1"></div>
-    @{ int i = 0;
-        <div class="d-flex flex-column col-md-2">
-            <div class="list-group-flush">
-                @foreach (var item in Model.Participants)
-                {
-                    if (i % 2 == 0)
-                    {
-                        <div class="p-2 list-group-item">
-                            @item.FkUserNavigation.Username
-                        </div>
-                    }
-                    i++;
-                }
-            </div>
-        </div>
-        <div class="d-flex flex-column col-md-2">
-            <div class="list-group-flush">
-                @foreach (var item in Model.Participants)
-                {
-                    if (i % 2 == 1)
-                    {
-                        <div class="p-2 list-group-item">
-                            @item.FkUserNavigation.Username
-                        </div>
-                    }
-                    i++;
-                }
-            </div>
-        </div>
-    }
-</div>
-<div>
-    <form id="submitform" method="post" data-ajax="true" data-ajax-method="post" data-ajax-complete="completed">
-        <div class="form-group">
-            <input type="hidden" asp-for="NewParticipant.FkUser" value="@currentUser.UserId" />
-            <input type="hidden" asp-for="NewParticipant.FkEvent" value="@Model.Event.EventId" />
-            <input type="hidden" asp-for="NewParticipant.FkTeam" value="0" />
-            <input id="submit" type="submit" value="Join" class="btn btn-primary ml-auto submit" />
-        </div>
-    </form>
+    @*<div class="d-flex flex-column col-md-1"></div>*@
+    <div class="d-flex flex-column col-md-8" id="participantList">
+        @await Component.InvokeAsync("EventMemberList", new { eventId = Model.Event.EventId, userId = 0 })
+    </div>
 </div>
 
+<div>
+    <input id="submit" type="button" onclick="joinEvent()" value="Join" class="btn btn-primary ml-auto" />
+</div>
 
 <script>
-
-
-    $('document').ready(function () {
-
-        $('#submitform').submit(function (e) {
-            e.preventDefault();
-            $.ajax({
-                data: $('#submitform').serialize(),
-                url: '@Url.RouteUrl(new{id=1, action="ViewEvent", controller="Esports"})',
-                type: 'POST',
-                dataType: 'json',
-                contentType: "application/json; charset=utf-8",
-                success: function (data) {
-                    console.log(data);
-                    alert("success");
-                }
-            });
-        })
-    });
-
+    function joinEvent() {
+        $("#participantList").load("@Url.Action("EventMemberVC", new { eventId = Model.Event.EventId, currentUser.UserId })");
+    }
 </script>
 
 @*<div>*@
-    @*<a asp-action="Edit" asp-route-id="@Model.EventId">Edit</a> |*@
-    @*<a asp-action="Esports">Back to List</a>*@
+@*<a asp-action="Edit" asp-route-id="@Model.EventId">Edit</a> |*@
+@*<a asp-action="Esports">Back to List</a>*@
 @*</div>*@
 
 

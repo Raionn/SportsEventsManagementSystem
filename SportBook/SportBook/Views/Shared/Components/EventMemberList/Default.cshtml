@@ -1,0 +1,20 @@
+﻿@model IEnumerable<SportBook.Models.User>
+
+<h3>Participants</h3>
+
+<style>
+    ul {
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+        column-count: 3;
+    }
+</style>
+
+<ul>
+    @foreach (var item in Model)
+    {
+        <li class="list-group-item">
+            @item.Username
+        </li>
+    }
+</ul>
