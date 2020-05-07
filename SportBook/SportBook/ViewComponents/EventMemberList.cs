@@ -29,8 +29,19 @@ namespace SportBook.ViewComponents
         {
             if (userId > 0)
             {
-                _context.Participant.Add(new Participant { FkEvent = eventId, FkUser = userId });
-                _context.SaveChanges();
+                var user = _context.Participant.FirstOrDefault(x => x.FkUser == userId);
+
+                if (user == null)
+                {
+                    _context.Participant.Add(new Participant { FkEvent = eventId, FkUser = userId });
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    _context.Participant.Remove(user);
+                    _context.SaveChanges();
+                }
+
             }
             var participantsList = _context.Participant.Where(p => p.FkEvent == eventId);
             var usersInEvent = (from users in _context.User

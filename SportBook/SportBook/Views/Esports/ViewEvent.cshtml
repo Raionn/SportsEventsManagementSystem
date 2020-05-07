@@ -66,21 +66,39 @@
         @await Component.InvokeAsync("EventMemberList", new { eventId = Model.Event.EventId, userId = 0 })
     </div>
 </div>
+@if (Model.Participants.Any(p => p.FkUser == currentUser.UserId))
+{
+    <div>
+        <input id="joinLeaveBtn" type="button" onclick="leaveEvent()" value="Leave" class="btn btn-danger" />
+    </div>
+}
+else
+{
+    <div>
+        <input id="joinLeaveBtn" type="button" onclick="joinEvent()" value="Join" class="btn btn-success" />
+    </div>
+}
 
-<div>
-    <input id="submit" type="button" onclick="joinEvent()" value="Join" class="btn btn-primary ml-auto" />
-</div>
 
 <script>
     function joinEvent() {
         $("#participantList").load("@Url.Action("EventMemberVC", new { eventId = Model.Event.EventId, currentUser.UserId })");
+        document.getElementById("joinLeaveBtn").setAttribute("value", "Leave"); 
+        document.getElementById("joinLeaveBtn").setAttribute("onClick", "leaveEvent()");
+        document.getElementById("joinLeaveBtn").classList.remove('btn-success');
+        document.getElementById("joinLeaveBtn").classList.add('btn-danger');
     }
+    
+    function leaveEvent() {
+        $("#participantList").load("@Url.Action("EventMemberVC", new { eventId = Model.Event.EventId, currentUser.UserId })");
+        document.getElementById("joinLeaveBtn").setAttribute("value", "Join"); 
+        document.getElementById("joinLeaveBtn").setAttribute("onClick", "joinEvent()");
+        document.getElementById("joinLeaveBtn").classList.remove('btn-danger');
+        document.getElementById("joinLeaveBtn").classList.add('btn-success');
+    }    
 </script>
 
 @*<div>*@
 @*<a asp-action="Edit" asp-route-id="@Model.EventId">Edit</a> |*@
 @*<a asp-action="Esports">Back to List</a>*@
 @*</div>*@
-
-
-
