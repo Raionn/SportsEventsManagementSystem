@@ -1,27 +1,34 @@
 ﻿@model SportBook.ViewModels.InvitationData;
 
-    <div class='list-group'>
+<div class='list-group'>
 
-        @foreach (var item in Model.EventInvitation)
-        {
+    @foreach (var item in Model.EventInvitation)
+    {
 
-            <a onclick='doSomething(@item.EventInvitationId);' href='@item.Url' class='btn list-group-item list-group-item-action mb-1'>You have been invited to join event: <b>@item.EventName</b></a>
+        <a id='@item.EventInvitationId E' href='@item.Url' class='btn list-group-item list-group-item-action mb-1 inviteAccept'>You have been invited to join event: <b>@item.EventName</b></a>
 
-        }
+    }
 
-        @foreach (var item in Model.TeamInvitation)
-        {
+    @foreach (var item in Model.TeamInvitation)
+    {
 
-            <a id='lmao' href='#' onclick='doSomething(@item.TeamInvitationId);' class='list-group-item list-group-item-action mb-1'>You have been invited to join team: <b>@item.TeamName</b></a>
-        }
-    </div>
+        <a id='@item.TeamInvitationId T' href='#' class='list-group-item list-group-item-action mb-1 inviteAccept'>You have been invited to join team: <b>@item.TeamName</b></a>
+    }
+</div>
 
 <script>
-    $('#lmao').click(function () { MyFunction(); return false; });
+    $('body').on('click', '.inviteAccept', function () { PostInvites($(this));});
 
-    function MyFunction() {
-        alert('hello');
-        console.log(data);
-        console.log(this);
+    function PostInvites(data) {        
+        var obj = data.attr('id');
+        $.ajax({
+            url: "../Home/AcceptInvite",
+            type: 'POST',
+            method: 'post',
+            dataType: 'json',
+            data: JSON.stringify(obj),
+            contentType: 'application/json',
+        })
     }
+
 </script>

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.Serialization;
 
 namespace SportBook.Controllers
 {
@@ -89,22 +90,27 @@ namespace SportBook.Controllers
         }
 
         [HttpPost]
-        public async Task<Task> AcceptInvite(int? id)
+        public async Task<Task> AcceptInvite([FromBody] string obj)
         {
-            var invite = await _context.EventInvitation.FindAsync(id);
-            if (invite == null)
+            if (obj != null && obj.Length > 0)
             {
-                var teamInvite = await _context.TeamInvitation.FindAsync(id);
-                teamInvite.IsAccepted = true;
-                _context.Update(teamInvite);
-                await _context.SaveChangesAsync();
+                var id = int.Parse(obj.Substring(0, obj.Length - 2));
+                if (obj.Contains("T"))
+                {
+                    var teamInvite = await _context.TeamInvitation.FindAsync(id);
+                    teamInvite.IsAccepted = true;
+                    _context.Update(teamInvite);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    var invite = await _context.EventInvitation.FindAsync(id);
+                    invite.IsAccepted = true;
+                    _context.Update(invite);
+                    await _context.SaveChangesAsync();
+                }
             }
-            else
-            {
-                invite.IsAccepted = true;
-                _context.Update(invite);
-                await _context.SaveChangesAsync();
-            }
+
 
             return Task.CompletedTask;
         }
