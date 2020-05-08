@@ -61,7 +61,6 @@
             @Html.DisplayFor(model => model.Event.FkOwnerNavigation.Username)
         </div>
     </div>
-    @*<div class="d-flex flex-column col-md-1"></div>*@
     <div class="d-flex flex-column col-md-8" id="participantList">
         @await Component.InvokeAsync("EventMemberList", new { eventId = Model.Event.EventId, userId = 0 })
     </div>
@@ -78,7 +77,6 @@ else
         <input id="joinLeaveBtn" type="button" onclick="joinEvent()" value="Join" class="btn btn-success" />
     </div>
 }
-
 
 <script>
     function joinEvent() {

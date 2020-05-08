@@ -4,6 +4,7 @@
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var locations = ViewData["Locations"] as List<SportBook.ViewModels.LocationData>;
+    var currentUser = ViewData["CurrentUser"] as SportBook.Models.User;
 }
 <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
 <div class="d-flex">
@@ -38,13 +39,12 @@
                                 {
                                     <tr>
                                         <td class="d-flex">
-                                            <div> @Html.DisplayFor(modelItem => item.Text) </div>
-                                            <input type="hidden" asp-for="Invitation.FkUser" value="@item.Value" />
+                                            <div> @Html.DisplayFor(modelItem => item.Username) </div>
+                                            <input type="hidden" asp-for="Invitation.FkUser" value="@item.UserId" />
                                             <input id="btnSave" name="submitBtn" type="submit" value="Invite" class="btn btn-success ml-auto" />
                                         </td>
                                     </tr>
                                     ++i;
-
                                 }
                             </tbody>
                         </table>
@@ -55,91 +55,115 @@
     </div>
 </div>
 
-<div class="d-flex">
-    <div class="col-md-6 col-xs-6">
-        <h4>Event</h4>
-        <hr />
-        <dl class="row">
-            <dt class="col-sm-3">
-                @Html.DisplayNameFor(model => model.Event.Title)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.Event.Title)
-            </dd>
-            <dt class="col-sm-3">
-                @Html.DisplayNameFor(model => model.Event.MaxParticipantAmt)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.Event.MaxParticipantAmt)
-            </dd>
-            <dt class="col-sm-3">
-                @Html.DisplayNameFor(model => model.Event.StartTime)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.Event.StartTime)
-            </dd>
-            <dt class="col-sm-3">
-                @Html.DisplayNameFor(model => model.Event.EndTime)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.Event.EndTime)
-            </dd>
-            <dt class="col-sm-3">
-                @Html.DisplayNameFor(model => model.Event.IsPrivate)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.Event.IsPrivate)
-            </dd>
-            <dt class="col-sm-3">
-                @Html.DisplayNameFor(model => model.Event.IsTeamEvent)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.Event.IsTeamEvent)
-            </dd>
-            <dt class="col-sm-3">
-                @Html.DisplayNameFor(model => model.Event.FkGameTypeNavigation)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.Event.FkGameTypeNavigation.Name)
-            </dd>
-            <dt class="col-sm-3">
-                @Html.DisplayNameFor(model => model.Event.FkLocationNavigation)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.Event.FkLocationNavigation.Address)
-            </dd>
-            <dt class="col-sm-3">
-                @Html.DisplayNameFor(model => model.Event.FkOwnerNavigation)
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.Event.FkOwnerNavigation.Username)
-            </dd>
-        </dl>
+<div class="d-flex flex-row">
+    <div class="d-flex flex-column col-md-2 col-xs-2">
+        @*<h4>Event</h4>
+            <hr />*@
+        <div class="p-2">
+            @Html.DisplayNameFor(model => model.Event.Title)
+        </div>
+        <div class="p-2">
+            @Html.DisplayNameFor(model => model.Event.MaxParticipantAmt)
+        </div>
+        <div class="p-2">
+            @Html.DisplayNameFor(model => model.Event.StartTime)
+        </div>
+        <div class="p-2">
+            @Html.DisplayNameFor(model => model.Event.EndTime)
+        </div>
+        @*<div class="p-2">
+                @Html.DisplayNameFor(model => model.Event.IsPrivate)            // idk if we need to show this
+            </div>*@
+        <div class="p-2">
+            @Html.DisplayNameFor(model => model.Event.FkGameTypeNavigation)
+        </div>
+        <div class="p-2">
+            @Html.DisplayNameFor(model => model.Event.FkLocationNavigation)
+        </div>
+        <div class="p-2">
+            @Html.DisplayNameFor(model => model.Event.FkOwnerNavigation)
+        </div>
     </div>
 
-
-    <div class="container-fluid" id="eventMap">
-
+    <div class="d-flex flex-column col-md-2 col-xs-2">
+        <div class="p-2">
+            @Html.DisplayFor(model => model.Event.Title)
+        </div>
+        <div class="p-2">
+            @Html.DisplayFor(model => model.Event.MaxParticipantAmt)
+        </div>
+        <div class="p-2">
+            @Html.DisplayFor(model => model.Event.StartTime)
+        </div>
+        <div class="p-2">
+            @Html.DisplayFor(model => model.Event.EndTime)
+        </div>
+        <div class="p-2">
+            @Html.DisplayFor(model => model.Event.FkGameTypeNavigation.Name)
+        </div>
+        <div class="p-2">
+            @Html.DisplayFor(model => model.Event.FkLocationNavigation.Address)
+        </div>
+        <div class="p-2">
+            @Html.DisplayFor(model => model.Event.FkOwnerNavigation.Username)
+        </div>
     </div>
+
+    <div class="d-flex flex-column col-md-4" id="participantList">
+        @await Component.InvokeAsync("EventMemberList", new { eventId = Model.Event.EventId, userId = 0 })
+    </div>
+
+    <div class="container-fluid" id="eventMap"></div>
+
 </div>
-<div>
+
+@if (Model.Participants.Any(p => p.FkUser == currentUser.UserId))
+{ 
+    <div>
+        <input id="joinLeaveBtn" type="button" onclick="leaveEvent()" value="Leave" class="btn btn-danger" />
+    </div>
+}
+else
+{
+    <div>
+        <input id="joinLeaveBtn" type="button" onclick="joinEvent()" value="Join" class="btn btn-success" />
+    </div>
+}
+
+@*<div>
     <a asp-action="Edit" asp-route-id="@Model.Event.EventId">Edit</a> |
     <a asp-action="Index">Back to List</a>
-</div>
+</div>*@
+
 <script async defer
         src="">
 </script>
+
+<script>
+    function joinEvent() {
+        $("#participantList").load("@Url.Action("SportsEventMemberVC", "Sports", new { eventId = Model.Event.EventId, currentUser.UserId })");
+        document.getElementById("joinLeaveBtn").setAttribute("value", "Leave");
+        document.getElementById("joinLeaveBtn").setAttribute("onClick", "leaveEvent()");
+        document.getElementById("joinLeaveBtn").classList.remove('btn-success');
+        document.getElementById("joinLeaveBtn").classList.add('btn-danger');
+    }
+
+    function leaveEvent() {
+        $("#participantList").load("@Url.Action("SportsEventMemberVC", "Sports", new { eventId = Model.Event.EventId, currentUser.UserId })");
+        document.getElementById("joinLeaveBtn").setAttribute("value", "Join");
+        document.getElementById("joinLeaveBtn").setAttribute("onClick", "joinEvent()");
+        document.getElementById("joinLeaveBtn").classList.remove('btn-danger');
+        document.getElementById("joinLeaveBtn").classList.add('btn-success');
+    }
+</script>
+
 <script>
     // Initialize and add the map
     function initMap() {
         var locationsObj = @Html.Raw(Json.Serialize(locations));
-        // The location of Uluru
         var kaunas = { lat: locationsObj[0].latitude, lng: locationsObj[0].longitude };
-        // The map, centered at Uluru
         var map = new google.maps.Map(
             document.getElementById('eventMap'), { zoom: 6, center: kaunas });
-
-        //// The marker, positioned at Uluru
         //var marker = new google.maps.Marker({ position: kaunas, map: map });
         lmao(map);
     }
@@ -162,7 +186,6 @@
             marker.addListener('mouseout', function () {
                 infowindow.close();
             });
-
         }
 
         //for (let marker of allMarkers) {
@@ -176,7 +199,7 @@
     };
 
 </script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
         $("#myInput").on("keyup", function () {
@@ -226,10 +249,10 @@
                     //    alert(value.Text + '---' + value.Value);// + '---' + value.date[0]); //and so on
                     //});
                 },
-                failure: function(response) {
+                failure: function (response) {
                     alert("failure");
                 },
-                error: function(response) {
+                error: function (response) {
                     alert("error");
                 },
             })

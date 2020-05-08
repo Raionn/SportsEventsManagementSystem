@@ -11,17 +11,20 @@ namespace SportBook.ViewModels
 {
     public class EventDetailData
     {
-        public SelectList Users { get; set; }
+        public List<User> Users { get; set; }
         public Event Event { get; set; }
         public Models.Participant Participant {get;set;}
         public EventInvitation Invitation { get; set; }
+        public List<Models.Participant> Participants { get; set; }
 
-        public EventDetailData(SelectList users, Event @event, Models.Participant participant, EventInvitation invitation)
+        public EventDetailData(List<User> users, Event @event, Models.Participant participant,
+            EventInvitation invitation, List<Models.Participant> participants)
         {
             Users = users;
             Event = @event;
             Participant = participant;
             Invitation = invitation;
+            Participants = participants;
         }
 
     }

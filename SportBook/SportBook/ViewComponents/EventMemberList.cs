@@ -41,7 +41,6 @@ namespace SportBook.ViewComponents
                     _context.Participant.Remove(user);
                     _context.SaveChanges();
                 }
-
             }
             var participantsList = _context.Participant.Where(p => p.FkEvent == eventId);
             var usersInEvent = (from users in _context.User

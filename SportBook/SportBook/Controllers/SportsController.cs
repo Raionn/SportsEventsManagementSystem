@@ -15,6 +15,7 @@ using SportBook.ViewModels;
 namespace SportBook.Controllers
 {
     //[Authorize(Roles ="admin")]
+    [Route("[controller]/[action]")]
     public class SportsController : Controller
     {
         private readonly SportbookDatabaseContext _context;
@@ -23,7 +24,7 @@ namespace SportBook.Controllers
         {
             _context = context;
         }
-        [Route("[action]")]
+        //[Route("[action]")]           // MUST FIX THIS LATER
         public async Task<IActionResult> Sports(string title, string gametype, string city)
         {
             var sportbookDatabaseContext = _context.Event.Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation).Where(e => !e.FkGameTypeNavigation.IsOnline).Where(x => x.IsPrivate == false).OrderBy(x => x.StartTime);
@@ -54,7 +55,6 @@ namespace SportBook.Controllers
             ViewData["CurrentUser"] = currentUser;
             return View(await sportbookDatabaseContext.ToListAsync());
         }
-        [Route("[controller]/[action]")]
         public IActionResult SportsEvents()
         {
             var sportbookDatabaseContext = _context.Location.Include(t => t.FkGameTypeNavigation).Where(e => e.FkGameTypeNavigation.IsOnline == false);
@@ -67,7 +67,6 @@ namespace SportBook.Controllers
             return View();
         }
 
-        [Route("[controller]/[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SportsEvents([Bind("Title,MaxParticipantAmt,StartTime,EndTime,IsPrivate,FkLocation,FkGameType")] Event @event)
@@ -91,7 +90,6 @@ namespace SportBook.Controllers
             return View(@event);
         }
 
-        [Route("[controller]/[action]")]
         public IActionResult Teams()
         {
             return View();
@@ -229,7 +227,12 @@ namespace SportBook.Controllers
             return _context.Event.Any(e => e.EventId == id);
         }
 
-        [Route("[controller]/[action]")]
+        [HttpGet("{userId}")]
+        public IActionResult SportsEventMemberVC(int eventId, int userId)
+        {
+            return ViewComponent("EventMemberList", new { eventId, userId });
+        }
+
         public async Task<IActionResult> ViewEvent(int? id)
         {
             if (id == null)
@@ -249,8 +252,10 @@ namespace SportBook.Controllers
             {
                 return NotFound();
             }
-            var users = new SelectList(_context.User.Where(u => u.UserId != GetCurrentUser().UserId), "UserId", "Username");
-            var modelData = new EventDetailData(users, @event, new Models.Participant(), new EventInvitation());
+            //var users = new SelectList(_context.User.Where(u => u.UserId != GetCurrentUser().UserId), "UserId", "Username");
+            var users = _context.User.Where(u => u.UserId != GetCurrentUser().UserId).ToList();     // idk why I did this again
+            var participants = await _context.Participant.Include(x => x.FkUserNavigation).Include(x => x.FkEventNavigation).Where(x => x.FkEvent == id).ToListAsync();
+            var modelData = new EventDetailData(users, @event, new Models.Participant(), new EventInvitation(), participants);
 
             List<LocationData> locations = new List<LocationData>
             {
@@ -258,6 +263,7 @@ namespace SportBook.Controllers
             };
 
             ViewData["Locations"] = locations;
+            ViewData["CurrentUser"] = GetCurrentUser();
 
             return View(modelData);
         }
