@@ -11,7 +11,7 @@ using SportBook.ViewModels;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace SportBook.Views.Components.Invitations
+namespace SportBook.ViewComponents
 {
     public class InvitationsViewComponent : ViewComponent
     {
@@ -75,7 +75,7 @@ namespace SportBook.Views.Components.Invitations
             }
             foreach (var item in amountTeam)
             {
-                teamList.Add(new TeamDataInvitation(item.TeamInvitationId, item.IsAccepted, item.FkUser, item.FkTeam, item.FkTeamNavigation.Name, ""));
+                teamList.Add(new TeamDataInvitation(item.TeamInvitationId, item.IsAccepted, item.FkUser, item.FkTeam, item.FkTeamNavigation.Name, "../Teams/Details/" + item.TeamInvitationId.ToString()));
             }
             var data = new InvitationData(eventList, teamList);
             //var items = await GetItemsAsync(maxPriority, isDone);

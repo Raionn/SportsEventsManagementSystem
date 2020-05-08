@@ -12,7 +12,7 @@
     @foreach (var item in Model.TeamInvitation)
     {
 
-        <a id='@item.TeamInvitationId T' href='#' class='list-group-item list-group-item-action mb-1 inviteAccept'>You have been invited to join team: <b>@item.TeamName</b></a>
+        <a id='@item.TeamInvitationId T' href='@item.Url' class='list-group-item list-group-item-action mb-1 inviteAccept'>You have been invited to join team: <b>@item.TeamName</b></a>
     }
 </div>
 
