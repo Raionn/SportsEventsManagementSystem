@@ -14,6 +14,7 @@ using SportBook.Models;
 
 namespace SportBook.Controllers
 {
+    [Route("[controller]/[action]")]
     public class TeamsController : Controller
     {
         private readonly SportbookDatabaseContext _context;
@@ -70,6 +71,7 @@ namespace SportBook.Controllers
             ViewData["Members"] = _context.TeamMember.Where(x => x.FkTeam == id).Include(x => x.FkUserNavigation);
             ViewData["CurrentUser"] = GetCurrentUser();
             ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name", team.FkGameType);
+            ViewData["TeamInvites"] = _context.TeamInvitation.Where(x => x.FkTeam == id);
             ViewData["isFailed"] = false;
             return View(team);
         }
@@ -139,6 +141,7 @@ namespace SportBook.Controllers
             ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name", team.FkGameType);
             ViewData["Members"] = _context.TeamMember.Where(x => x.FkTeam == id).Include(x => x.FkUserNavigation);
             ViewData["CurrentUser"] = GetCurrentUser();
+            ViewData["TeamInvites"] = _context.TeamInvitation.Where(x => x.FkTeam == id);
             ViewData["isFailed"] = true;
             return View("Details", team);
         }
@@ -175,6 +178,12 @@ namespace SportBook.Controllers
         public IActionResult TeamMemberVC(int teamId, int userId)
         {
             return ViewComponent("TeamMemberList", new { teamId, userId });
+        }
+
+        [HttpGet("{teamId}")]
+        public IActionResult TeamInvitationListVC(int userId, int teamId)
+        {
+            return ViewComponent("InviteTeamMemberList", new { teamId, userId });
         }
     }
 }

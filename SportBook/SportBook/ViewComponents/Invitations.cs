@@ -68,14 +68,14 @@ namespace SportBook.ViewComponents
             {
                 var url = "";
                 if (item.FkEventNavigation.FkGameTypeNavigation.IsOnline)
-                    url = "../Esports/ViewEvent?id=" + item.FkEvent.ToString();
+                    url = "/Esports/ViewEvent?id=" + item.FkEvent.ToString();
                 else
-                    url = "../Sports/ViewEvent?id=" + item.FkEvent.ToString();
+                    url = "/Sports/ViewEvent?id=" + item.FkEvent.ToString();
                 eventList.Add(new EventDataInvitation(item.EventInvitationId, item.IsAccepted, item.FkUser, item.FkEvent, item.FkEventNavigation.Title,url));
             }
             foreach (var item in amountTeam)
             {
-                teamList.Add(new TeamDataInvitation(item.TeamInvitationId, item.IsAccepted, item.FkUser, item.FkTeam, item.FkTeamNavigation.Name, "../Teams/Details/" + item.TeamInvitationId.ToString()));
+                teamList.Add(new TeamDataInvitation(item.TeamInvitationId, item.IsAccepted, item.FkUser, item.FkTeam, item.FkTeamNavigation.Name, "/Teams/Details?id=" + item.FkTeam.ToString()));
             }
             var data = new InvitationData(eventList, teamList);
             //var items = await GetItemsAsync(maxPriority, isDone);

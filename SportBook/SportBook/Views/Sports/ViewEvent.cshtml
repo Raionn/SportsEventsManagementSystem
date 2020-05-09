@@ -198,13 +198,9 @@ else
 
     function PostInvites(data) {
         var obj = data.attr("id");
-        console.log(obj);
         var link = "@Url.Action("InvitableUserVC", "Sports", new { eventId = Model.Event.EventId, userId = "-1" })";
         link = link.replace("-1", obj);
         link = link.replace("amp;", "");
-        console.log(link); 
         $("#invitableUserList").load(link, function () { });
-        console.log("loaded");
-        console.log(data);
     }
 </script>

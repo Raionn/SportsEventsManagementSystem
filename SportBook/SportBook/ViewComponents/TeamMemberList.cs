@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace SportBook.ViewComponents
 {
-    public class TeamMemberList : ViewComponent
+    public class TeamMemberListViewComponent : ViewComponent
     {
         private readonly SportbookDatabaseContext _context;
 
-        public TeamMemberList(SportbookDatabaseContext context)
+        public TeamMemberListViewComponent(SportbookDatabaseContext context)
         {
             _context = context;
         }
 
-        public IViewComponentResult Invoke(int teamId, int userId)
+        public async Task<IViewComponentResult> InvokeAsync(int teamId, int userId)
         {
             ViewData["CurrentUser"] = GetCurrentUser();
             var team = _context.Team.Find(teamId);
@@ -29,43 +29,22 @@ namespace SportBook.ViewComponents
 
                 if (user == null)
                 {
+                    var invites = _context.TeamInvitation.Where(x => x.FkUser == userId);
+                    _context.RemoveRange(invites);
                     _context.TeamMember.Add(new TeamMember { FkTeam = teamId, FkUser = userId });
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                 }
                 else
                 {
                     _context.TeamMember.Remove(user);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                 }
 
             }
             var teamMemberList = _context.TeamMember.Where(p => p.FkTeam == teamId).Include(x => x.FkUserNavigation);
             return View(teamMemberList);
         }
-        //private List<TeamMember> GetItemsAsync(int teamId, int userId)
-        //{
-        //    if (userId > 0)
-        //    {
-        //        var user = _context.TeamMember.FirstOrDefault(x => x.FkUser == userId);
 
-        //        if (user == null)
-        //        {
-        //            _context.TeamMember.Add(new TeamMember { FkTeam = teamId, FkUser = userId });
-        //            _context.SaveChanges();
-        //        }
-        //        else
-        //        {
-        //            _context.TeamMember.Remove(user);
-        //            _context.SaveChanges();
-        //        }
-
-        //    }
-        //    var teamMemberList = _context.TeamMember.Where(p => p.FkTeam == teamId).Include(x => x.FkUserNavigation);
-        //    //var usersInTeam = (from users in _context.User
-        //    //                    join teamMembers in teamMemberList on users.UserId equals teamMembers.FkUser
-        //    //                    select users).ToList();
-        //    return teamMemberList;
-        //}
         private User GetCurrentUser()
         {
             var externalId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;

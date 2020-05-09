@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var teamMembers = ViewData["Members"] as IEnumerable<SportBook.Models.TeamMember>;
     var currentUser = ViewData["CurrentUser"] as SportBook.Models.User;
+    var teamInvites = ViewData["TeamInvites"] as IEnumerable<SportBook.Models.TeamInvitation>;
 }
 
 @if ((bool)ViewData["isFailed"] == true)
@@ -16,6 +17,7 @@
     </script>
 }
 
+
 <div class="d-flex">
     <h1>Team details</h1>
     <div class="ml-auto mr-5">
@@ -23,12 +25,32 @@
         {
             <a class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal" asp-action="Delete" asp-route-id="@Model.TeamId"><i class="fa fa-trash-alt"></i></a>
             <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#myModal"><i class="fa fa-edit" style="color:white"></i></a>
-            <a class="btn btn-secondary ml-2"><i class="fa fa-user-plus" style="color:white"></i></a>
+            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#inviteToTeamModal"><i class="fa fa-user-plus" style="color:white"></i></a>
         }
         <a asp-action="Index" class="btn btn-secondary ml-2"><i class="fa fa-list"></i></a>
     </div>
 </div>
 
+<div class="modal" id="inviteToTeamModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Invite to team</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <input class="form-control mb-2" id="myInput" type="text" placeholder="Search..">
+                <h4 class="align-content-center">Users</h4>
+                <ul class="list-group overflow-auto p-2" style="max-height:550px" id="invitableUserList">
+                    @await Component.InvokeAsync("InviteTeamMemberList", new { userId = 0, teamId = Model.TeamId })
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 <form id="eventForm" asp-action="Edit" asp-route-id="@Model.TeamId">
     <div class="modal" id="myModal">
         <div class="modal-dialog">
@@ -62,7 +84,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="form-group">
-                        <input id="btnSave" type="submit" value="Edit" class="btn btn-secondary" />
+                        <input type="submit" value="Edit" class="btn btn-secondary" />
                     </div>
                 </div>
             </div>
@@ -89,7 +111,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="form-group">
-                        <input id="btnSave" type="submit" value="Delete" class="btn btn-outline-danger" />
+                        <input type="submit" value="Delete" class="btn btn-outline-danger" />
                     </div>
                 </div>
             </div>
@@ -157,3 +179,89 @@
         </div>
     </div>
 </div>
+@if (teamInvites.Any(p => p.FkUser == currentUser.UserId) && !teamMembers.Any(x => x.FkUser == currentUser.UserId))
+{
+    <div class="text-center">
+        <div class="col align-content-lg-center text-center">
+            <div class="flex-row p-2" id="joinLeaveText">
+                You have been invited to join this team
+            </div>
+
+            <div class="flex-row p-2">
+                <input id="joinLeaveBtn" type="button" onclick="joinEvent()" value="Join" class="btn btn-success" />
+            </div>
+
+        </div>
+
+    </div>
+}
+else if (teamMembers.Any(x => x.FkUser == currentUser.UserId) && currentUser.UserId != Model.FkOwner)
+{
+    <div class="text-center">
+        <div class="col align-content-lg-center text-center">
+            <div class="flex-row p-2" id="joinLeaveText">
+                Are you sure you want to leave?
+            </div>
+
+            <div class="flex-row p-2">
+                <input id="joinLeaveBtn" type="button" onclick="leaveEvent()" value="Leave" class="btn btn-danger" />
+            </div>
+
+        </div>
+    </div>
+}
+<script>
+
+    $('body').on('click', '.removeMember', function () { PostInvites($(this)); return false;});
+
+    function PostInvites(data) {
+            var obj = data.attr("id");
+            var link = "@Url.Action("TeamMemberVC", "Teams", new { teamId = Model.TeamId, userId = "-1" })";
+        link = link.replace("-1", obj);
+
+            $("#teamMemberList").load(link, function () { });
+            console.log("loaded");
+            console.log(data);
+    }
+</script>
+
+<script>
+    function joinEvent() {
+        $("#teamMemberList").load("@Url.Action("TeamMemberVC", "Teams", new { teamId = Model.TeamId, userId = currentUser.UserId })");
+        document.getElementById("joinLeaveBtn").setAttribute("value", "Leave");
+        document.getElementById("joinLeaveBtn").setAttribute("onClick", "leaveEvent()");
+        document.getElementById("joinLeaveBtn").classList.remove('btn-success');
+        document.getElementById("joinLeaveBtn").classList.add('btn-danger');
+        document.getElementById("joinLeaveText").textContent = "Are you sure you want to leave?"
+    }
+
+    function leaveEvent() {
+        $("#teamMemberList").load("@Url.Action("TeamMemberVC", "Teams", new { teamId = Model.TeamId, userId = currentUser.UserId })");
+        document.getElementById("joinLeaveBtn").remove();
+        document.getElementById("joinLeaveText").textContent = ""
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#invitableUserList li").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    $('body').on('click', '.invitableUser', function () {
+        PostInvites($(this));
+        return false;
+    });
+
+    function PostInvites(data) {
+        var obj = data.attr("id");
+        var link = "@Url.Action("TeamInvitationListVC", "Teams", new { userId = "-1", teamId = Model.TeamId })";
+        link = link.replace("-1", obj);
+        link = link.replace("amp;", "");
+        $("#invitableUserList").load(link, function () { });
+    }
+</script>
