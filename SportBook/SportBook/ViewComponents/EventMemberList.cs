@@ -33,6 +33,8 @@ namespace SportBook.ViewComponents
 
                 if (user == null)
                 {
+                    var invites = _context.EventInvitation.Where(x => x.FkUser == userId);
+                    _context.RemoveRange(invites);
                     _context.Participant.Add(new Participant { FkEvent = eventId, FkUser = userId });
                     _context.SaveChanges();
                 }

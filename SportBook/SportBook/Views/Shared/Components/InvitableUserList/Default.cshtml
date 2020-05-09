@@ -1,0 +1,18 @@
+﻿@model IEnumerable<SportBook.Models.User>
+@{var eventOwner = ViewData["EventOwner"] as SportBook.Models.User;}
+@{var currentUser = ViewData["CurrentUser"] as SportBook.Models.User;}
+
+@foreach (var item in Model)
+{
+    if (item.UserId != currentUser.UserId && item.UserId != eventOwner.UserId)
+    {
+        <li class="list-group-item ">
+            <div class="row">
+                <div class="ml-3 p-2">
+                    @item.Username
+                </div>
+                <a id="@item.UserId" class="btn btn-secondary ml-auto mr-2 invitableUser"><i class="fa fa-user-plus" style="color:white"></i></a>
+            </div>
+        </li>
+    }
+}

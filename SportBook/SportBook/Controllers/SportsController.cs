@@ -233,6 +233,12 @@ namespace SportBook.Controllers
             return ViewComponent("EventMemberList", new { eventId, userId });
         }
 
+        [HttpGet("{userId}")]
+        public IActionResult InvitableUserVC(int eventId, int userId)
+        {
+            return ViewComponent("InvitableUserList", new { eventId, userId });
+        }
+
         public async Task<IActionResult> ViewEvent(int? id)
         {
             if (id == null)
