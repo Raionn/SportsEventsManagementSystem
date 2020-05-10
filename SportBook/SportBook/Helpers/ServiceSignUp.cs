@@ -33,7 +33,7 @@ namespace SportBook.Helpers
             var claim = claims.FirstOrDefault(x => x.Type.EndsWith("isNewUser"));
             string userOId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
             var userInfo = _context.User.FirstOrDefault(s => s.ExternalId == userOId);
-            if ((userInfo != null) || bool.Parse(claim.Value))
+            if ((userInfo == null) || bool.Parse(claim.Value))
             {
                 isNewUser = true;
             }

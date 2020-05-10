@@ -26,12 +26,10 @@
     <form class="form" asp-action="Profile">
         <div class="row">
             <div class="col-sm-3">
-
                 <div class="text-center">
                     <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail" alt="avatar">
-                    <h6>Upload profile image...</h6>
+                    <h6>Upload profile image</h6>
                     <input asp-for="PictureUrl" type="file" class="text-center center-block file-upload">
-                    <label asp-for="PictureUrl" class="control-label"></label>
                     @*<div class="custom-file">
                         <input asp-for="PictureUrl" type="file" class="custom-file-input" id="customFile">
                         <label class="custom-file-label" for="customFile">Choose file</label>
@@ -61,22 +59,28 @@
                 <hr>
                 @*<form class="form" asp-action="Profile">*@
                 <div class="form-group">
+                    <div class="col-xs-6">
+                        <label asp-for="Username" class="control-label"></label>
+                        <input asp-for="Username" class="form-control" value="@currentUser.Username" placeholder="Username">
+                    </div>
+                </div>
+                <div class="form-group">
 
                     <div class="col-xs-6">
-                        <label asp-for="Firstname">First name</label>
+                        <label asp-for="Firstname" class="control-label"></label>
                         <input asp-for="Firstname" class="form-control" value="@currentUser.Firstname" placeholder="First name">
                     </div>
                 </div>
                 <div class="form-group">
 
                     <div class="col-xs-6">
-                        <label asp-for="Lastname">Last name</label>
+                        <label asp-for="Lastname" class="control-label"></label>
                         <input asp-for="Lastname" class="form-control" value="@currentUser.Lastname" placeholder="Last name">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-xs-6">
-                        <label asp-for="Email">Email</label>
+                        <label asp-for="Email" class="control-label"></label>
                         <input asp-for="Email" class="form-control" value="@currentUser.Email" readonly>
                     </div>
                 </div>
@@ -86,10 +90,8 @@
                     <span asp-validation-for="Birthdate" class="text-danger"></span>
                 </div>
                 <input type="hidden" asp-for="UserId" value="@currentUser.UserId" />
-                <input type="hidden" asp-for="Username" value="@currentUser.Username" />
                 <input type="hidden" asp-for="ExternalId" value="@currentUser.ExternalId" />
                 @* <input type="hidden" asp-for="PictureUrl" value="@currentUser.PictureUrl" />*@
-
 
                 <div class="form-group">
                     <div class="col-xs-12">
