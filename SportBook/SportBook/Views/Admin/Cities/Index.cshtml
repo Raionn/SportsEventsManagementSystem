@@ -4,18 +4,20 @@
     ViewData["Title"] = "Cities";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
-<h1>Cities</h1>
-<form asp-controller="Admin" asp-action="Cities">
-    <p>
-        <div class="input-group" style="width:30%">
-            <input type="text" class="form-control" name="name" placeholder="Search cities">
-            <div class="input-group-append">
-                <button type="submit" class="btn btn-secondary"><i class="fa fa-search"></i></button>
+<div class="d-flex">
+    <h1>Cities</h1>
+    <div class="ml-auto col-sm-3 p-0">
+        <p>
+            <div class="input-group">
+                <input id="myInput" type="text" class="form-control" name="title" placeholder="Search..." style="margin-right:5px">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary"><i class="fa fa-search"></i></button>
+                </div>
             </div>
-        </div>
-    </p>
-</form>
+        </p>
+    </div>
+</div>
+
 <p>
     Create new
     <button style="margin-left:5px" onclick="location.href='@Url.Action("CitiesCreate", "Admin")'" class="btn btn-secondary"><i class="fa fa-plus"></i></button>
@@ -29,7 +31,7 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="search">
         @foreach (var item in Model)
         {
             <tr>
@@ -37,7 +39,7 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    <a asp-action="CitiesEdit" asp-route-id="@item.CityId"><i class="fa fa-edit"></i></a> 
+                    <a asp-action="CitiesEdit" asp-route-id="@item.CityId"><i class="fa fa-edit"></i></a>
                     <a asp-action="CitiesDetails" asp-route-id="@item.CityId"><i class="fa fa-info-circle"></i></a>
                     <a asp-action="CitiesDelete" asp-route-id="@item.CityId"><i class="fa fa-trash"></i></a>
                 </td>
@@ -45,3 +47,14 @@
         }
     </tbody>
 </table>
+
+<script>
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#search tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>

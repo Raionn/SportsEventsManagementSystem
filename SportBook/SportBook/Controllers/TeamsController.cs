@@ -48,7 +48,7 @@ namespace SportBook.Controllers
                                              on first.TeamId equals second.FkTeam
                                      select first;
             ViewData["Teams"] = data;
-            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name");
+            ViewData["FkGameType"] = new SelectList(_context.GameType.Where(x => x.IsOnline), "GameTypeId", "Name");
             return View(new Team());
         }
 

@@ -5,20 +5,20 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Events</h1>
 
-<form asp-controller="Admin" asp-action="Events">
-    <p>
-        <div class="input-group" style="width:40%">
-            <input type="text" class="form-control" name="title" placeholder="Title" style="margin-right:5px">
-            <input type="text" class="form-control" name="gametype" placeholder="Game type" style="margin-right:5px">
-            <input type="text" class="form-control" name="address" placeholder="Address" style="margin-right:5px">
-            <div class="input-group-append">
-                <button type="submit" class="btn btn-secondary"><i class="fa fa-search"></i></button>
+<div class="d-flex">
+    <h1>Events</h1>
+    <div class="ml-auto col-sm-3 p-0">
+        <p>
+            <div class="input-group">
+                <input id="myInput" type="text" class="form-control" name="title" placeholder="Search..." style="margin-right:5px">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary"><i class="fa fa-search"></i></button>
+                </div>
             </div>
-        </div>
-    </p>
-</form>
+        </p>
+    </div>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -52,7 +52,7 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="search">
         @foreach (var item in Model)
         {
             <tr>
@@ -94,3 +94,13 @@
 </table>
 
 
+<script>
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#search tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>

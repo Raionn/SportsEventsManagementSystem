@@ -25,23 +25,10 @@ namespace SportBook.Controllers
             _context = context;
         }
         //[Route("[action]")]           // MUST FIX THIS LATER
-        public async Task<IActionResult> Sports(string title, string gametype, string city)
+        public async Task<IActionResult> Sports()
         {
             var sportbookDatabaseContext = _context.Event.Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation).Where(e => !e.FkGameTypeNavigation.IsOnline).Where(x => x.IsPrivate == false).OrderBy(x => x.StartTime);
-            if (!String.IsNullOrEmpty(title))
-            {
-                sportbookDatabaseContext = sportbookDatabaseContext.Where(s => s.Title.Contains(title)).Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation).OrderBy(x => x.StartTime);
-            }
-            if (!String.IsNullOrEmpty(gametype))
-            {
-                sportbookDatabaseContext = sportbookDatabaseContext.Where(s => s.FkGameTypeNavigation.Name.Contains(gametype)).Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation).OrderBy(x => x.StartTime);
-            }
-            if (!String.IsNullOrEmpty(city))
-            {
-                var _cities = _context.City;
-                sportbookDatabaseContext = sportbookDatabaseContext.Where(s => s.FkLocationNavigation.FkCityNavigation.Name.Contains(city)).Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation).OrderBy(x => x.StartTime);
-            }
-            // user - eventmember - event 
+
             var eventParticipations = _context.Participant.Where(e => e.FkUser == GetCurrentUser().UserId);
 
             ViewData["joinedEvents"] = from first in sportbookDatabaseContext

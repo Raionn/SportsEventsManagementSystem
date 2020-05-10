@@ -63,15 +63,10 @@ namespace SportBook.Controllers
         #endregion
 
         #region Cities
-        public async Task<IActionResult> Cities(string name)
+        public async Task<IActionResult> Cities()
         {
             var cities = from m in _context.City
                          select m;
-
-            if (!String.IsNullOrEmpty(name))
-            {
-                cities = cities.Where(s => s.Name.Contains(name));
-            }
 
             return View("~/Views/Admin/Cities/Index.cshtml", await cities.ToListAsync());
         }
@@ -203,22 +198,11 @@ namespace SportBook.Controllers
         #endregion
 
         #region Locations
-        public async Task<IActionResult> Locations(string address, string city, string gametype)
+        public async Task<IActionResult> Locations()
         {
 
             var sportbookDatabaseContext = _context.Location.Include(l => l.FkCityNavigation).Include(l => l.FkGameTypeNavigation);
-            if (!String.IsNullOrEmpty(address))
-            {
-                sportbookDatabaseContext = sportbookDatabaseContext.Where(s => s.Address.Contains(address)).Include(l => l.FkCityNavigation).Include(l => l.FkGameTypeNavigation);
-            }
-            if (!String.IsNullOrEmpty(city))
-            {
-                sportbookDatabaseContext = sportbookDatabaseContext.Where(s => s.FkCityNavigation.Name.Contains(city)).Include(l => l.FkCityNavigation).Include(l => l.FkGameTypeNavigation);
-            }
-            if (!String.IsNullOrEmpty(gametype))
-            {
-                sportbookDatabaseContext = sportbookDatabaseContext.Where(s => s.FkGameTypeNavigation.Name.Contains(gametype)).Include(l => l.FkCityNavigation).Include(l => l.FkGameTypeNavigation);
-            }
+
             return View("~/Views/Admin/Locations/Index.cshtml",await sportbookDatabaseContext.ToListAsync());
         }
 
@@ -367,15 +351,11 @@ namespace SportBook.Controllers
         #endregion
 
         #region Game Types
-        public async Task<IActionResult> GameTypes(string name)
+        public async Task<IActionResult> GameTypes()
         {
             var gameTypes = from m in _context.GameType
                          select m;
 
-            if (!String.IsNullOrEmpty(name))
-            {
-                gameTypes = gameTypes.Where(s => s.Name.Contains(name));
-            }
             return View("~/Views/Admin/GameTypes/Index.cshtml",await gameTypes.ToListAsync());
         }
 
@@ -514,17 +494,9 @@ namespace SportBook.Controllers
             return offlineGames;
         }
 
-        public async Task<IActionResult> Tournaments(string name, string gametype)
+        public async Task<IActionResult> Tournaments()
         {
             var sportbookDatabaseContext = _context.Tournament.Include(t => t.FkGameTypeNavigation).Include(t => t.FkOwnerNavigation);
-            if (!String.IsNullOrEmpty(name))
-            {
-                sportbookDatabaseContext = sportbookDatabaseContext.Where(s => s.Name.Contains(name)).Include(t => t.FkGameTypeNavigation).Include(t => t.FkOwnerNavigation);
-            }
-            if (!String.IsNullOrEmpty(gametype))
-            {
-                sportbookDatabaseContext = sportbookDatabaseContext.Where(s => s.FkGameTypeNavigation.Name.Contains(gametype)).Include(t => t.FkGameTypeNavigation).Include(t => t.FkOwnerNavigation);
-            }
 
             return View("~/Views/Admin/Tournaments/Index.cshtml",await sportbookDatabaseContext.ToListAsync());
         }
@@ -675,21 +647,10 @@ namespace SportBook.Controllers
         #endregion
 
         #region Events
-        public async Task<IActionResult> Events(string title,string gametype, string address)
+        public async Task<IActionResult> Events()
         {
             var sportbookDatabaseContext = _context.Event.Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation);
-            if (!String.IsNullOrEmpty(title))
-            {
-                sportbookDatabaseContext = sportbookDatabaseContext.Where(s => s.Title.Contains(title)).Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation);
-            }
-            if (!String.IsNullOrEmpty(gametype))
-            {
-                sportbookDatabaseContext = sportbookDatabaseContext.Where(s => s.FkGameTypeNavigation.Name.Contains(gametype)).Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation);
-            }
-            if (!String.IsNullOrEmpty(address))
-            {
-                sportbookDatabaseContext = sportbookDatabaseContext.Where(s => s.FkLocationNavigation.Address.Contains(address)).Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation);
-            }
+
             return View("~/Views/Admin/Events/Index.cshtml",await sportbookDatabaseContext.ToListAsync());
         }
 
