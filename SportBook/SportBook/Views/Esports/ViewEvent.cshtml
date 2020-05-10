@@ -244,6 +244,10 @@ else if (Model.Participants.Any(x => x.FkUser == currentUser.UserId) && currentU
 }
 <script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
 
+<div id="chat">
+    @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
+</div>
+
 <script>
     $('body').on('click', '.removeMember', function () { RemoveEventMember($(this)); return false;});
 

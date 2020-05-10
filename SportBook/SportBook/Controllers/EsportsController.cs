@@ -248,6 +248,10 @@ namespace SportBook.Controllers
 
             return View(await sportbookDatabaseContext.ToListAsync());
         }
+        public IActionResult ChatroomVC(string chatGroup)
+        {
+            return ViewComponent("Chatroom", chatGroup);
+        }
         public async Task<IActionResult> Tournament(int id)
         {
             var tournaments = _context.Tournament.Include(t => t.TournamentMember);

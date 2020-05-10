@@ -20,6 +20,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
 using FluentValidation.AspNetCore;
 using FluentValidation;
+using SportBook.ChatHub;
 
 namespace SportBook
 {
@@ -46,7 +47,8 @@ namespace SportBook
             services.AddHttpClient();
             services.AddTransient<IValidator<Event>, EventDateValidator>();
 
-            services.AddScoped<IServiceSignUp, ServiceSignUp>();
+            // changed to Transient to allow concurrent logins, https://github.com/dotnet/efcore/issues/6488
+            services.AddTransient<IServiceSignUp, ServiceSignUp>();
             IServiceProvider serviceProvider = services.BuildServiceProvider();
             var serviceSignUp = serviceProvider.GetService<IServiceSignUp>();
             services.AddAuthentication(options =>
@@ -108,7 +110,7 @@ namespace SportBook
                    }
                 };
             });
-
+            services.AddSignalR().AddAzureSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -131,18 +133,23 @@ namespace SportBook
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+
+            //app.UseStaticFiles();         replaced by UseFileServer() (for SignalR support)
+            
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseFileServer();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapHub<Chat>("/chat");
             });
+
             var cultureInfo = new CultureInfo("en-US");
 
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
