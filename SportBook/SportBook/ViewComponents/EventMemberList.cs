@@ -20,35 +20,46 @@ namespace SportBook.ViewComponents
             _context = context;
         }
 
-        public IViewComponentResult Invoke(int eventId, int userId)
+        public async Task<IViewComponentResult> InvokeAsync(int eventId, int userId)
         {
-            List<User> users = GetItemsAsync(eventId, userId);
-            return View(users);
-        }
-        private List<User> GetItemsAsync(int eventId, int userId)
-        {
-            if (userId > 0)
+            ViewData["CurrentUser"] = GetCurrentUser();
+            var eventItem = _context.Event.Find(eventId);
+            ViewData["TeamOwner"] = _context.User.Where(x => x.UserId == eventItem.FkOwner).FirstOrDefault();
+            var eventMemberList = _context.Participant.Where(p => p.FkEvent == eventId).Include(x => x.FkUserNavigation);
+            if (eventItem.MaxParticipantAmt > eventMemberList.Count())
             {
-                var user = _context.Participant.FirstOrDefault(x => x.FkUser == userId);
+                if (userId > 0)
+                {
+                    var user = _context.Participant.FirstOrDefault(x => x.FkUser == userId && x.FkEvent == eventId);
 
-                if (user == null)
-                {
-                    var invites = _context.EventInvitation.Where(x => x.FkUser == userId);
-                    _context.RemoveRange(invites);
-                    _context.Participant.Add(new Participant { FkEvent = eventId, FkUser = userId });
-                    _context.SaveChanges();
-                }
-                else
-                {
-                    _context.Participant.Remove(user);
-                    _context.SaveChanges();
+                    if (user == null)
+                    {
+                        var invites = _context.EventInvitation.Where(x => x.FkUser == userId);
+                        _context.RemoveRange(invites);
+                        _context.Participant.Add(new Participant { FkEvent = eventId, FkUser = userId });
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        _context.Participant.Remove(user);
+                        await _context.SaveChangesAsync();
+                    }
+
                 }
             }
-            var participantsList = _context.Participant.Where(p => p.FkEvent == eventId);
-            var usersInEvent = (from users in _context.User
-                               join participants in participantsList on users.UserId equals participants.FkUser
-                               select users).ToList();
-            return usersInEvent;
+
+
+            return View(eventMemberList);
+        }
+
+        private User GetCurrentUser()
+        {
+            var externalId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var user = _context.User
+                           .Where(s => s.ExternalId == externalId)
+                           .FirstOrDefaultAsync();
+            user.Wait();
+            return user.Result;
         }
     }
 }

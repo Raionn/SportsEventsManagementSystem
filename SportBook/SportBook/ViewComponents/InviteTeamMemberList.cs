@@ -25,7 +25,7 @@ namespace SportBook.ViewComponents
             ViewData["TeamOwner"] = _context.User.Where(x => x.UserId == team.FkOwner).FirstOrDefault();
             if (userId > 0)     // if Invite is clicked
             {
-                var user = _context.TeamMember.FirstOrDefault(x => x.FkUser == userId);
+                var user = _context.TeamMember.FirstOrDefault(x => x.FkUser == userId && x.FkTeam == teamId);
 
                 if (user == null)
                 {   // user is not a team member

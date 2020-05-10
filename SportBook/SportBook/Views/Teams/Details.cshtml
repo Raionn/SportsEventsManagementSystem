@@ -23,7 +23,7 @@
     <div class="ml-auto mr-5">
         @if (currentUser.UserId == Model.FkOwner)
         {
-            <a class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal" asp-action="Delete" asp-route-id="@Model.TeamId"><i class="fa fa-trash-alt"></i></a>
+            <a class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-alt" style="color:white"></i></a>
             <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#myModal"><i class="fa fa-edit" style="color:white"></i></a>
             <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#inviteToTeamModal"><i class="fa fa-user-plus" style="color:white"></i></a>
         }
@@ -118,6 +118,7 @@
         </div>
     </div>
 </form>
+
 <div>
     <hr />
     <div class="row">
@@ -220,8 +221,6 @@ else if (teamMembers.Any(x => x.FkUser == currentUser.UserId) && currentUser.Use
         link = link.replace("-1", obj);
 
             $("#teamMemberList").load(link, function () { });
-            console.log("loaded");
-            console.log(data);
     }
 </script>
 

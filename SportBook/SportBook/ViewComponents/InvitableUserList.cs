@@ -25,7 +25,7 @@ namespace SportBook.ViewComponents
             ViewData["EventOwner"] = _context.User.Where(x => x.UserId == @event.FkOwner).FirstOrDefault();
             if (userId > 0)     // if Invite is clicked
             {
-                var user = _context.Participant.FirstOrDefault(x => x.FkUser == userId);
+                var user = _context.Participant.FirstOrDefault(x => x.FkUser == userId && x.FkEvent == eventId);
 
                 if (user == null)
                 {   // user is not a participant

@@ -25,11 +25,11 @@ namespace SportBook.Models
         [DataType(DataType.DateTime)]
         [Required(ErrorMessage = "This field is required")]
         [DisplayName("Start time")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd hh:mm}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         [DateValidator]
         public DateTime? StartTime { get; set; }
         [DataType(DataType.DateTime)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd hh:mm}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         [DisplayName("End time")]
         [Required(ErrorMessage = "This field is required")]
         //[GreaterThan("StartTime", ErrorMessage ="End time must be greater than start time")]

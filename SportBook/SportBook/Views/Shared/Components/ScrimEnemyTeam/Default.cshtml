@@ -1,0 +1,22 @@
+﻿@{ bool create = (bool)ViewData["create"];
+    var teamMembers = ViewData["teamMembers"] as IEnumerable<SportBook.Models.TeamMember>;
+    var team = ViewData["team"] as SportBook.Models.Team;
+    var eventOwner = ViewData["EventOwner"] as SportBook.Models.User;
+    var currentUser = ViewData["CurrentUser"] as SportBook.Models.User;
+
+
+}
+
+@if (create)
+{
+
+    <h2>@team.Name</h2>
+    <ul class="list-group-flush" id="participantList">
+        @foreach (var item in teamMembers)
+        {
+            <li class="list-group-item">
+                @item.FkUserNavigation.Username
+            </li>
+        }
+    </ul>
+}

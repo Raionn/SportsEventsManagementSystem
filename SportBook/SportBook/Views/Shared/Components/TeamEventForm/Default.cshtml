@@ -1,0 +1,40 @@
+﻿@model SportBook.Models.Event;
+@{int teamId = (int)ViewData["teamId"];}
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="form-group">
+    <label asp-for="Title" class="control-label"></label>
+    <input asp-for="Title" class="form-control" />
+    <span asp-validation-for="Title" class="text-danger"></span>
+</div>
+<input type="hidden" asp-for="MaxParticipantAmt" value="2" />
+<input type="hidden" asp-for="IsTeamEvent" value="true" />
+<div class="form-group">
+    <label asp-for="StartTime" class="control-label"></label>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <button type="button" id="toggle3" class="input-group-text"><i class="fa fa-calendar-alt"></i></button>
+        </div>
+        <input type="text" asp-for="StartTime" id="datepicker3" class="form-control" />
+    </div>
+    <span asp-validation-for="StartTime" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="EndTime" class="control-label"></label>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <button type="button" id="toggle4" class="input-group-text"><i class="fa fa-calendar-alt"></i></button>
+        </div>
+        <input type="text" asp-for="EndTime" id="datepicker4" class="form-control" />
+    </div>
+    <span asp-validation-for="EndTime" class="text-danger"></span>
+</div>
+<input type="hidden" asp-for="FkOwner" value="@teamId" />
+<input type="hidden" asp-for="IsPrivate" value="false" />
+<div class="form-group">
+    <label asp-for="FkGameType" class="control-label"></label>
+    <select asp-for="FkGameType" class="form-control" asp-items="ViewBag.FkGameType" disabled></select>
+</div>
+<div class="form-group">
+    <input type="submit" id="formSubmitButton" value="Create" class="btn btn-secondary" />
+</div>

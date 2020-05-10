@@ -1,10 +1,19 @@
 ﻿@model SportBook.ViewModels.EventData
 
 @{
-    ViewData["Title"] = "ViewEvent";
+    ViewData["Title"] = "Team Event";
     Layout = "~/Views/Shared/_EsportsLayout.cshtml";
     var currentUser = ViewData["CurrentUser"] as SportBook.Models.User;
-    var eventInvites = ViewData["EventInvites"] as IEnumerable<SportBook.Models.EventInvitation>;
+    var team = ViewData["eventTeam"] as SportBook.Models.Team;
+    var teamMembers = ViewData["teamMembers"] as IEnumerable<SportBook.Models.TeamMember>;
+    var pCount = (int)ViewData["pCount"];
+    var teams = ViewData["Teams"] as IEnumerable<SportBook.Models.Team>;
+    var enemyTeam = ViewData["enemyTeam"] as SportBook.Models.Team;
+    var teamId = 0;
+    if (pCount > 1)
+    {
+        teamId = enemyTeam.TeamId;
+    }
 }
 
 @if ((bool)ViewData["isFailed"] == true)
@@ -17,34 +26,76 @@
 }
 
 <div class="d-flex">
-    <h1>Event details</h1>
+    <h1>Scrim details</h1>
     <div class="ml-auto mr-5">
         @if (currentUser.UserId == Model.Event.FkOwner)
         {
             <a class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-alt" style="color:white"></i></a>
             <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#editModal"><i class="fa fa-edit" style="color:white"></i></a>
-            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#myModal"><i class="fa fa-user-plus" style="color:white"></i></a>
+        }
+        @if (pCount == 1)
+        {
+            @if (!teamMembers.Any(x => x.FkUser == currentUser.UserId))
+            {
+                <a class="btn btn-secondary ml-2" data-toggle="modal" id="bothModalElement" data-target="#joinModal"><i class="fa fa-plus" style="color:white"></i></a>
+            }
+        }
+        else
+        {
+            var enemyTeamMembers = ViewData["enemyMembers"] as IEnumerable<SportBook.Models.TeamMember>;
+            @if (enemyTeamMembers.Any(x => x.FkUser == currentUser.UserId))
+            {
+                <a class="btn btn-secondary ml-2" data-toggle="modal" id="bothModalElement" data-target="#quitModal"><i class="fa fa-user-minus" style="color:white"></i></a>
+            }
         }
         <a asp-action="Esports" class="btn btn-secondary ml-2"><i class="fa fa-list"></i></a>
     </div>
 </div>
-
-<div class="modal" id="myModal">
-    <div class="modal-dialog">
+<div class="modal " id="joinModal">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title">Select user</h4>
+                <h4 class="modal-title">Select team for scrim</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
+            <!-- Modal body -->
             <div class="modal-body">
-                <input class="form-control mb-2" id="myInput" type="text" placeholder="Search..">
-                <h4 class="align-content-center">Users</h4>
-                <ul class="list-group overflow-auto p-2" style="max-height:550px" id="invitableUserList">
-                    @await Component.InvokeAsync("InvitableUserList", new { eventId = Model.Event.EventId, userId = 0 })
-                </ul>
+                <div class="p-2">
+                    @Html.DropDownList("SelectedTeam", new SelectList(teams, "TeamId", "Name"), new { @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <input type="submit" id="joinModalSubmit" value="Join" class="btn btn-secondary" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal " id="quitModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Leave scrim</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="p-2">
+                    Are you sure you want to leave <b>@Model.Event.Title</b>?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <input type="submit" id="quitModalSubmit" value="Leave" class="btn btn-outline-danger" />
+                </div>
             </div>
         </div>
     </div>
@@ -93,11 +144,7 @@
                         </div>
                         <span asp-validation-for="Event.EndTime" class="text-danger"></span>
                     </div>
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="Event.IsPrivate" /> @Html.DisplayNameFor(model => model.Event.IsPrivate)
-                        </label>
-                    </div>
+                    <input type="hidden" asp-for="Event.IsPrivate" />
                     <input type="hidden" asp-for="Event.IsTeamEvent" />
                     <input type="hidden" asp-for="Event.FkGameType" />
                     <input type="hidden" asp-for="Event.FkOwner" />
@@ -144,22 +191,13 @@
 <div>
     <hr />
     <div class="row">
-        <div class="col ">
+        <div class="flex-column col-md-8 col-xl-6 col-sm-8">
             <div class="row">
                 <div class="p-2 font-weight-bold ml-3 flex-column col-md-4">
                     @Html.DisplayNameFor(model => model.Event.Title):
                 </div>
                 <div class="p-2 flex-column ml-3">
                     @Html.DisplayFor(model => model.Event.Title)
-                </div>
-            </div>
-            <hr />
-            <div class="row">
-                <div class="p-2 font-weight-bold ml-3 flex-column col-md-4">
-                    Participants:
-                </div>
-                <div class="p-2 flex-column ml-3">
-                    @Model.Participants.Count / @Html.DisplayFor(model => model.Event.MaxParticipantAmt)
                 </div>
             </div>
             <hr />
@@ -186,112 +224,127 @@
                     Event creator:
                 </div>
                 <div class="p-2 flex-column ml-3">
-                    @Html.DisplayFor(model => model.Event.FkOwnerNavigation.Username)
+                    @team.Name
                 </div>
             </div>
             <hr />
         </div>
 
-        <div class="col">
+        <div class="flex-column col-md-12 col-xl-6">
             <div class="row mr-3 p-2">
 
 
-                <div class="flex-column">
-                    <h2>
-                        Participants:
-                    </h2>
-                </div>
-                <div class="col-md-8">
-                    <ul class="list-group-flush" id="participantList">
-                        @await Component.InvokeAsync("EventMemberList", new { eventId = Model.Event.EventId, userId = 0 })
+
+                <div class="flex-column col-md-4 col-sm-4 text-center">
+                    <h2>@team.Name</h2>
+                    <ul class="list-group-flush">
+                        @foreach (var item in teamMembers)
+                        {
+                            <li class="list-group-item">
+                                @item.FkUserNavigation.Username
+                            </li>
+                        }
                     </ul>
+                </div>
+
+                <div class="p-2 flex-column align-self-center"><h3>VS</h3></div>
+
+                <div class="flex-column col-md-4 col-sm-4 text-center" id="enemyTeamList">
+                    @if (pCount > 1)
+                    {
+                        var enemyTeamMembers = ViewData["enemyMembers"] as IEnumerable<SportBook.Models.TeamMember>;
+                        <h2>@enemyTeam.Name</h2>
+                        <ul class="list-group-flush" id="participantList">
+                            @foreach (var item in enemyTeamMembers)
+                            {
+                                <li class="list-group-item">
+                                    @item.FkUserNavigation.Username
+                                </li>
+                            }
+                        </ul>
+                        @if (currentUser.UserId == Model.Event.FkOwner) //isOwner
+                        {
+                            <a class="btn btn-secondary ml-auto mr-2 removeMember"><i class="fa fa-user-slash" style="color:white"></i></a>
+                        }
+                    }
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-@if (!Model.Participants.Any(x => x.FkUser == currentUser.UserId) && Model.Event.MaxParticipantAmt > Model.Participants.Count)
-{
-    <div class="text-center">
-        <div class="col align-content-lg-center text-center">
-            <div class="flex-row p-2" id="joinLeaveText">
-                You have been invited to join this team
-            </div>
+@*@if (!Model.Participants.Any(x => x.FkUser == currentUser.UserId) && Model.Event.MaxParticipantAmt > Model.Participants.Count)
+    {
+        <div class="text-center">
+            <div class="col align-content-lg-center text-center">
+                <div class="flex-row p-2" id="joinLeaveText">
+                    You have been invited to join this team
+                </div>
 
-            <div class="flex-row p-2">
-                <input id="joinLeaveBtn" type="button" onclick="joinEvent()" value="Join" class="btn btn-success" />
-            </div>
+                <div class="flex-row p-2">
+                    <input id="joinLeaveBtn" type="button" onclick="joinEvent()" value="Join" class="btn btn-success" />
+                </div>
 
-        </div>
-
-    </div>
-}
-else if (Model.Participants.Any(x => x.FkUser == currentUser.UserId) && currentUser.UserId != Model.Event.FkOwner)
-{
-    <div class="text-center">
-        <div class="col align-content-lg-center text-center">
-            <div class="flex-row p-2" id="joinLeaveText">
-                Are you sure you want to leave?
-            </div>
-
-            <div class="flex-row p-2">
-                <input id="joinLeaveBtn" type="button" onclick="leaveEvent()" value="Leave" class="btn btn-danger" />
             </div>
 
         </div>
-    </div>
-}
+    }
+    else if (Model.Participants.Any(x => x.FkUser == currentUser.UserId) && currentUser.UserId != Model.Event.FkOwner)
+    {
+        <div class="text-center">
+            <div class="col align-content-lg-center text-center">
+                <div class="flex-row p-2" id="joinLeaveText">
+                    Are you sure you want to leave?
+                </div>
+
+                <div class="flex-row p-2">
+                    <input id="joinLeaveBtn" type="button" onclick="leaveEvent()" value="Leave" class="btn btn-danger" />
+                </div>
+
+            </div>
+        </div>
+    }*@
 <script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
 
 <script>
+
+    $('#joinModalSubmit').on('click', function () {
+        var teamId = $('#SelectedTeam').find(":selected").val();
+
+
+            var link = "@Url.Action("TeamEventEnemyVC", "Esports", new { eventId = Model.Event.EventId , teamId = "-1" })";
+            link = link.replace("-1", teamId);
+            link = link.replace("amp;", "");
+            $("#enemyTeamList").load(link, function () { });
+            $('#joinModal').modal('hide');
+        $('#bothModalElement').attr('data-target', '#quitModal');
+        $('#bothModalElement i').removeClass();
+        $('#bothModalElement i').addClass('fa fa-user-minus');
+    });
+    $('#quitModalSubmit').on('click', function () {
+
+        var teamId = '@teamId';
+
+        var link = "@Url.Action("TeamEventEnemyVC", "Esports", new { eventId = Model.Event.EventId , teamId = "-1" })";
+        link = link.replace("-1", teamId);
+        link = link.replace("amp;", "");
+        $("#enemyTeamList").load(link, function () { });
+        $('#quitModal').modal('hide');
+        $('#bothModalElement').attr('data-target', '#joinModal');
+        $('#bothModalElement i').removeClass();
+        $('#bothModalElement i').addClass('fa fa-plus');
+
+    });
+
     $('body').on('click', '.removeMember', function () { RemoveEventMember($(this)); return false;});
 
     function RemoveEventMember(data) {
-            var obj = data.attr("id");
-            var link = "@Url.Action("EventMemberVC", new { eventId = Model.Event.EventId, userId = "-1" })";
-        link = link.replace("-1", obj);
-
-        $("#participantList").load(link, function () { });
-    }
-    function joinEvent() {
-        $("#participantList").load("@Url.Action("EventMemberVC", new { eventId = Model.Event.EventId, currentUser.UserId })");
-        document.getElementById("joinLeaveBtn").setAttribute("value", "Leave");
-        document.getElementById("joinLeaveBtn").setAttribute("onClick", "leaveEvent()");
-        document.getElementById("joinLeaveBtn").classList.remove('btn-success');
-        document.getElementById("joinLeaveBtn").classList.add('btn-danger');
-        document.getElementById("joinLeaveText").textContent = "Are you sure you want to leave?"
-    }
-
-    function leaveEvent() {
-        $("#participantList").load("@Url.Action("EventMemberVC", new { eventId = Model.Event.EventId, currentUser.UserId })");
-        document.getElementById("joinLeaveBtn").setAttribute("value", "Join");
-        document.getElementById("joinLeaveBtn").setAttribute("onClick", "joinEvent()");
-        document.getElementById("joinLeaveBtn").classList.remove('btn-danger');
-        document.getElementById("joinLeaveBtn").classList.add('btn-success');
-        document.getElementById("joinLeaveText").textContent = "Join event"
-    }
-
-    $(document).ready(function () {
-        $("#myInput").on("keyup", function () {
-            var value = $(this).val().toLowerCase();
-            $("#invitableUserList li").filter(function () {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            });
-        });
-    });
-
-    $('body').on('click', '.invitableUser', function () {
-        PostInvites($(this));
-        return false;
-    });
-
-    function PostInvites(data) {
-        var obj = data.attr("id");
-        var link = "@Url.Action("InvitableUserVC", "Esports", new { eventId = Model.Event.EventId, userId = "-1" })";
-        link = link.replace("-1", obj);
+        var teamId = '@teamId';
+        var link = "@Url.Action("TeamEventEnemyVC", "Esports", new { eventId = Model.Event.EventId, teamId = "-1" })";
+        link = link.replace("-1", teamId);
         link = link.replace("amp;", "");
-        $("#invitableUserList").load(link, function () { });
+        $("#enemyTeamList").load(link, function () { });
     }
 
     $('#datepicker').datetimepicker({

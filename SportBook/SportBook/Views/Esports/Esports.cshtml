@@ -3,84 +3,339 @@
     ViewData["Title"] = "Esports Home";
     Layout = "~/Views/Shared/_EsportsLayout.cshtml";
     var currentUser = ViewData["CurrentUser"] as SportBook.Models.User;
+    var teamEvents = ViewData["teamEvents"] as IEnumerable<SportBook.Models.Event>;
+    var myEvents = ViewData["myEvents"] as IEnumerable<SportBook.Models.Event>;
+    var joinedEvents = ViewData["joinedEvents"] as IEnumerable<SportBook.Models.Event>;
+    var participants = ViewData["Participants"] as Dictionary<int, int>;
 }
 
-<h1>Esports_home</h1>
 
-<p>
-    <a asp-action="CreateEvent">Create New</a>
-</p>
+<div class="d-flex">
+    <h1>Esports</h1>
+    <div class="ml-auto col-sm-3 p-0">
+        <p>
+            <div class="input-group">
+                <input id="myInput" type="text" class="form-control" name="title" placeholder="Search..." style="margin-right:5px">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+        </p>
+    </div>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MaxParticipantAmt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsPrivate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsTeamEvent)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FkGameTypeNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FkOwnerNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MaxParticipantAmt)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StartTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EndTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsPrivate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsTeamEvent)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FkOwnerNavigation.Username)
-                </td>
-                <td>
-                    <a asp-action="ViewEvent" asp-route-id="@item.EventId">Details</a>
-                    @if (item.FkOwner == currentUser.UserId)
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a>
-                    }
-                    @if (item.FkOwner == currentUser.UserId)
-                    {
-                        <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+
+
+
+<div class="d-flex">
+    <ul class="nav nav-tabs nav-justified w-100">
+        <li class="nav-item">
+            <a class="nav-link active" id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="true" style="text-decoration:none; color:black; font-size:larger">All Events</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="team-tab" data-toggle="tab" href="#team" role="tab" aria-controls="team" aria-selected="false" style="text-decoration:none; color:black; font-size:larger">Team Events</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="joined-tab" data-toggle="tab" href="#joined" role="tab" aria-controls="joined" aria-selected="false" style="text-decoration:none; color:black; font-size:larger">Joined Events</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="my-tab" data-toggle="tab" href="#my" role="tab" aria-controls="my" aria-selected="false" style="text-decoration:none; color:black; font-size:larger">My Events</a>
+        </li>
+
+    </ul>
+    <div class="ml-auto ">
+        <a style="margin-left:5px" asp-action="CreateEvent" class="btn btn-secondary"><i class="fa fa-plus"></i></a>
+    </div>
+</div>
+
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Title)
+                    </th>
+                    <th>
+                        Participants
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.StartTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EndTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsPrivate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FkGameTypeNavigation)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="allS">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @participants[item.EventId] / @Html.DisplayFor(modelItem => item.MaxParticipantAmt)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EndTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsPrivate)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.Name)
+                        </td>
+                        <td>
+                            <a asp-action="ViewEvent" asp-route-id="@item.EventId" class="btn btn-secondary ml-2"><i class="fa fa-info" style="color:white;"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="team" role="tabpanel" aria-labelledby="team-tab">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Title)
+                    </th>
+                    <th>
+                        Availability
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.StartTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EndTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FkGameTypeNavigation)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="teamS">
+                @foreach (var item in teamEvents)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @if (@participants[item.EventId] < item.MaxParticipantAmt)
+                            {
+                                <text>Available</text>
+                            }
+                            else
+                            {
+                                <text>Full</text>
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EndTime)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.Name)
+                        </td>
+                        <td>
+                            <a asp-action="TeamEvent" asp-route-id="@item.EventId" class="btn btn-secondary ml-2"><i class="fa fa-info" style="color:white;"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="joined" role="tabpanel" aria-labelledby="joined-tab">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Title)
+                    </th>
+                    <th>
+                        Participants
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.StartTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EndTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsPrivate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FkGameTypeNavigation)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="joinedS">
+                @foreach (var item in joinedEvents)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @if (item.IsTeamEvent)
+                            {
+                                @if (@participants[item.EventId] < item.MaxParticipantAmt)
+                                {
+                                    <text>Available</text>
+                                }
+                                else
+                                {
+                                    <text>Full</text>
+                                }
+                            }
+                            else
+                            {
+                                @participants[item.EventId] <text>/</text> @Html.DisplayFor(modelItem => item.MaxParticipantAmt);
+                            }
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EndTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsPrivate)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.Name)
+                        </td>
+                        <td>
+                            @if (item.IsTeamEvent)
+                            {
+                                <a asp-action="TeamEvent" asp-route-id="@item.EventId" class="btn btn-secondary ml-2"><i class="fa fa-info" style="color:white;"></i></a>
+                            }
+                            else
+                            {
+                                <a asp-action="ViewEvent" asp-route-id="@item.EventId" class="btn btn-secondary ml-2"><i class="fa fa-info" style="color:white;"></i></a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="my" role="tabpanel" aria-labelledby="my-tab">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Title)
+                    </th>
+                    <th>
+                        Participants
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.StartTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EndTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsPrivate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FkGameTypeNavigation)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="myS">
+                @foreach (var item in myEvents)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @if (item.IsTeamEvent)
+                            {
+                                @if (@participants[item.EventId] < item.MaxParticipantAmt)
+                                {
+                                    <text>Available</text>
+                                }
+                                else
+                                {
+                                    <text>Full</text>
+                                }
+                            }
+                            else
+                            {
+                                @participants[item.EventId] <text>/</text> @Html.DisplayFor(modelItem => item.MaxParticipantAmt);
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EndTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsPrivate)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.Name)
+                        </td>
+                        <td>
+                            @if (item.IsTeamEvent)
+                            {
+                                <a asp-action="TeamEvent" asp-route-id="@item.EventId" class="btn btn-secondary ml-2"><i class="fa fa-info" style="color:white;"></i></a>
+                            }
+                            else
+                            {
+                                <a asp-action="ViewEvent" asp-route-id="@item.EventId" class="btn btn-secondary ml-2"><i class="fa fa-info" style="color:white;"></i></a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#allS tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+            $("#joinedS tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+            $("#myS tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+            $("#teamS tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>

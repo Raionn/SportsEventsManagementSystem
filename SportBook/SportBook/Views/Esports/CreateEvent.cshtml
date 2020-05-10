@@ -2,69 +2,307 @@
 
 @{
     ViewData["Title"] = "CreateEvent";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_EsportsLayout.cshtml";
     var currentUser = ViewData["FkOwner"] as SportBook.Models.User;
+    var teams = ViewData["Teams"] as IEnumerable<SportBook.Models.Team>;
+    var isSecondFailed = ViewData["SecondFailed"];
 }
 
-<h1>Create Esports Event</h1>
 
-<h4>Event</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="CreateEvent">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MaxParticipantAmt" class="control-label"></label>
-                <input asp-for="MaxParticipantAmt" class="form-control" />
-                <span asp-validation-for="MaxParticipantAmt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartTime" class="control-label"></label>
-                <input asp-for="StartTime" class="form-control" />
-                <span asp-validation-for="StartTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndTime" class="control-label"></label>
-                <input asp-for="EndTime" class="form-control" />
-                <span asp-validation-for="EndTime" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsPrivate" /> @Html.DisplayNameFor(model => model.IsPrivate)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsTeamEvent" /> @Html.DisplayNameFor(model => model.IsTeamEvent)
-                </label>
-            </div>
-            @*<div class="form-group">
-                    <label asp-for="FkOwner" class="control-label"></label>
-                    <select asp-for="FkOwner" class="form-control" asp-items="ViewBag.FkOwnerID"></select>
-                </div>*@
-            <input type="hidden" asp-for="FkOwner" value="@currentUser.UserId" />
-            @*<input type="hidden" asp-for="FkLocation" value="" />*@
-            <div class="form-group">
-                <label asp-for="FkGameType" class="control-label"></label>
-                <select asp-for="FkGameType" class="form-control" asp-items="ViewBag.FkGameType"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+
+<div class="d-flex ml-2 mr-2">
+    <h1>Create Esports Event</h1>
+    <div class="ml-auto mr-5">
+        <a asp-action="Esports" class="btn btn-secondary ml-2"><i class="fa fa-list"></i></a>
     </div>
 </div>
 
-<div>
-    <a asp-action="Esports">Back to List</a>
+
+
+
+<div class="d-flex">
+    <ul class="nav nav-tabs nav-justified w-100">
+        <li class="nav-item">
+            <a class="nav-link active" id="createEvent-tab" data-toggle="tab" href="#createEvent" role="tab" aria-controls="createEvent" aria-selected="true" style="text-decoration:none; color:black; font-size:larger">Create Event</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="createTeamEvent-tab" data-toggle="tab" href="#createTeamEvent" role="tab" aria-controls="createTeamEvent" aria-selected="false" style="text-decoration:none; color:black; font-size:larger">Create Team Event</a>
+        </li>
+    </ul>
 </div>
+
+<div class="tab-content align-content-center" id="myTabContent">
+    @if ((bool)isSecondFailed)
+    {
+        <div class="tab-pane fade" id="createEvent" role="tabpanel" aria-labelledby="createEvent-tab">
+            <div class="flex-row">
+                <div class="flex-column col-sm-6">
+                    <form asp-action="CreateEvent">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="Title" class="control-label"></label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="MaxParticipantAmt" class="control-label"></label>
+                            <input asp-for="MaxParticipantAmt" class="form-control" />
+                            <span asp-validation-for="MaxParticipantAmt" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="StartTime" class="control-label"></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button type="button" id="toggle" class="input-group-text"><i class="fa fa-calendar-alt"></i></button>
+                                </div>
+                                <input type="text" asp-for="StartTime" id="datepicker" class="form-control" />
+                            </div>
+                            <span asp-validation-for="StartTime" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EndTime" class="control-label"></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button type="button" id="toggle2" class="input-group-text"><i class="fa fa-calendar-alt"></i></button>
+                                </div>
+                                <input type="text" asp-for="EndTime" id="datepicker2" class="form-control" />
+                            </div>
+                            <span asp-validation-for="EndTime" class="text-danger"></span>
+                        </div>
+                        <input type="hidden" asp-for="IsTeamEvent" value="false" />
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="IsPrivate" /> @Html.DisplayNameFor(model => model.IsPrivate)
+                            </label>
+                        </div>
+                        @*<div class="form-group">
+                                <label asp-for="FkOwner" class="control-label"></label>
+                                <select asp-for="FkOwner" class="form-control" asp-items="ViewBag.FkOwnerID"></select>
+                            </div>*@
+                        <input type="hidden" asp-for="FkOwner" value="@currentUser.UserId" />
+                        @*<input type="hidden" asp-for="FkLocation" value="" />*@
+                        <div class="form-group">
+                            <label asp-for="FkGameType" class="control-label"></label>
+                            <select asp-for="FkGameType" class="form-control" asp-items="ViewBag.FkGameType"></select>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-secondary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="tab-pane fade show active" id="createEvent" role="tabpanel" aria-labelledby="createEvent-tab">
+            <div class="flex-row">
+                <div class="flex-column col-sm-6">
+                    <form asp-action="CreateEvent">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="Title" class="control-label"></label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="MaxParticipantAmt" class="control-label"></label>
+                            <input asp-for="MaxParticipantAmt" class="form-control" />
+                            <span asp-validation-for="MaxParticipantAmt" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="StartTime" class="control-label"></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button type="button" id="toggle" class="input-group-text"><i class="fa fa-calendar-alt"></i></button>
+                                </div>
+                                <input type="text" asp-for="StartTime" id="datepicker" class="form-control" />
+                            </div>
+                            <span asp-validation-for="StartTime" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EndTime" class="control-label"></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button type="button" id="toggle2" class="input-group-text"><i class="fa fa-calendar-alt"></i></button>
+                                </div>
+                                <input type="text" asp-for="EndTime" id="datepicker2" class="form-control" />
+                            </div>
+                            <span asp-validation-for="EndTime" class="text-danger"></span>
+                        </div>
+                        <input type="hidden" asp-for="IsTeamEvent" value="false" />
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="IsPrivate" /> @Html.DisplayNameFor(model => model.IsPrivate)
+                            </label>
+                        </div>
+                        @*<div class="form-group">
+                                <label asp-for="FkOwner" class="control-label"></label>
+                                <select asp-for="FkOwner" class="form-control" asp-items="ViewBag.FkOwnerID"></select>
+                            </div>*@
+                        <input type="hidden" asp-for="FkOwner" value="@currentUser.UserId" />
+                        @*<input type="hidden" asp-for="FkLocation" value="" />*@
+                        <div class="form-group">
+                            <label asp-for="FkGameType" class="control-label"></label>
+                            <select asp-for="FkGameType" class="form-control" asp-items="ViewBag.FkGameType"></select>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-secondary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if ((bool)isSecondFailed)
+    {
+        <div class="tab-pane fade show active" id="createTeamEvent" role="tabpanel" aria-labelledby="createTeamEvent-tab">
+            <div class="flex-row">
+                <div class="flex-column ml-auto col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label">
+                            Select your team
+                        </label>
+                        @Html.DropDownList("SelectedTeam", new SelectList(teams, "TeamId", "Name", (int)ViewData["teamId"]), "", new { @class = "form-control" })
+                    </div>
+                    <form asp-action="CreateEvent" id="teamEventForm">
+                        @await Component.InvokeAsync("TeamEventForm", new { teamId = ViewData["teamId"] })
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="tab-pane fade" id="createTeamEvent" role="tabpanel" aria-labelledby="createTeamEvent-tab">
+            <div class="flex-row">
+                <div class="flex-column ml-auto col-sm-6">
+                    @if (teams.Count() < 1)
+                    {
+                        <div class="text-center p-2 mt-5">
+                            <h5>You are not a member of any team!</h5>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label class="control-label">
+                                Select your team
+                            </label>
+                            @Html.DropDownList("SelectedTeam", new SelectList(teams, "TeamId", "Name"), "", new { @class = "form-control" })
+                        </div>
+                        <form asp-action="CreateEvent" id="teamEventForm">
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+<script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script>
+    $('#SelectedTeam').on('change', function () {
+        var teamId = $(this).find(":selected").val();
+        if (teamId != "") {
+            var link = "@Url.Action("TeamEventFormVC", "Esports", new { teamId = "-1" })";
+            link = link.replace("-1", teamId);
+            $("#teamEventForm").load(link, function () { });
+        }
+        else {
+            $("#teamEventForm").empty();
+        }
+
+    });
+
+    $('#datepicker').datetimepicker({
+        timepicker: true,
+        datepicker: true,
+        format: 'Y-m-d H:i',
+        hours12: false,
+        step: 15,
+        onShow: function (ct) {
+            this.setOptions({
+                minDate: new Date(),
+                maxDate: $('#datepicker2').val() ? $('#datepicker2').val() : false
+            })
+        }
+    });
+    $('#toggle').on('click', function () {
+        $('#datepicker').datetimepicker('toggle')
+    })
+
+    $('#datepicker2').datetimepicker({
+        timepicker: true,
+        datepicker: true,
+        format: 'Y-m-d H:i',
+        hours12: false,
+        step: 15,
+        onShow: function (ct) {
+            this.setOptions({
+                minDate: $('#datepicker').val() ? $('#datepicker').val() : false
+            })
+        }
+    });
+    $('#toggle2').on('click', function () {
+        $('#datepicker2').datetimepicker('toggle')
+    })
+    
+
+    $('body').on('click', '#datepicker3', function () {
+        $('#datepicker3').datetimepicker({
+            timepicker: true,
+            datepicker: true,
+            format: 'Y-m-d H:i',
+            hours12: false,
+            step: 15,
+            onShow: function (ct) {
+                this.setOptions({
+                    minDate: new Date(),
+                    maxDate: $('#datepicker4').val() ? $('#datepicker4').val() : false
+                })
+            }
+        });
+        $('#datepicker3').datetimepicker('toggle');
+    });
+    $('body').on('click', '#toggle3', function () { $('#datepicker3').datetimepicker('toggle'); });
+
+    $('body').on('click', '#datepicker4', function () {
+        $('#datepicker4').datetimepicker({
+            timepicker: true,
+            datepicker: true,
+            format: 'Y-m-d H:i',
+            hours12: false,
+            step: 15,
+            onShow: function (ct) {
+                this.setOptions({
+                    minDate: $('#datepicker3').val() ? $('#datepicker3').val() : false
+                })
+            }
+        });
+        $('#datepicker4').datetimepicker('toggle');
+    });
+
+    $('body').on('click', '#toggle4', function ()
+    {
+        $('#datepicker4').datetimepicker('toggle')
+    });
+    $('body').on('click', '#formSubmitButton', function () {
+        { SubmitForm(); return false; }
+        
+    });
+
+    function SubmitForm() {      
+        $("#teamEventForm").submit();
+    }
+    
+</script>
