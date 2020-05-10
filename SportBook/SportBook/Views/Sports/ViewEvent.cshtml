@@ -110,10 +110,14 @@ else
     </div>
 }
 
+<div id="chat">
+    @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
+</div>
+
 @*<div>
-        <a asp-action="Edit" asp-route-id="@Model.Event.EventId">Edit</a> |
-        <a asp-action="Index">Back to List</a>
-    </div>*@
+    <a asp-action="Edit" asp-route-id="@Model.Event.EventId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>*@
 
 <script async defer
         src="">

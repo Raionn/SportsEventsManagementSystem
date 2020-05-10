@@ -78,6 +78,10 @@ else
     </div>
 }
 
+<div id="chat">
+    @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
+</div>
+
 <script>
     function joinEvent() {
         $("#participantList").load("@Url.Action("EventMemberVC", new { eventId = Model.Event.EventId, currentUser.UserId })");

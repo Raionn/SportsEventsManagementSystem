@@ -32,9 +32,8 @@ namespace SportBook.Helpers
             List<Claim> claims = ticketReceivedContext.Principal.Claims.ToList();
             var claim = claims.FirstOrDefault(x => x.Type.EndsWith("isNewUser"));
             string userOId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var userInfo = (from s in _context.User
-                           select s).Where(s => s.ExternalId == userOId);
-            if (userInfo.Count() < 1 || bool.Parse(claim.Value))
+            var userInfo = _context.User.FirstOrDefault(s => s.ExternalId == userOId);
+            if ((userInfo != null) || bool.Parse(claim.Value))
             {
                 isNewUser = true;
             }

@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <UserSecretsId>5bfbe65b-fbab-4411-b6ed-5c2e53a57bb4</UserSecretsId>
+    <!--<UserSecretsId>5bfbe65b-fbab-4411-b6ed-5c2e53a57bb4</UserSecretsId>-->
+    <UserSecretsId>SportbookSecrets</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +22,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="3.0.3" />
+    <PackageReference Include="Microsoft.Azure.SignalR" Version="1.4.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.3">
       <PrivateAssets>all</PrivateAssets>
@@ -33,6 +35,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.3" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
   </ItemGroup>
 
 </Project>

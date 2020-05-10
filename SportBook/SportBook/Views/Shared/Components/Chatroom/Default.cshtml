@@ -1,0 +1,161 @@
+﻿
+@{
+    Layout = null;
+    var currentUser = ViewData["CurrentUser"] as SportBook.Models.User;
+    var chatGroup = ViewData["ChatGroup"] as string;
+}
+
+<script src="~/lib/signalr/signalr.js"></script>
+
+@* Chat window ---------------------------------------------------------------------------------------------*@
+<div class="row justify-content-end h-100">
+    <div class="col-sm-8 col-md-5 col-xl-4 chat">
+        <div class="card">
+            <div class="card-body msg_card_body">
+                <div id="messages"></div>
+                <div class="input-group mb-1">
+                    <textarea class="form-control type_msg" id="message"></textarea>
+                    <div class="input-group-append">
+                        <div class="input-group-text send_btn" id="sendmessage">
+                            <i class="far fa-paper-plane"></i>
+                        </div>
+                    </div>
+                </div>
+                <div style="overflow: auto;">
+                    <button class="btn-secondary pull-right" id="echo">
+                        <i class="fas fa-dragon"></i>
+                    </button>
+                    <button class="btn-secondary pull-right" id="sendmessage">
+                        <i class="far fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* -------------------------------------------------------------------------------------------------------- *@
+<div class="modal alert alert-danger fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>Connection Error...</div>
+                <div><strong style="font-size: 1.5em;">Hit Refresh/F5</strong> to rejoin. ;)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Add script to update the page and send messages.-->
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // Get the user name and store it to prepend to messages.
+        var username = '@currentUser.Username'; //generateRandomName();
+
+        // Set initial focus to message input box.
+        var messageInput = document.getElementById('message');
+        messageInput.focus();
+
+        function createMessageEntry(encodedName, encodedMsg) {
+            var entry = document.createElement('div');
+            entry.classList.add("message-entry");
+            entry.classList.add("d-flex");
+            entry.classList.add("justify-content-start");
+            entry.classList.add("mb-4");
+            if (encodedName === "_SYSTEM_") {
+                entry.innerHTML = encodedMsg;
+                entry.classList.add("text-center");
+                entry.classList.add("system-message");
+            } else if (encodedName === "_BROADCAST_") {
+                entry.classList.add("text-center");
+                entry.innerHTML = `<div class="text-center broadcast-message">${encodedMsg}</div>`;
+            } else if (encodedName === username) {
+                entry.innerHTML = `<div class="message-avatar pull-right" style="font-weight: bold">${encodedName}</div>` +
+                    `<div class="message-content pull-right">${encodedMsg}<div>`;
+            } else {
+                entry.innerHTML = `<div class="message-avatar pull-left" style="font-weight: bold">${encodedName}</div>` +
+                    `<div class="message-content pull-left">${encodedMsg}<div>`;
+            }
+            return entry;
+        }
+
+        function bindConnectionMessage(connection) {
+            var messageCallback = function (name, message) {
+                if (!message) return;
+                // Html encode display name and message.
+                var encodedName = name;
+                var encodedMsg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                var messageEntry = createMessageEntry(encodedName, encodedMsg);
+
+                var messageBox = document.getElementById('messages');
+                messageBox.appendChild(messageEntry);
+                messageBox.scrollTop = messageBox.scrollHeight;
+            };
+            // Create a function that the hub can call to broadcast messages.
+            //connection.on('sendMessage', messageCallback);
+            connection.on('sendToGroup', messageCallback);
+            connection.on('echo', messageCallback);
+            connection.onclose(onConnectionError);
+        }
+
+        function onConnected(connection) {
+            var groupName = '@chatGroup';
+            if (groupName)
+                connection.send('joingroup', username, groupName);
+            console.log('connection started');
+            //connection.send('sendMessage', '_SYSTEM_', username + ' joined');
+            document.getElementById('sendmessage').addEventListener('click', function (event) {
+                // Call the sendToGroup method on the hub.
+                if (messageInput.value) {
+                    connection.send('sendToGroup', username, groupName, messageInput.value);
+                }
+
+                // Clear text box and reset focus for next comment.
+                messageInput.value = '';
+                messageInput.focus();
+                event.preventDefault();
+            });
+            document.getElementById('message').addEventListener('keypress', function (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    document.getElementById('sendmessage').click();
+                    return false;
+                }
+            });
+            document.getElementById('echo').addEventListener('click', function (event) {        // echo sends publicly for now
+                // Call the echo method on the hub.
+                connection.send('echo', username, messageInput.value);
+
+                // Clear text box and reset focus for next comment.
+                messageInput.value = '';
+                messageInput.focus();
+                event.preventDefault();
+            });
+        }
+
+        function onConnectionError(error) {
+            if (error && error.message) {
+                console.error(error.message);
+            }
+            var modal = document.getElementById('myModal');
+            modal.classList.add('in');
+            modal.style = 'display: block;';
+        }
+        
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl('/chat')
+            .build();
+        bindConnectionMessage(connection);
+        connection.start()
+            .then(function () {
+                onConnected(connection);
+            })
+            .catch(function (error) {
+                console.error(error.message);
+            });
+        //connection.closed()
+        //    .then(function () {
+        //        onDisconnectedAsync("Disconnected");
+        //    });
+    });
+</script>

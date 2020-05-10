@@ -238,7 +238,10 @@ namespace SportBook.Controllers
         {
             return ViewComponent("InvitableUserList", new { eventId, userId });
         }
-
+        public IActionResult ChatroomVC(string chatGroup)
+        {
+            return ViewComponent("Chatroom", chatGroup);
+        }
         public async Task<IActionResult> ViewEvent(int? id)
         {
             if (id == null)
