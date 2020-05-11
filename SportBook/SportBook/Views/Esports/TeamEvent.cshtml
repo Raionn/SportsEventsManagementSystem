@@ -305,6 +305,11 @@
             </div>
         </div>
     }*@
+
+<div id="chat" class="ml-3">
+    @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
+</div>
+
 <script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
 
 <script>

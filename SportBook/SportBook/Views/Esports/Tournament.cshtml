@@ -2,109 +2,159 @@
 @{
     ViewData["Title"] = "Tournament";
     Layout = "~/Views/Shared/_EsportsLayout.cshtml";
+    var myTeam = ViewData["myTeam"] as SportBook.Models.Team;
 }
 
 <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+@if (Model.TournamentMember != null && Model.TournamentMember.FkTournament != 0)
+{
+    <div class="d-flex">
+        <h6 class="ml-auto">You are participating with team <b>@myTeam.Name</b></h6>
+    </div>
+}
+<style>
+    .card {
+        height: 650px
+    }
+</style>
 
-<div class="d-flex flex-row">
-    <h1 class="p-2">@Html.DisplayFor(model => model.Tournament.Name)</h1>
-    @if (Model.TournamentMember == null || Model.TournamentMember.TournamentMemberId == 0)
-    {
-        if ((Model.Tournament.StartTime < DateTime.Now) || (Model.Tournament.MaxParticipantAmt <= Model.Tournament.TournamentMember.Count))
-        {
-            <a class="btn btn-secondary ml-auto" data-toggle="popover" data-trigger="hover" data-content="Too late ¯\_(ツ)_/¯" data-target="#myModal">Register</a>
-        }
-        else
-        {
-            <a class="btn btn-primary ml-auto" data-toggle="modal" data-target="#myModal">Register</a>
-        }
-        <form id="tournamentMembForm" method="post" class="col-sm-6 custom-close" data-ajax="true" data-ajax-method="post" data-ajax-complete="completed">
-            <div class="modal" id="myModal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
+<div class="card mb-4" style="background-color:white !important; height:auto;">
+    <div class="card-header">
+        <div class="d-flex">
+            <h3 class="p-2">@Html.DisplayFor(model => model.Tournament.Name)</h3>
+            <div class="ml-auto p-0">
+                <h6>@Model.Tournament.TournamentMember.Count / @Model.Tournament.MaxParticipantAmt</h6>
+                @if (Model.TournamentMember == null || Model.TournamentMember.TournamentMemberId == 0)
+                {
+                    if ((Model.Tournament.StartTime < DateTime.Now) || (Model.Tournament.MaxParticipantAmt <= Model.Tournament.TournamentMember.Count))
+                    {
+                        <a class="btn btn-secondary ml-auto" data-toggle="popover" data-trigger="hover" data-content="Too late ¯\_(ツ)_/¯" data-target="#myModal"><i class="fa fa-user-plus" style="color:white;"></i></a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-secondary ml-auto" data-toggle="modal" data-target="#myModal"><i class="fa fa-user-plus" style="color:white;"></i></a>
+                    }
+                    <form id="tournamentMembForm" method="post" class="col-sm-6 custom-close" data-ajax="true" data-ajax-method="post" data-ajax-complete="completed">
+                        <div class="modal" id="myModal">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
 
-                        <!-- Modal Header -->
-                        <div class="modal-header">
-                            <h4 class="modal-title">Select team</h4>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Select team</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
 
-                        <!-- Modal body -->
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label asp-for="TournamentMember.FkTeam" class="control-label"></label>
-                                <select asp-for="TournamentMember.FkTeam" id="myField" class="form-control" asp-items="Model.Teams"></select>
+                                    <!-- Modal body -->
+
+                                    @if (Model.Teams.Count() > 0)
+                                    {
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label asp-for="TournamentMember.FkTeam" class="control-label"></label>
+                                                <select asp-for="TournamentMember.FkTeam" id="myField" class="form-control" asp-items="Model.Teams"></select>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" asp-for="TournamentMember.FkTournament" value="@Model.Tournament.TournamentId" />
+                                        @*<input type="hidden" asp-for="TournamentMember.TournamentMemberId" />*@
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <div class="form-group">
+                                                <input id="btnSave" type="submit" value="Join" class="btn btn-secondary" />
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                <div class="modal-body">
+                                    <h6>You have no teams with required game type!</h6>
+                                </div>
+                                        @*<input type="hidden" asp-for="TournamentMember.TournamentMemberId" />*@
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <div class="form-group">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </div>
+
+                                    }
+
+
+                                </div>
                             </div>
                         </div>
+                    </form>
+                }
+                else
+                {
+                    <form method="post" data-ajax="true" data-ajax-method="post" data-ajax-complete="completedLeave" data-ajax-url="@Url.Action("LeaveTournament", "Esports")">
                         <input type="hidden" asp-for="TournamentMember.FkTournament" value="@Model.Tournament.TournamentId" />
-                        @*<input type="hidden" asp-for="TournamentMember.TournamentMemberId" />*@
-                        <!-- Modal footer -->
-                        <div class="modal-footer">
-                            <div class="form-group">
-                                <input id="btnSave" type="submit" value="Join" class="btn btn-secondary" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        <input type="hidden" asp-for="TournamentMember.TournamentMemberId" />
+                        <button type="submit" class="btn btn-secondary"><i class="fa fa-user-slash" style="color:white;"></i></button>
+                    </form>
+                }
             </div>
-        </form>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="d-flex">
+            <h5>@Html.DisplayFor(model => model.Tournament.Description)</h5>
+            <div class="ml-auto">
+                <h5>@Html.DisplayFor(model => model.Tournament.StartTime)</h5>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    @if (Model.Tournament.TournamentMember.Count < 2)
+    {
+        <h2 class=" ml-3 text-danger">
+            Brackets not ready! Atleast 2 teams need to register!
+        </h2>
     }
     else
     {
-        <form class="p-2" method="post" data-ajax="true" data-ajax-method="post" data-ajax-complete="completedLeave" data-ajax-url="@Url.Action("LeaveTournament", "Esports")">
-            <input type="hidden" asp-for="TournamentMember.FkTournament" value="@Model.Tournament.TournamentId" />
-            <input type="hidden" asp-for="TournamentMember.TournamentMemberId" />
-            <input type="submit" value="Leave" class="btn btn-secondary" />
-        </form>
+        <iframe class="col-xl-7 col-md-12 col-sm-12 " src="@Model.Tournament.TournamentUrl/module" style="width:auto" height="650" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
     }
 
-</div>
-<h3>@Html.DisplayFor(model => model.Tournament.Description)</h3>
-
-<h4>@Html.DisplayFor(model => model.Tournament.StartTime)</h4>
-
-@if (Model.Tournament.TournamentMember.Count < 2)
-{
-    <h2 class="text-danger">
-        Brackets not ready! Atleast 2 teams need to register!
-    </h2>
-}
-else
-{
-    <iframe src="@Model.Tournament.TournamentUrl/module" style="width:100%" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
-}
-
-<div id="chat">
-    @await Component.InvokeAsync("Chatroom", new { chatGroup = ("tournament_" + Model.Tournament.TournamentId) })
+    <div id="chat"  class="col-xl-4 col-md-10 col-sm-10 p-2 m-2 m-md-auto m-sm-auto">
+        @await Component.InvokeAsync("Chatroom", new { chatGroup = ("tournament_" + Model.Tournament.TournamentId) })
+    </div>
 </div>
 
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            $('[data-toggle="popover"]').popover();
-        });
 
-        completed = () => {
-            location.reload();
-        };
-
-        completedLeave = () => {
-            location.reload()
-        };
-
-
-        //(function () {
-        //    function displaymsg() {
-        //        $("#tournament").modal('hide');
-        //    }
-        //    document.getElementById('tournament').onsubmit = displaymsg;
-        //})();
-
-        $(function () {
-            $(".custom-close").on('submit', function () {
-                $('#myModal').modal('hide');
+    @section Scripts {
+        <script>
+            $(document).ready(function () {
+                $('[data-toggle="popover"]').popover();
             });
-        });
 
-    </script>
-}
+            completed = () => {
+                location.reload();
+            };
+
+            completedLeave = () => {
+                location.reload()
+            };
+
+
+            //(function () {
+            //    function displaymsg() {
+            //        $("#tournament").modal('hide');
+            //    }
+            //    document.getElementById('tournament').onsubmit = displaymsg;
+            //})();
+
+            $(function () {
+                $(".custom-close").on('submit', function () {
+                    $('#myModal').modal('hide');
+                });
+            });
+
+        </script>
+    }

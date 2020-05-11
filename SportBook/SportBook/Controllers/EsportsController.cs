@@ -258,7 +258,7 @@ namespace SportBook.Controllers
             var tournament = await tournaments.Where(t => t.TournamentId == id).FirstOrDefaultAsync();
             var tournamentTeams = _context.TournamentMember.Where(x => x.FkTournament == id);
             var user = GetCurrentUser();
-            var userTeams = _context.Team.Where(x => x.TeamMember.Any(y => y.FkUser == user.UserId));
+            var userTeams = _context.Team.Where(x => x.TeamMember.Any(y => y.FkUser == user.UserId) && x.FkGameType == tournament.FkGameType);
             var tournamentMember = new TournamentMember();
             if (tournamentTeams.Count() > 0)
             {
@@ -267,8 +267,12 @@ namespace SportBook.Controllers
                                                  on first.FkTeam equals second.TeamId
                                          select first;
                 tournamentMember = alreadyParticipant.FirstOrDefault();
+                
             }
-
+            if (tournamentMember != null)
+            {
+                ViewData["myTeam"] = _context.Team.FirstOrDefault(x => x.TeamId == tournamentMember.FkTeam);
+            }
             var teams = new SelectList(userTeams, "TeamId", "Name");
 
             TournamentData data = new TournamentData(tournament, teams, tournamentMember);

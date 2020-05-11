@@ -236,7 +236,7 @@ else if (Model.Participants.Any(x => x.FkUser == currentUser.UserId) && currentU
 }
 <script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
 
-<div id="chat">
+<div id="chat" class="ml-3">
     @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
 </div>
 
