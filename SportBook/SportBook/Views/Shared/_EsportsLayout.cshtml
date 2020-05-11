@@ -51,7 +51,7 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Settings
+                            @await Component.InvokeAsync("ConnectedUsername")
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item text-dark" name="navBar" asp-area="" asp-controller="Users" asp-action="Profile">Profile</a>

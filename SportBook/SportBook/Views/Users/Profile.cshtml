@@ -6,13 +6,13 @@
 }
 
 @*<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-</head>*@
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </head>*@
 @{
     var currentUser = ViewData["CurrentUser"] as SportBook.Models.User;
 }
@@ -31,10 +31,10 @@
                     <h6>Upload profile image</h6>
                     <input asp-for="PictureUrl" type="file" class="text-center center-block file-upload">
                     @*<div class="custom-file">
-                        <input asp-for="PictureUrl" type="file" class="custom-file-input" id="customFile">
-                        <label class="custom-file-label" for="customFile">Choose file</label>
-                    </div>
-                    <span asp-validation-for="PictureUrl" class="text-danger"></span>*@
+                            <input asp-for="PictureUrl" type="file" class="custom-file-input" id="customFile">
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
+                        <span asp-validation-for="PictureUrl" class="text-danger"></span>*@
                 </div><br>
 
                 <ul class="list-group">
@@ -44,15 +44,15 @@
                 </ul>
 
                 @*<div class="panel panel-default">
-                    <div class="panel-heading">Social Media</div>
-                    <div class="panel-body">
-                        <i class="fa fa-facebook fa-2x"></i>
-                        <i class="fa fa-github fa-2x"></i>
-                        <i class="fa fa-twitter fa-2x"></i>
-                        <i class="fa fa-pinterest fa-2x"></i>
-                        <i class="fa fa-google-plus fa-2x"></i>
-                    </div>
-                </div>*@
+                        <div class="panel-heading">Social Media</div>
+                        <div class="panel-body">
+                            <i class="fa fa-facebook fa-2x"></i>
+                            <i class="fa fa-github fa-2x"></i>
+                            <i class="fa fa-twitter fa-2x"></i>
+                            <i class="fa fa-pinterest fa-2x"></i>
+                            <i class="fa fa-google-plus fa-2x"></i>
+                        </div>
+                    </div>*@
 
             </div>
             <div class="col-sm-9">
@@ -86,9 +86,19 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Birthdate" class="control-label"></label>
-                    <input asp-for="Birthdate" class="form-control" />
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button type="button" id="toggle" class="input-group-text"><i class="fa fa-calendar-alt"></i></button>
+                        </div>
+                        <input type="text" asp-for="Birthdate" id="datepicker" class="form-control" />
+                    </div>
                     <span asp-validation-for="Birthdate" class="text-danger"></span>
                 </div>
+                @*<div class="form-group">
+                        <label asp-for="Birthdate" class="control-label"></label>
+                        <input asp-for="Birthdate" class="form-control" />
+                        <span asp-validation-for="Birthdate" class="text-danger"></span>
+                    </div>*@
                 <input type="hidden" asp-for="UserId" value="@currentUser.UserId" />
                 <input type="hidden" asp-for="ExternalId" value="@currentUser.ExternalId" />
                 @* <input type="hidden" asp-for="PictureUrl" value="@currentUser.PictureUrl" />*@
@@ -109,32 +119,46 @@
 </div>
 
 @*@section scripts{
-    <script type="text/javascript">
-        // Add the following code if you want the name of the file appear on select
-        $(".custom-file-input").on("change", function () {
-            var fileName = $(this).val().split("\\").pop();
-            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-        });
-    </script>
-}*@
+        <script type="text/javascript">
+            // Add the following code if you want the name of the file appear on select
+            $(".custom-file-input").on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            });
+        </script>
+    }*@
+<script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
 
 <script>
-        $(document).ready(function () {
+    $(document).ready(function () {
 
-            var readURL = function (input) {
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
+        var readURL = function (input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
 
-                    reader.onload = function (e) {
-                        $('.avatar').attr('src', e.target.result);
-                    }
-
-                    reader.readAsDataURL(input.files[0]);
+                reader.onload = function (e) {
+                    $('.avatar').attr('src', e.target.result);
                 }
-            }
 
-            $(".file-upload").on('change', function () {
-                readURL(this);
-            });
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $(".file-upload").on('change', function () {
+            readURL(this);
         });
+    });
+    $('#datepicker').datetimepicker({
+        datepicker: true,
+        timepicker: false,
+        format: 'Y-m-d',
+        onShow: function (ct) {
+            this.setOptions({
+                maxDate: new Date()
+            })
+        }
+    });
+    $('#toggle').on('click', function () {
+        $('#datepicker').datetimepicker('toggle')
+    })
 </script>

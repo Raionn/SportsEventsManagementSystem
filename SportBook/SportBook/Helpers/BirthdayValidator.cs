@@ -10,14 +10,22 @@ namespace SportBook.Helpers
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if ((DateTime)value > DateTime.Now.AddYears(-100) && (DateTime)value < DateTime.Now.AddYears(-5))
+            if (value == null)
             {
-                return ValidationResult.Success;
+                return new ValidationResult("Date field cannot be empty");
             }
             else
             {
-                return new ValidationResult("You cannot be older than 100 and younger than 5");
+                if ((DateTime)value > DateTime.Now.AddYears(-100) && (DateTime)value < DateTime.Now.AddYears(-5))
+                {
+                    return ValidationResult.Success;
+                }
+                else
+                {
+                    return new ValidationResult("You cannot be older than 100 and younger than 5");
+                }
             }
+            
         }
     }
 }

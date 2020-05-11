@@ -24,6 +24,7 @@ namespace SportBook.ViewComponents
         {
             ViewData["CurrentUser"] = GetCurrentUser();
             var eventItem = _context.Event.Find(eventId);
+            ViewData["EventMax"] = eventItem.MaxParticipantAmt;
             ViewData["TeamOwner"] = _context.User.Where(x => x.UserId == eventItem.FkOwner).FirstOrDefault();
             var eventMemberList = _context.Participant.Where(p => p.FkEvent == eventId).Include(x => x.FkUserNavigation);
             if (eventItem.MaxParticipantAmt > eventMemberList.Count())

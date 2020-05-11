@@ -156,15 +156,6 @@
             <hr />
             <div class="row">
                 <div class="p-2 font-weight-bold ml-3 flex-column col-md-4">
-                    Participants:
-                </div>
-                <div class="p-2 flex-column ml-3">
-                    @Model.Participants.Count / @Html.DisplayFor(model => model.Event.MaxParticipantAmt)
-                </div>
-            </div>
-            <hr />
-            <div class="row">
-                <div class="p-2 font-weight-bold ml-3 flex-column col-md-4">
                     Event time:
                 </div>
                 <div class="p-2 flex-column ml-3">
@@ -192,8 +183,9 @@
             <hr />
         </div>
 
-        <div class="col">
-            <div class="row mr-3 p-2">
+        <div class="col" id="participantList">
+            @await Component.InvokeAsync("EventMemberList", new { eventId = Model.Event.EventId, userId = 0 })
+            @*<div class="row mr-3 p-2">
 
 
                 <div class="flex-column">
@@ -206,7 +198,7 @@
                         @await Component.InvokeAsync("EventMemberList", new { eventId = Model.Event.EventId, userId = 0 })
                     </ul>
                 </div>
-            </div>
+            </div>*@
         </div>
     </div>
 </div>
@@ -215,9 +207,9 @@
 {
     <div class="text-center">
         <div class="col align-content-lg-center text-center">
-            <div class="flex-row p-2" id="joinLeaveText">
+            @*<div class="flex-row p-2" id="joinLeaveText">
                 You have been invited to join this team
-            </div>
+            </div>*@
 
             <div class="flex-row p-2">
                 <input id="joinLeaveBtn" type="button" onclick="joinEvent()" value="Join" class="btn btn-success" />
@@ -231,9 +223,9 @@ else if (Model.Participants.Any(x => x.FkUser == currentUser.UserId) && currentU
 {
     <div class="text-center">
         <div class="col align-content-lg-center text-center">
-            <div class="flex-row p-2" id="joinLeaveText">
+            @*<div class="flex-row p-2" id="joinLeaveText">
                 Are you sure you want to leave?
-            </div>
+            </div>*@
 
             <div class="flex-row p-2">
                 <input id="joinLeaveBtn" type="button" onclick="leaveEvent()" value="Leave" class="btn btn-danger" />
@@ -264,7 +256,7 @@ else if (Model.Participants.Any(x => x.FkUser == currentUser.UserId) && currentU
         document.getElementById("joinLeaveBtn").setAttribute("onClick", "leaveEvent()");
         document.getElementById("joinLeaveBtn").classList.remove('btn-success');
         document.getElementById("joinLeaveBtn").classList.add('btn-danger');
-        document.getElementById("joinLeaveText").textContent = "Are you sure you want to leave?"
+        //document.getElementById("joinLeaveText").textContent = "Are you sure you want to leave?"
     }
 
     function leaveEvent() {
@@ -273,7 +265,7 @@ else if (Model.Participants.Any(x => x.FkUser == currentUser.UserId) && currentU
         document.getElementById("joinLeaveBtn").setAttribute("onClick", "joinEvent()");
         document.getElementById("joinLeaveBtn").classList.remove('btn-danger');
         document.getElementById("joinLeaveBtn").classList.add('btn-success');
-        document.getElementById("joinLeaveText").textContent = "Join event"
+        //document.getElementById("joinLeaveText").textContent = "Join event"
     }
 
     $(document).ready(function () {

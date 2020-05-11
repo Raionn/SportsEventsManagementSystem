@@ -1,38 +1,58 @@
 ﻿@model IEnumerable<SportBook.Models.Participant>
 @{var teamOwner = ViewData["TeamOwner"] as SportBook.Models.User;}
-@{var currentUser = ViewData["CurrentUser"] as SportBook.Models.User;}
+@{var currentUser = ViewData["CurrentUser"] as SportBook.Models.User;
+    var maxAmt = (int)ViewData["EventMax"];
+    }
 
 @*<style>
-    ul {
-        -webkit-column-count: 2;
-        -moz-column-count: 2;
-        column-count: 2;
-        -webkit-perspective: 1pt;    not helping 
-    }
-</style>
+        ul {
+            -webkit-column-count: 2;
+            -moz-column-count: 2;
+            column-count: 2;
+            -webkit-perspective: 1pt;    not helping
+        }
+    </style>
 
-<ul class="list-group-flush">
-    @foreach (var item in Model)
-    {
-        <li class="list-group-item">
-            @item.Username
-        </li>
-    }
-</ul>*@
+    <ul class="list-group-flush">
+        @foreach (var item in Model)
+        {
+            <li class="list-group-item">
+                @item.Username
+            </li>
+        }
+    </ul>*@
+<div class="row mr-3 p-2">
 
-@foreach (var item in Model)
-{
-    <li class="list-group-item">
-        <div class="d-flex">
-            <div class="mr-2">
-                @item.FkUserNavigation.Username
+
+    <div class="flex-column text-center">
+        <h2>
+            Participants:
+        </h2>
+        <div class="row">
+
+            <div class="p-2 col ml-3">
+                @Model.Count() / @maxAmt
             </div>
-
-            @if (item.FkUser != teamOwner.UserId && currentUser.UserId == teamOwner.UserId) //isOwner
-            {
-                <a id="@item.FkUser" class="btn btn-secondary ml-auto mr-2 removeMember"><i class="fa fa-user-slash" style="color:white"></i></a>
-            }
         </div>
+    </div>
+    <div class="col-md-8">
+        <ul class="list-group-flush">
+            @foreach (var item in Model)
+            {
+                <li class="list-group-item">
+                    <div class="d-flex">
+                        <div class="mr-2">
+                            @item.FkUserNavigation.Username
+                        </div>
 
-    </li>
-}
+                        @if (item.FkUser != teamOwner.UserId && currentUser.UserId == teamOwner.UserId) //isOwner
+                        {
+                            <a id="@item.FkUser" class="btn btn-secondary ml-auto mr-2 removeMember"><i class="fa fa-user-slash" style="color:white"></i></a>
+                        }
+                    </div>
+
+                </li>
+            }
+        </ul>
+    </div>
+</div>

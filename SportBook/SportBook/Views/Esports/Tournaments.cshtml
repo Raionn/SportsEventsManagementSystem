@@ -4,7 +4,19 @@
     Layout = "~/Views/Shared/_EsportsLayout.cshtml";
 }
 
-<h1>Tournaments</h1>
+<div class="d-flex">
+    <h1>Tournaments</h1>
+    <div class="ml-auto col-sm-3 p-0">
+        <p>
+            <div class="input-group">
+                <input id="myInput" type="text" class="form-control" name="title" placeholder="Search..." style="margin-right:5px">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+        </p>
+    </div>
+</div>
 
 <style>
     .glyphicon {
@@ -54,62 +66,73 @@
     }
 </style>
 
-<form asp-controller="Esports" asp-action="Tournaments">
-    <p>
-        <div class="input-group" style="width:40%">
-            <input type="text" class="form-control" name="name" placeholder="Name" style="margin-right:5px">
-            <input type="text" class="form-control" name="gametype" placeholder="Game type" style="margin-right:5px">
-            <div class="input-group-append">
-                <button type="submit" class="btn btn-secondary"><i class="fa fa-search"></i></button>
+@*<form asp-controller="Esports" asp-action="Tournaments">
+        <p>
+            <div class="input-group" style="width:40%">
+                <input type="text" class="form-control" name="name" placeholder="Name" style="margin-right:5px">
+                <input type="text" class="form-control" name="gametype" placeholder="Game type" style="margin-right:5px">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-secondary"><i class="fa fa-search"></i></button>
+                </div>
             </div>
-        </div>
-    </p>
-</form>
+        </p>
+    </form>*@
 
-<div class="container ml-2 mr-2">
+<div class="container ml-2 mr-2" id="Search">
     <div class="row list-group">
         @foreach (var item in Model)
         {
-        <div class="item list-group-item" >
-            <a asp-action="Tournament" asp-route-id="@item.TournamentId" style="text-decoration:none; color:black">
-                <div class="thumbnail" style="min-height:250px">
-                    @if (item.FkGameType == 3)
-                    {
-                    <img class="group list-group-image" src="~/Resources/Images/league-of-legends.jpg" alt="" />
-                    }
-                    else
-                    {
-                <img class="group list-group-image" src="~/Resources/Images/csgo.jpg" alt="" />
-                    }
+            <div class="item list-group-item">
+                <a asp-action="Tournament" asp-route-id="@item.TournamentId" style="text-decoration:none; color:black">
+                    <div class="thumbnail" style="min-height:250px">
+                        @if (item.FkGameType == 3)
+                        {
+                            <img class="group list-group-image" src="~/Resources/Images/league-of-legends.jpg" alt="" />
+                        }
+                        else
+                        {
+                            <img class="group list-group-image" src="~/Resources/Images/csgo.jpg" alt="" />
+                        }
 
-                    <div class="caption d-flex flex-column col-md-7 h-100 mb-0" style="min-height:250px">
-                        <div class="d-flex flex-row">
-                            <h4 class="group inner list-group-item-heading mb-auto p-2 align-items-start">
-                                @Html.DisplayFor(modelItem => item.Name)
-                            </h4>
-                            <div class="ml-auto p-2">
-                                @Html.DisplayFor(modelItem => item.StartTime)
-                            </div>
-                        </div>
-
-                        <p class="group inner list-group-item-text align-items-center p-2 align-content-center">
-                            @Html.DisplayFor(modelItem => item.Description)
-                        </p>
-                        <div class="mt-auto p-2">
+                        <div class="caption d-flex flex-column col-md-7 h-100 mb-0" style="min-height:250px">
                             <div class="d-flex flex-row">
-                                <h4 class="mr-auto">
-                                    @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.Name)
+                                <h4 class="group inner list-group-item-heading mb-auto p-2 align-items-start">
+                                    @Html.DisplayFor(modelItem => item.Name)
                                 </h4>
-                                <p class="lead ml-auto">
-                                    @Html.DisplayFor(modelItem => item.TournamentMember.Count) / @Html.DisplayFor(modelItem => item.MaxParticipantAmt)
-                                </p>
+                                <div class="ml-auto p-2">
+                                    @Html.DisplayFor(modelItem => item.StartTime)
+                                </div>
+                            </div>
+
+                            <p class="group inner list-group-item-text align-items-center p-2 align-content-center">
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </p>
+                            <div class="mt-auto p-2">
+                                <div class="d-flex flex-row">
+                                    <h4 class="mr-auto">
+                                        @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.Name)
+                                    </h4>
+                                    <p class="lead ml-auto">
+                                        @Html.DisplayFor(modelItem => item.TournamentMember.Count) / @Html.DisplayFor(modelItem => item.MaxParticipantAmt)
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 </a>
-        </div>
+            </div>
         }
 
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#Search div").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
