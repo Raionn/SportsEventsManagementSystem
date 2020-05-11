@@ -47,34 +47,35 @@ stages:
 
     - publish: '$(Build.ArtifactStagingDirectory)'
       artifact: drop
- - job: BuildDacpac     #db stuff
-   pool:
-     vmImage: 'windows-2019'
-   steps:
-   - task: DotNetCoreCLI@2
-     displayName: 'Restore project dependencies'
-     inputs:
-       command: 'restore'
-       projects: '**/*.csproj'
 
-   - task: MSBuild@1
-     displayName: 'Build the database project'
-     inputs:
-       solution: '**/*.sqlproj'
+  - job: BuildDacpac     #db stuff
+    pool:
+      vmImage: 'windows-2019'
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore project dependencies'
+      inputs:
+        command: 'restore'
+        projects: '**/*.csproj'
 
-   - task: CopyFiles@2
-     displayName: 'Copy dacpac file to staging directory'
-     inputs:
-       contents: |
-         SportBook/Sportbook.Database/bin/**/*.dacpac
-       targetFolder: '$(Build.StagingDirectory)'
+    - task: MSBuild@1
+      displayName: 'Build the database project'
+      inputs:
+        solution: '**/*.sqlproj'
 
-   - task: PublishBuildArtifacts@1
-     displayName: 'Publish Artifact'
-     inputs:
-       pathToPublish: '$(Build.ArtifactStagingDirectory)'
-       artifactName: dropDacpac
-     condition: succeededOrFailed()
+    - task: CopyFiles@2
+      displayName: 'Copy dacpac file to staging directory'
+      inputs:
+        contents: |
+          SportBook/Sportbook.Database/bin/**/*.dacpac
+        targetFolder: '$(Build.StagingDirectory)'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact'
+      inputs:
+        pathToPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: dropDacpac
+      condition: succeededOrFailed()
 
 - stage: DBAVerificationScript
   displayName: 'Script database schema changes'
