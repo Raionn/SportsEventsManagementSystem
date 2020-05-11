@@ -1,13 +1,12 @@
 ﻿@model SportBook.Models.Event
 @{
-    ViewData["Title"] = "Sports Events";
+    ViewData["Title"] = "Create sport event";
     Layout = "~/Views/Shared/_SportsLayout.cshtml";
     var locations = ViewData["Locations"] as List<SportBook.ViewModels.LocationData>;
 }
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
 
-<h1>SportsEvents</h1>
+<h1>Create Event</h1>
 @if (!(Model == null || Model.FkLocation == null))
 {
     <script type="text/javascript">
@@ -115,9 +114,8 @@
     </div>
 </form>
 
-<div class="align-content-center" id="map"></div>
+<div class="align-content-center " id="map"></div>
 <script async defer
-        src="">
 </script>
 <script>
     // Initialize and add the map

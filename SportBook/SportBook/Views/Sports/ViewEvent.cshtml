@@ -1,16 +1,30 @@
-﻿@model SportBook.ViewModels.EventDetailData
+﻿@model SportBook.ViewModels.EventData
 @{
     ViewData["Title"] = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_SportsLayout.cshtml";
     var locations = ViewData["Locations"] as List<SportBook.ViewModels.LocationData>;
     var currentUser = ViewData["CurrentUser"] as SportBook.Models.User;
+    var eventInvites = ViewData["EventInvites"] as IEnumerable<SportBook.Models.EventInvitation>;
 }
-<link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+@if ((bool)ViewData["isFailed"] == true)
+{
+    <script type="text/javascript">
+        $(window).on('load', function () {
+            $('#editModal').modal('show');
+        });
+    </script>
+}
+
 <div class="d-flex">
-    <h1 class="col-md-2">Details</h1>
-    <div class="ml-auto">
-        <button style="margin-left:5px" data-toggle="modal" data-target="#myModal" class="btn btn-secondary ml-auto"><i class="fa fa-address-book"></i></button>
-        <button style="margin-left:5px" class="btn btn-secondary ml-auto"><i class="fa fa-user-plus"></i></button>
+    <h1>Event details</h1>
+    <div class="ml-auto mr-5">
+        @if (currentUser.UserId == Model.Event.FkOwner)
+        {
+            <a class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-alt" style="color:white"></i></a>
+            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#editModal"><i class="fa fa-edit" style="color:white"></i></a>
+            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#myModal"><i class="fa fa-user-plus" style="color:white"></i></a>
+        }
+        <a asp-action="Sports" class="btn btn-secondary ml-2"><i class="fa fa-list"></i></a>
     </div>
 </div>
 
@@ -34,96 +48,211 @@
         </div>
     </div>
 </div>
+<form id="eventForm" asp-action="Edit" asp-route-id="@Model.Event.EventId">
+    <div class="modal" id="editModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
 
-<div class="d-flex flex-row">
-    <div class="d-flex flex-column col-md-2 col-xs-2">
-        @*<h4>Event</h4>
-            <hr />*@
-        <div class="p-2">
-            @Html.DisplayNameFor(model => model.Event.Title)
-        </div>
-        <div class="p-2">
-            @Html.DisplayNameFor(model => model.Event.MaxParticipantAmt)
-        </div>
-        <div class="p-2">
-            @Html.DisplayNameFor(model => model.Event.StartTime)
-        </div>
-        <div class="p-2">
-            @Html.DisplayNameFor(model => model.Event.EndTime)
-        </div>
-        @*<div class="p-2">
-                @Html.DisplayNameFor(model => model.Event.IsPrivate)            // idk if we need to show this
-            </div>*@
-        <div class="p-2">
-            @Html.DisplayNameFor(model => model.Event.FkGameTypeNavigation)
-        </div>
-        <div class="p-2">
-            @Html.DisplayNameFor(model => model.Event.FkLocationNavigation)
-        </div>
-        <div class="p-2">
-            @Html.DisplayNameFor(model => model.Event.FkOwnerNavigation)
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit team</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Event.Title" class="control-label"></label>
+                        <input asp-for="Event.Title" class="form-control" />
+                        <span asp-validation-for="Event.Title" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Event.MaxParticipantAmt" class="control-label"></label>
+                        <input asp-for="Event.MaxParticipantAmt" class="form-control" />
+                        <span asp-validation-for="Event.MaxParticipantAmt" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Event.StartTime" class="control-label"></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button type="button" id="toggle" class="input-group-text"><i class="fa fa-calendar-alt"></i></button>
+                            </div>
+                            <input type="text" asp-for="Event.StartTime" id="datepicker" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Event.StartTime" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Event.EndTime" class="control-label"></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button type="button" id="toggle2" class="input-group-text"><i class="fa fa-calendar-alt"></i></button>
+                            </div>
+                            <input type="text" asp-for="Event.EndTime" id="datepicker2" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Event.EndTime" class="text-danger"></span>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Event.IsPrivate" /> @Html.DisplayNameFor(model => model.Event.IsPrivate)
+                        </label>
+                    </div>
+                    <input type="hidden" asp-for="Event.IsTeamEvent" />
+                    <input type="hidden" asp-for="Event.FkGameType" />
+                    <input type="hidden" asp-for="Event.FkOwner" />
+                    <input type="hidden" asp-for="Event.EventId" />
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <input type="submit" value="Edit" class="btn btn-secondary" />
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</form>
+<form id="deleteForm" asp-action="Delete" asp-route-id="@Model.Event.EventId">
+    <div class="modal " id="deleteModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
 
-    <div class="d-flex flex-column col-md-2 col-xs-2">
-        <div class="p-2">
-            @Html.DisplayFor(model => model.Event.Title)
-        </div>
-        <div class="p-2">
-            @Html.DisplayFor(model => model.Event.MaxParticipantAmt)
-        </div>
-        <div class="p-2">
-            @Html.DisplayFor(model => model.Event.StartTime)
-        </div>
-        <div class="p-2">
-            @Html.DisplayFor(model => model.Event.EndTime)
-        </div>
-        <div class="p-2">
-            @Html.DisplayFor(model => model.Event.FkGameTypeNavigation.Name)
-        </div>
-        <div class="p-2">
-            @Html.DisplayFor(model => model.Event.FkLocationNavigation.Address)
-        </div>
-        <div class="p-2">
-            @Html.DisplayFor(model => model.Event.FkOwnerNavigation.Username)
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete event</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="p-2 text-center">
+                        Are you sure you want to delete <b>@Model.Event.Title</b>?
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <input type="submit" value="Delete" class="btn btn-outline-danger" />
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</form>
 
-    <div class="d-flex flex-column col-md-4" id="participantList">
-        @await Component.InvokeAsync("EventMemberList", new { eventId = Model.Event.EventId, userId = 0 })
+
+<div>
+    <hr />
+    <div class="row">
+        <div class="col ">
+            <div class="row">
+                <div class="p-2 font-weight-bold ml-3 flex-column col-md-4">
+                    @Html.DisplayNameFor(model => model.Event.Title):
+                </div>
+                <div class="p-2 flex-column ml-3">
+                    @Html.DisplayFor(model => model.Event.Title)
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="p-2 font-weight-bold ml-3 flex-column col-md-4">
+                    Event time:
+                </div>
+                <div class="p-2 flex-column ml-3">
+                    @Html.DisplayFor(model => model.Event.StartTime) - @Html.DisplayFor(model => model.Event.EndTime)
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="p-2 font-weight-bold ml-3 flex-column col-md-4">
+                    @Html.DisplayNameFor(model => model.Event.FkGameTypeNavigation):
+                </div>
+                <div class="p-2 flex-column ml-3">
+                    @Html.DisplayFor(model => model.Event.FkGameTypeNavigation.Name)
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="p-2 font-weight-bold ml-3 flex-column col-md-4">
+                    Event creator:
+                </div>
+                <div class="p-2 flex-column ml-3">
+                    @Html.DisplayFor(model => model.Event.FkOwnerNavigation.Username)
+                </div>
+            </div>
+            <hr />
+        </div>
+
+        <div class="col" id="participantList">
+            @await Component.InvokeAsync("EventMemberList", new { eventId = Model.Event.EventId, userId = 0 })
+            @*<div class="row mr-3 p-2">
+
+
+                    <div class="flex-column">
+                        <h2>
+                            Participants:
+                        </h2>
+                    </div>
+                    <div class="col-md-8">
+                        <ul class="list-group-flush" id="participantList">
+                            @await Component.InvokeAsync("EventMemberList", new { eventId = Model.Event.EventId, userId = 0 })
+                        </ul>
+                    </div>
+                </div>*@
+        </div>
     </div>
-
-    <div class="container-fluid" id="eventMap"></div>
-
 </div>
-
-@if (Model.Participants.Any(p => p.FkUser == currentUser.UserId))
+@if (!Model.Participants.Any(x => x.FkUser == currentUser.UserId) && Model.Event.MaxParticipantAmt > Model.Participants.Count)
 {
     <div>
-        <input id="joinLeaveBtn" type="button" onclick="leaveEvent()" value="Leave" class="btn btn-danger" />
+        <div class="col">
+            @*<div class="flex-row p-2" id="joinLeaveText">
+                    You have been invited to join this team
+                </div>*@
+
+            <div class="flex-row p-2 ml-2">
+                <input id="joinLeaveBtn" type="button" onclick="joinEvent()" value="Join" class="btn btn-success" />
+            </div>
+
+        </div>
+
     </div>
 }
-else
+else if (Model.Participants.Any(x => x.FkUser == currentUser.UserId) && currentUser.UserId != Model.Event.FkOwner)
 {
     <div>
-        <input id="joinLeaveBtn" type="button" onclick="joinEvent()" value="Join" class="btn btn-success" />
+        <div class="col">
+            @*<div class="flex-row p-2" id="joinLeaveText">
+                    Are you sure you want to leave?
+                </div>*@
+
+            <div class="flex-row p-2 ml-2">
+                <input id="joinLeaveBtn" type="button" onclick="leaveEvent()" value="Leave" class="btn btn-danger" />
+            </div>
+
+        </div>
     </div>
 }
 
-<div id="chat ml-3">
-    @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
+<script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
+<div class="row">
+    <div class="col-xl-7 col-md-12 col-sm-12 ml-3" style="min-height:300px; overflow:visible !important" id="eventMap"></div>
+
+    <div id="chat" class="col-xl-4 col-md-10 col-sm-10 p-2 m-2 m-md-auto m-sm-auto">
+        @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
+    </div>
 </div>
 
 @*<div>
-    <a asp-action="Edit" asp-route-id="@Model.Event.EventId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>*@
+        <a asp-action="Edit" asp-route-id="@Model.Event.EventId">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>*@
 
 <script async defer
-        src="">
 </script>
 
 <script>
+    $('body').on('click', '.removeMember', function () { RemoveEventMember($(this)); return false; });
+
     function joinEvent() {
         $("#participantList").load("@Url.Action("SportsEventMemberVC", "Sports", new { eventId = Model.Event.EventId, currentUser.UserId })");
         document.getElementById("joinLeaveBtn").setAttribute("value", "Leave");
@@ -183,7 +312,6 @@ else
     };
 
 </script>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -207,4 +335,36 @@ else
         link = link.replace("amp;", "");
         $("#invitableUserList").load(link, function () { });
     }
+    $('#datepicker').datetimepicker({
+        timepicker: true,
+        datepicker: true,
+        format: 'Y-m-d H:i',
+        hours12: false,
+        step: 15,
+        onShow: function (ct) {
+            this.setOptions({
+                minDate: new Date(),
+                maxDate: $('#datepicker2').val() ? $('#datepicker2').val() : false
+            })
+        }
+    });
+    $('#toggle').on('click', function () {
+        $('#datepicker').datetimepicker('toggle')
+    })
+
+    $('#datepicker2').datetimepicker({
+        timepicker: true,
+        datepicker: true,
+        format: 'Y-m-d H:i',
+        hours12: false,
+        step: 15,
+        onShow: function (ct) {
+            this.setOptions({
+                minDate: $('#datepicker').val() ? $('#datepicker').val() : false
+            })
+        }
+    });
+    $('#toggle2').on('click', function () {
+        $('#datepicker2').datetimepicker('toggle')
+    })
 </script>
