@@ -113,7 +113,7 @@ namespace SportBook
                    }
                 };
             });
-            services.AddSignalR().AddAzureSignalR();
+            services.AddSignalR().AddAzureSignalR(Configuration.GetValue<string>("ConnectionStrings:Azure_SignalR"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

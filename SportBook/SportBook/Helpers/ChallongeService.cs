@@ -28,8 +28,7 @@ namespace SportBook.Helpers
         public async Task<Task> OnGet()
         {
 
-            var request = new HttpRequestMessage(HttpMethod.Get,
-                "https://api.challonge.com/v1/tournaments.json?include_participants=1&api_key=Hgtdj8IxMetjfk7zbJNQDLHKbzduQxqKACLlVKAl");
+            var request = new HttpRequestMessage(HttpMethod.Get, "https://api.challonge.com/v1/tournaments.json?include_participants=1&api_key=" + Configuration.GetValue<string>("ConnectionStrings:Challonge_Key"));
             //request.Headers.Add("Accept", "application/vnd.github.v3+json");
             //request.Headers.Add("User-Agent", "HttpClientFactory-Sample");
             var client = _clientFactory.CreateClient();
@@ -68,7 +67,7 @@ namespace SportBook.Helpers
 
         public async Task<Tournament> OnPostTournament(Tournament tour, int id)
         {
-            string api_key = Configuration.GetValue<string>("API_Keys:Challonge_Key");
+            string api_key = Configuration.GetValue<string>("ConnectionStrings:Challonge_Key");
             string url = String.Format("https://api.challonge.com/v1/tournaments.json?api_key={0}",api_key);
             var result = tour;
 
@@ -101,7 +100,7 @@ namespace SportBook.Helpers
 
         public async Task<Task> OnPutTournament(Tournament tour)
         {
-            string api_key = Configuration.GetValue<string>("API_Keys:Challonge_Key");
+            string api_key = Configuration.GetValue<string>("ConnectionStrings:Challonge_Key");
             string url = String.Format("https://api.challonge.com/v1/tournaments/{1}.json?api_key={0}", api_key, tour.ExternalID);
 
             var tournament = new PutTournament()
@@ -131,7 +130,7 @@ namespace SportBook.Helpers
 
         public async Task<Task> OnDeleteTournament(Tournament tour)
         {
-            string api_key = Configuration.GetValue<string>("API_Keys:Challonge_Key");
+            string api_key = Configuration.GetValue<string>("ConnectionStrings:Challonge_Key");
             string url = String.Format("https://api.challonge.com/v1/tournaments/{1}.json?api_key={0}", api_key, tour.ExternalID);
 
             //var request = new HttpRequestMessage(HttpMethod.Post, url);
@@ -155,7 +154,7 @@ namespace SportBook.Helpers
 
         public async Task<int> OnPostParticipant(int tournamentExternalId, string participantName)
         {
-            string api_key = Configuration.GetValue<string>("API_Keys:Challonge_Key");
+            string api_key = Configuration.GetValue<string>("ConnectionStrings:Challonge_Key");
             string url = String.Format("https://api.challonge.com/v1/tournaments/{1}/participants.json?api_key={0}", api_key, tournamentExternalId);
             var result = 0;
 
@@ -187,7 +186,7 @@ namespace SportBook.Helpers
 
         public async Task<Task> OnDeleteParticipant(TournamentMember member, int tournamentId)
         {
-            string api_key = Configuration.GetValue<string>("API_Keys:Challonge_Key");
+            string api_key = Configuration.GetValue<string>("ConnectionStrings:Challonge_Key");
             string url = String.Format("https://api.challonge.com/v1/tournaments/{1}/participants/{2}.json?api_key={0}", api_key, tournamentId, member.ExternalID);
 
             //var request = new HttpRequestMessage(HttpMethod.Post, url);
