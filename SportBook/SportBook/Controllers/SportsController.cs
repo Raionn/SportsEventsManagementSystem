@@ -262,7 +262,7 @@ namespace SportBook.Controllers
                 .Include(e => e.FkLocationNavigation)
                 .Include(e => e.FkOwnerNavigation)
                 .FirstOrDefaultAsync(m => m.EventId == id);
-            if (@event == null)
+            if (@event == null || @event.FkGameTypeNavigation.IsOnline)
             {
                 return NotFound();
             }

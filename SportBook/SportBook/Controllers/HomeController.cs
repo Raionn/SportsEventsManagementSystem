@@ -17,7 +17,7 @@ using System.Runtime.Serialization;
 
 namespace SportBook.Controllers
 {
-    [Authorize(Roles ="user, admin")]
+    [Authorize(Roles = "user, admin")]
     public class HomeController : Controller
     {
         private readonly SportbookDatabaseContext _context;
@@ -52,9 +52,9 @@ namespace SportBook.Controllers
             var eventParticipations = _context.Participant.Where(e => e.FkUser == GetCurrentUser().UserId);
             var _events = _context.Event;
             var eventData = from first in _events
-                                       join second in eventParticipations
-                                       on first.EventId equals second.FkEvent
-                                       select first;
+                            join second in eventParticipations
+                            on first.EventId equals second.FkEvent
+                            select first;
             var joinedEvents = eventData.Include(e => e.FkGameTypeNavigation);
             var createdEvents = _events.Include(e => e.FkGameTypeNavigation).Where(e => e.FkOwner == GetCurrentUser().UserId);
             var returnEvents = new List<ScheduleData>();
@@ -62,8 +62,15 @@ namespace SportBook.Controllers
             {
                 if (item.FkGameTypeNavigation.IsOnline)
                 {
-                    returnEvents.Add(new ScheduleData(item.Title, item.StartTime,
-                    item.EndTime, "../Esports/ViewEvent?id=" + item.EventId.ToString(), "info"));
+                    if (item.IsTeamEvent)
+                    {
+                        returnEvents.Add(new ScheduleData(item.Title, item.StartTime,item.EndTime, "../Esports/TeamEvent?id=" + item.EventId.ToString(), "info"));
+                    }
+                    else
+                    {
+                        returnEvents.Add(new ScheduleData(item.Title, item.StartTime,item.EndTime, "../Esports/ViewEvent?id=" + item.EventId.ToString(), "info"));
+                    }
+
                 }
                 else
                 {
@@ -78,12 +85,12 @@ namespace SportBook.Controllers
                     returnEvents.Add(new ScheduleData(item.Title, item.StartTime,
                     item.EndTime, "../Esports/ViewEvent?id=" + item.EventId.ToString(), "important"));
                 }
-                else 
+                else
                 {
                     returnEvents.Add(new ScheduleData(item.Title, item.StartTime,
                     item.EndTime, "../Sports/ViewEvent?id=" + item.EventId.ToString(), "important"));
                 }
-                
+
             }
             ViewData["events"] = returnEvents;
             return View();

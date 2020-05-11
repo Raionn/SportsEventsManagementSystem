@@ -68,7 +68,17 @@ namespace SportBook.ViewComponents
             {
                 var url = "";
                 if (item.FkEventNavigation.FkGameTypeNavigation.IsOnline)
-                    url = "/Esports/ViewEvent?id=" + item.FkEvent.ToString();
+                {
+                    if (item.FkEventNavigation.IsTeamEvent)
+                    {
+                        url = "/Esports/TeamEvent?id=" + item.FkEvent.ToString();
+                    }
+                    else
+                    {
+                        url = "/Esports/ViewEvent?id=" + item.FkEvent.ToString();
+                    }
+                }
+
                 else
                     url = "/Sports/ViewEvent?id=" + item.FkEvent.ToString();
                 eventList.Add(new EventDataInvitation(item.EventInvitationId, item.IsAccepted, item.FkUser, item.FkEvent, item.FkEventNavigation.Title,url));

@@ -43,7 +43,7 @@ namespace SportBook.ViewComponents
                                       on users.UserId equals teamMembers.FkUser
                                       select users;
             var notAcceptedInvite = from users in _context.User
-                                    join invitations in _context.TeamInvitation.Where(x => x.IsAccepted == false)
+                                    join invitations in _context.TeamInvitation.Where(x => x.IsAccepted == false && x.FkTeam == teamId)
                                     on users.UserId equals invitations.FkUser
                                     select users;
 
