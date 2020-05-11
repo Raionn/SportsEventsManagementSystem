@@ -57,9 +57,9 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="dbo" />
-    <Folder Include="Tables" />
+    <Folder Include="dbo\Tables" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Tables\DBScript.sql" />
+    <None Include="dbo\Tables\DBScript.sql" />
   </ItemGroup>
 </Project>

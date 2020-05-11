@@ -67,7 +67,7 @@ namespace SportBook
 
                 // Configure the Auth0 Client ID and Client Secret
                 options.ClientId = Configuration["Authentication:auth0ClientId"];
-                options.ClientSecret = Configuration.GetValue<string>("API_Keys:AUTH0_CLIENT_SECRET");
+                options.ClientSecret = Configuration.GetValue<string>("ConnectionStrings:AUTH0_CLIENT_SECRET");
                 // Set response type to code
                 options.ResponseType = OpenIdConnectResponseType.Code;
 
@@ -119,12 +119,6 @@ namespace SportBook
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            string auth0Domain = Configuration["Authentication:auth0Domain"];
-            string auth0ClientId = Configuration["Authentication:auth0ClientId"];
-            //string auth0ClientSecret = Configuration.GetValue<string>("API_Keys:AUTH0_CLIENT_SECRET");
-            string auth0RedirectUri = Configuration["Authentication:auth0RedirectUri"];
-            string auth0PostLogoutRedirectUri = Configuration["Authentication:auth0PostLogoutRedirectUri"];
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -144,21 +138,21 @@ namespace SportBook
             app.UseAuthentication();
             app.UseAuthorization();
 
-            SecretClientOptions options = new SecretClientOptions()
-            {
-                Retry =
-                {
-                    Delay= TimeSpan.FromSeconds(2),
-                    MaxDelay = TimeSpan.FromSeconds(16),
-                    MaxRetries = 5,
-                    Mode = RetryMode.Exponential
-                 }
-            };
-            var client = new SecretClient(new Uri("https://sportbook-secrets.vault.azure.net/"), new DefaultAzureCredential(), options);
+            //SecretClientOptions options = new SecretClientOptions()
+            //{
+            //    Retry =
+            //    {
+            //        Delay= TimeSpan.FromSeconds(2),
+            //        MaxDelay = TimeSpan.FromSeconds(16),
+            //        MaxRetries = 5,
+            //        Mode = RetryMode.Exponential
+            //     }
+            //};
+            //var client = new SecretClient(new Uri("https://sportbook-secrets.vault.azure.net/"), new DefaultAzureCredential(), options);
 
-            KeyVaultSecret secret = client.GetSecret("AUTH0-CLIENT-SECRET");
+            //KeyVaultSecret secret = client.GetSecret("AUTH0-CLIENT-SECRET");
 
-            string auth0ClientSecret = secret.Value;
+            //string auth0ClientSecret = secret.Value;
 
             app.UseFileServer();
             app.UseEndpoints(endpoints =>
