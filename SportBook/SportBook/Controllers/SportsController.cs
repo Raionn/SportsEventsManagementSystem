@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using SportBook.Helpers;
 using SportBook.Models;
 using SportBook.ViewModels;
@@ -18,11 +19,15 @@ namespace SportBook.Controllers
     [Route("[controller]/[action]")]
     public class SportsController : Controller
     {
+        private readonly IConfiguration _configuration;
         private readonly SportbookDatabaseContext _context;
+        private string google_key;
 
-        public SportsController(SportbookDatabaseContext context)
+        public SportsController(SportbookDatabaseContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
+            google_key = _configuration.GetValue<string>("ConnectionStrings:GOOGLE_API");
         }
         //[Route("[action]")]           // MUST FIX THIS LATER
         public async Task<IActionResult> Sports()
@@ -51,6 +56,8 @@ namespace SportBook.Controllers
                 locations.Add(new LocationData(item.Longitude, item.Latitude, item.Address, item.FkGameTypeNavigation.Name, item.LocationId, item.FkGameType));
             }
             ViewData["Locations"] = locations;
+            ViewData["GoogleAPI"] = google_key;
+
             return View();
         }
 
@@ -74,6 +81,8 @@ namespace SportBook.Controllers
                 locations.Add(new LocationData(item.Longitude, item.Latitude, item.Address, item.FkGameTypeNavigation.Name, item.LocationId, item.FkGameType));
             }
             ViewData["Locations"] = locations;
+            ViewData["GoogleAPI"] = google_key;
+
             return View(@event);
         }
 
@@ -260,6 +269,7 @@ namespace SportBook.Controllers
 
             ViewData["Locations"] = locations;
             ViewData["CurrentUser"] = GetCurrentUser();
+            ViewData["GoogleApi"] = google_key;
 
             return View(modelData);
         }
