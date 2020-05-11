@@ -21,6 +21,9 @@ using System.Globalization;
 using FluentValidation.AspNetCore;
 using FluentValidation;
 using SportBook.ChatHub;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using Azure.Core;
 
 namespace SportBook
 {
@@ -118,7 +121,7 @@ namespace SportBook
         {
             string auth0Domain = Configuration["Authentication:auth0Domain"];
             string auth0ClientId = Configuration["Authentication:auth0ClientId"];
-            string auth0ClientSecret = Configuration["Authentication:auth0ClientSecret"];
+            //string auth0ClientSecret = Configuration.GetValue<string>("API_Keys:AUTH0_CLIENT_SECRET");
             string auth0RedirectUri = Configuration["Authentication:auth0RedirectUri"];
             string auth0PostLogoutRedirectUri = Configuration["Authentication:auth0PostLogoutRedirectUri"];
 
@@ -140,6 +143,22 @@ namespace SportBook
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            SecretClientOptions options = new SecretClientOptions()
+            {
+                Retry =
+                {
+                    Delay= TimeSpan.FromSeconds(2),
+                    MaxDelay = TimeSpan.FromSeconds(16),
+                    MaxRetries = 5,
+                    Mode = RetryMode.Exponential
+                 }
+            };
+            var client = new SecretClient(new Uri("https://sportbook-secrets.vault.azure.net/"), new DefaultAzureCredential(), options);
+
+            KeyVaultSecret secret = client.GetSecret("AUTH0-CLIENT-SECRET");
+
+            string auth0ClientSecret = secret.Value;
 
             app.UseFileServer();
             app.UseEndpoints(endpoints =>
