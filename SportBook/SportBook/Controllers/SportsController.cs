@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using SportBook.Helpers;
 using SportBook.Models;
 using SportBook.ViewModels;
@@ -19,33 +18,40 @@ namespace SportBook.Controllers
     [Route("[controller]/[action]")]
     public class SportsController : Controller
     {
-        private readonly IConfiguration _configuration;
         private readonly SportbookDatabaseContext _context;
-        private string google_key;
 
-        public SportsController(SportbookDatabaseContext context, IConfiguration configuration)
+        public SportsController(SportbookDatabaseContext context)
         {
             _context = context;
-            _configuration = configuration;
-            google_key = _configuration.GetValue<string>("ConnectionStrings:GOOGLE_API");
         }
         //[Route("[action]")]           // MUST FIX THIS LATER
-        public async Task<IActionResult> Sports()
+        public IActionResult Sports()
         {
-            var sportbookDatabaseContext = _context.Event.Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation).Where(e => !e.FkGameTypeNavigation.IsOnline).Where(x => x.IsPrivate == false).OrderBy(x => x.StartTime);
+            var userId = GetCurrentUser().UserId;
 
-            var eventParticipations = _context.Participant.Where(e => e.FkUser == GetCurrentUser().UserId);
+            var events = _context.Event.Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation).Where(e => e.FkGameTypeNavigation.IsOnline == false);
 
-            ViewData["joinedEvents"] = from first in sportbookDatabaseContext
-                                       join second in eventParticipations
-                                       on first.EventId equals second.FkEvent
-                                       select first;
+            var participants = new Dictionary<int, int>();
+            var eventList = events.ToList();
+            foreach (var item in eventList)
+            {
+                participants.Add(item.EventId, _context.Participant.Where(x => x.FkEvent == item.EventId).Count());
+            }
+            var eventParticipations = _context.Participant.Where(e => e.FkUser == userId);
 
-            ViewData["myEvents"] = sportbookDatabaseContext.Where(e => e.FkOwner == GetCurrentUser().UserId);
+            var myEvents = events.Where(e => e.FkOwner == userId);
+            var joinedEvents = from first in events
+                               join second in eventParticipations
+                               on first.EventId equals second.FkEvent
+                               select first; ;
+            ViewData["myEvents"] = myEvents.OrderBy(x => x.StartTime);
+            ViewData["joinedEvents"] = joinedEvents.OrderBy(x => x.StartTime).Except(myEvents);
+            ViewData["Participants"] = participants;
 
             User currentUser = (from s in _context.User select s).Where(s => s.ExternalId == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).FirstOrDefault();
             ViewData["CurrentUser"] = currentUser;
-            return View(await sportbookDatabaseContext.ToListAsync());
+            events = events.Except(myEvents).Except(joinedEvents).OrderBy(x => x.StartTime);
+            return View(events);
         }
         public IActionResult SportsEvents()
         {
@@ -56,8 +62,6 @@ namespace SportBook.Controllers
                 locations.Add(new LocationData(item.Longitude, item.Latitude, item.Address, item.FkGameTypeNavigation.Name, item.LocationId, item.FkGameType));
             }
             ViewData["Locations"] = locations;
-            ViewData["GoogleAPI"] = google_key;
-
             return View();
         }
 
@@ -81,8 +85,6 @@ namespace SportBook.Controllers
                 locations.Add(new LocationData(item.Longitude, item.Latitude, item.Address, item.FkGameTypeNavigation.Name, item.LocationId, item.FkGameType));
             }
             ViewData["Locations"] = locations;
-            ViewData["GoogleAPI"] = google_key;
-
             return View(@event);
         }
 
@@ -111,7 +113,8 @@ namespace SportBook.Controllers
         {
             var user = GetCurrentUser();
             var _event = _context.Event.Find(id);
-            if (_event.IsPrivate && _event.FkOwner != user.UserId)
+            var member = _context.Participant.FirstOrDefault(x => x.FkEvent == id && x.FkUser == user.UserId);
+            if (_event.IsPrivate && _event.FkOwner != user.UserId && member == null)
                 return _context.EventInvitation.Any(e => (e.FkEvent == id) && (user.UserId == e.FkUser));
             else return true;
         }
@@ -151,10 +154,6 @@ namespace SportBook.Controllers
             {
                 return NotFound();
             }
-            if (!IsEventOwner(id))
-            {
-                return Forbid();
-            }
 
             if (ModelState.IsValid)
             {
@@ -174,12 +173,18 @@ namespace SportBook.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ViewEvent), new { id = @event.EventId });
             }
-            ViewData["FkGameType"] = new SelectList(_context.GameType, "GameTypeId", "Name", @event.FkGameType);
+            var tempEvent = await _context.Event.Include(e => e.FkGameTypeNavigation).FirstOrDefaultAsync(m => m.EventId == id);
+            @event.FkGameTypeNavigation = tempEvent.FkGameTypeNavigation;
+            User currentUser = (from s in _context.User select s).Where(s => s.ExternalId == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).FirstOrDefault();
+            ViewData["CurrentUser"] = currentUser;
+            ViewData["EventInvites"] = _context.EventInvitation.Where(x => x.FkEvent == id);
+            ViewData["isFailed"] = true;
+            var eventMembers = await _context.Participant.Include(x => x.FkUserNavigation).Include(x => x.FkEventNavigation).Where(x => x.FkEvent == id).ToListAsync();
+            EventData eventData = new EventData(@event, eventMembers, new Models.Participant());
             ViewData["FkLocation"] = new SelectList(_context.Location, "LocationId", "Address", @event.FkLocation);
-            ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username", @event.FkOwner);
-            return View(@event);
+            return View("ViewEvent", eventData);
         }
 
         // GET: Events/Delete/5
@@ -212,10 +217,14 @@ namespace SportBook.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var eventParticipants = _context.Participant.Where(x => x.FkEvent == id);
+            var eventInvitations = _context.EventInvitation.Where(x => x.FkEvent == id);
             var @event = await _context.Event.FindAsync(id);
+            _context.Participant.RemoveRange(eventParticipants);
+            _context.EventInvitation.RemoveRange(eventInvitations);
             _context.Event.Remove(@event);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Sports));
         }
 
         private bool EventExists(int id)
@@ -253,25 +262,24 @@ namespace SportBook.Controllers
                 .Include(e => e.FkLocationNavigation)
                 .Include(e => e.FkOwnerNavigation)
                 .FirstOrDefaultAsync(m => m.EventId == id);
-            if (@event == null)
+            if (@event == null || @event.FkGameTypeNavigation.IsOnline)
             {
                 return NotFound();
             }
-            //var users = new SelectList(_context.User.Where(u => u.UserId != GetCurrentUser().UserId), "UserId", "Username");
-            var users = _context.User.Where(u => u.UserId != GetCurrentUser().UserId).ToList();     // idk why I did this again
-            var participants = await _context.Participant.Include(x => x.FkUserNavigation).Include(x => x.FkEventNavigation).Where(x => x.FkEvent == id).ToListAsync();
-            var modelData = new EventDetailData(users, @event, new Models.Participant(), new EventInvitation(), participants);
-
             List<LocationData> locations = new List<LocationData>
             {
                 new LocationData(@event.FkLocationNavigation.Longitude, @event.FkLocationNavigation.Latitude, @event.FkLocationNavigation.Address, @event.FkGameTypeNavigation.Name, 0, 0)
             };
 
             ViewData["Locations"] = locations;
-            ViewData["CurrentUser"] = GetCurrentUser();
-            ViewData["GoogleApi"] = google_key;
+            User currentUser = (from s in _context.User select s).Where(s => s.ExternalId == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).FirstOrDefault();
+            ViewData["CurrentUser"] = currentUser;
+            ViewData["EventInvites"] = _context.EventInvitation.Where(x => x.FkEvent == id);
+            ViewData["isFailed"] = false;
+            var eventMembers = await _context.Participant.Include(x => x.FkUserNavigation).Include(x => x.FkEventNavigation).Where(x => x.FkEvent == id).ToListAsync();
+            EventData eventData = new EventData(@event, eventMembers, new Models.Participant());
 
-            return View(modelData);
+            return View(eventData);
         }
         #endregion
 

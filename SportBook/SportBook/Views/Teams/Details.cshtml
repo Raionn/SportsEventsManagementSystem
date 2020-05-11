@@ -197,9 +197,9 @@ else if (teamMembers.Any(x => x.FkUser == currentUser.UserId) && currentUser.Use
 {
     <div class="text-center">
         <div class="col align-content-lg-center text-center">
-            @*<div class="flex-row p-2" id="joinLeaveText">
-                Are you sure you want to leave?
-            </div>*@
+            <div class="flex-row p-2" id="joinLeaveText">
+                @*Are you sure you want to leave?*@
+            </div>
 
             <div class="flex-row p-2">
                 <input id="joinLeaveBtn" type="button" onclick="leaveEvent()" value="Leave" class="btn btn-danger" />
@@ -228,6 +228,7 @@ else if (teamMembers.Any(x => x.FkUser == currentUser.UserId) && currentUser.Use
         document.getElementById("joinLeaveBtn").setAttribute("onClick", "leaveEvent()");
         document.getElementById("joinLeaveBtn").classList.remove('btn-success');
         document.getElementById("joinLeaveBtn").classList.add('btn-danger');
+        document.getElementById("joinLeaveText").textContent = ""
         //document.getElementById("joinLeaveText").textContent = "Are you sure you want to leave?"
     }
 

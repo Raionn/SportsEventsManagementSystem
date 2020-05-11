@@ -166,7 +166,7 @@ namespace SportBook.Controllers
                 .Include(e => e.FkOwnerNavigation)
                 .FirstOrDefaultAsync(m => m.EventId == id);
 
-            if (@event == null)
+            if (@event == null || @event.FkGameTypeNavigation.IsOnline == false)
             {
                 return NotFound();
             }
@@ -188,6 +188,7 @@ namespace SportBook.Controllers
                 return NotFound();
             }
 
+
             if (!IsInvited(id))
             {
                 return Forbid();
@@ -198,7 +199,7 @@ namespace SportBook.Controllers
                 .Include(e => e.FkOwnerNavigation)
                 .FirstOrDefaultAsync(m => m.EventId == id);
 
-            if (@event == null)
+            if (@event == null || @event.IsTeamEvent == false || @event.FkGameTypeNavigation.IsOnline == false)
             {
                 return NotFound();
             }
@@ -212,7 +213,7 @@ namespace SportBook.Controllers
             {
                 var otherParticipant = firstParticipant.Where(x => x.ParticipantId != firstParticipant.FirstOrDefault().ParticipantId).FirstOrDefault();
                 var enemyTeam = _context.Team.Where(x => x.TeamId == otherParticipant.FkTeam).FirstOrDefault();
-                var enemyMembers = _context.TeamMember.Where(x => x.FkTeam == enemyTeam.TeamId);
+                var enemyMembers = _context.TeamMember.Where(x => x.FkTeam == enemyTeam.TeamId).Include(x => x.FkUserNavigation);
                 ViewData["enemyMembers"] = enemyMembers;
                 ViewData["enemyTeam"] = enemyTeam;
             }
@@ -381,7 +382,7 @@ namespace SportBook.Controllers
                 {
                     var otherParticipant = firstParticipant.Where(x => x.ParticipantId != firstParticipant.FirstOrDefault().ParticipantId).FirstOrDefault();
                     var enemyTeam = _context.Team.Where(x => x.TeamId == otherParticipant.FkTeam).FirstOrDefault();
-                    var enemyMembers = _context.TeamMember.Where(x => x.FkTeam == enemyTeam.TeamId);
+                    var enemyMembers = _context.TeamMember.Where(x => x.FkTeam == enemyTeam.TeamId).Include(x => x.FkUserNavigation);
                     ViewData["enemyMembers"] = enemyMembers;
                     ViewData["enemyTeam"] = enemyTeam;
                 }
