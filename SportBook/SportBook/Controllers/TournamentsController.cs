@@ -161,5 +161,9 @@ namespace SportBook.Controllers
         {
             return _context.Tournament.Any(e => e.TournamentId == id);
         }
+        public IActionResult ChatroomVC(string chatGroup)
+        {
+            return ViewComponent("Chatroom", chatGroup);
+        }
     }
 }
