@@ -30,8 +30,8 @@ CREATE TABLE [User]
 
 CREATE TABLE Location
 (
-	Latitude decimal,
-	Longitude decimal,
+	Latitude decimal(8,6) NOT NULL,
+	Longitude decimal(8,6) NOT NULL,
 	Address varchar (255),
 	LocationID integer IDENTITY(1,1),
 	fk_City integer NOT NULL,
@@ -57,10 +57,10 @@ CREATE TABLE Team
 
 CREATE TABLE Tournament
 (
-	Name varchar (255),
+	Name varchar (255) NOT NULL,
 	Description varchar (255),
-	MaxParticipantAmt int,
-	Start datetime,
+	MaxParticipantAmt int NOT NULL,
+	StartTime datetime NOT NULL,
 	TournamentID integer IDENTITY(1,1),
 	ExternalID integer NOT NULL,
 	TournamentUrl varchar(255) NOT NULL,
@@ -75,8 +75,8 @@ CREATE TABLE Event
 (
 	Title varchar (255),
 	MaxParticipantAmt int,
-	StartTime datetime,
-	EndTime datetime,
+	StartTime datetime NOT NULL,
+	EndTime datetime NOT NULL,
 	IsPrivate bit NOT NULL DEFAULT 0,
 	IsTeamEvent bit NOT NULL DEFAULT 0,
 	EventID integer IDENTITY(1,1),
@@ -137,7 +137,7 @@ CREATE TABLE Participant
 	ParticipantID integer IDENTITY(1,1),
 	fk_User integer NOT NULL,
 	fk_Event integer NOT NULL,
-	fk_Team integer NOT NULL,
+	fk_Team integer NULL,
 	PRIMARY KEY(ParticipantID),
 	FOREIGN KEY(fk_User) REFERENCES [User] (UserID),
 	FOREIGN KEY(fk_Event) REFERENCES Event (EventID),
