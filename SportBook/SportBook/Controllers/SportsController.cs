@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using SportBook.Helpers;
 using SportBook.Models;
 using SportBook.ViewModels;
@@ -19,10 +20,14 @@ namespace SportBook.Controllers
     public class SportsController : Controller
     {
         private readonly SportbookDatabaseContext _context;
+        private readonly IConfiguration _configuration;
+        private string google_key;
 
-        public SportsController(SportbookDatabaseContext context)
+        public SportsController(SportbookDatabaseContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
+            google_key = _configuration.GetValue<string>("ConnectionStrings:GOOGLE_API");
         }
         //[Route("[action]")]           // MUST FIX THIS LATER
         public IActionResult Sports()
@@ -62,6 +67,7 @@ namespace SportBook.Controllers
                 locations.Add(new LocationData(item.Longitude, item.Latitude, item.Address, item.FkGameTypeNavigation.Name, item.LocationId, item.FkGameType));
             }
             ViewData["Locations"] = locations;
+            ViewData["GoogleApi"] = google_key;
             return View();
         }
 
@@ -85,6 +91,7 @@ namespace SportBook.Controllers
                 locations.Add(new LocationData(item.Longitude, item.Latitude, item.Address, item.FkGameTypeNavigation.Name, item.LocationId, item.FkGameType));
             }
             ViewData["Locations"] = locations;
+            ViewData["GoogleApi"] = google_key;
             return View(@event);
         }
 
@@ -274,6 +281,7 @@ namespace SportBook.Controllers
             ViewData["Locations"] = locations;
             User currentUser = (from s in _context.User select s).Where(s => s.ExternalId == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).FirstOrDefault();
             ViewData["CurrentUser"] = currentUser;
+            ViewData["GoogleApi"] = google_key;
             ViewData["EventInvites"] = _context.EventInvitation.Where(x => x.FkEvent == id);
             ViewData["isFailed"] = false;
             var eventMembers = await _context.Participant.Include(x => x.FkUserNavigation).Include(x => x.FkEventNavigation).Where(x => x.FkEvent == id).ToListAsync();

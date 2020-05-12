@@ -115,22 +115,18 @@
 </form>
 
 <div class="align-content-center " id="map"></div>
+
 <script async defer
-<<<<<<< HEAD
-        src= '@ViewData["GoogleApi"]'>
-=======
->>>>>>> 0005da2b5324ebef5204dbf8baaae7fe9401e12e
+    src= '@ViewData["GoogleApi"]'>
 </script>
+
 <script>
     // Initialize and add the map
     function initMap() {
-        // The location of Uluru
         var kaunas = { lat: 54.8985, lng: 23.9036 };
-        // The map, centered at Uluru
         var map = new google.maps.Map(
             document.getElementById('map'), { zoom: 6, center: kaunas });
 
-        //// The marker, positioned at Uluru
         //var marker = new google.maps.Marker({ position: kaunas, map: map });
         lmao(map);
     }

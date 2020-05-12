@@ -5,7 +5,7 @@
     var chatGroup = ViewData["ChatGroup"] as string;
 }
 
-<script src="~/lib/signalr/signalr.js"></script>
+<script src="~/lib/signalr/signalr.min.js"></script>
 
 @* Chat window ---------------------------------------------------------------------------------------------*@
 <div class="row h-100">
@@ -20,14 +20,6 @@
                             <i class="far fa-paper-plane"></i>
                         </div>
                     </div>
-                </div>
-                <div style="overflow: auto;">
-                    <button class="btn-secondary pull-right" id="echo">
-                        <i class="fas fa-dragon"></i>
-                    </button>
-                    <button class="btn-secondary pull-right" id="sendmessage">
-                        <i class="far fa-paper-plane"></i>
-                    </button>
                 </div>
             </div>
         </div>
@@ -122,15 +114,15 @@
                     return false;
                 }
             });
-            document.getElementById('echo').addEventListener('click', function (event) {        // echo sends publicly for now
-                // Call the echo method on the hub.
-                connection.send('echo', username, messageInput.value);
+            //document.getElementById('echo').addEventListener('click', function (event) {        // echo sends publicly for now
+            //    // Call the echo method on the hub.
+            //    connection.send('echo', username, messageInput.value);
 
-                // Clear text box and reset focus for next comment.
-                messageInput.value = '';
-                messageInput.focus();
-                event.preventDefault();
-            });
+            //    // Clear text box and reset focus for next comment.
+            //    messageInput.value = '';
+            //    messageInput.focus();
+            //    event.preventDefault();
+            //});
         }
 
         function onConnectionError(error) {
