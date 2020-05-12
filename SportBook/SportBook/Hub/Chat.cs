@@ -16,12 +16,12 @@ namespace SportBook.ChatHub
         {
             Clients.Group(groupName).SendAsync("sendToGroup", name, message);
         }
-        //public override Task OnConnectedAsync()
-        //{
-        //    var name = Context.GetHttpContext().Request.Query["name"];
-        //    //return Clients.All.SendAsync("sendMessage", $"{name} joined the chat");
-        //    return Clients.All.SendAsync("sendMessage", $"{name} joined the chat");
-        //}
+        public override Task OnConnectedAsync()
+        {
+            var name = Context.GetHttpContext().Request.Query["name"];
+            //return Clients.All.SendAsync("sendMessage", $"{name} joined the chat");
+            return Clients.All.SendAsync("sendMessage", $"{name} joined the chat");
+        }
         //public override Task OnDisconnectedAsync(Exception exception)
         //{
         //    var name = Context.GetHttpContext().Request.Query["name"];
@@ -34,10 +34,10 @@ namespace SportBook.ChatHub
         }
         public async Task JoinGroup(string name, string groupName)
         {            
-            Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
             //await Clients.Group(groupName).SendAsync("echo", "_SYSTEM_", $"{name} joined {groupName} with connectionId {Context.ConnectionId}");      
             // instant message to group on group join
-            Clients.Group(groupName).SendAsync("echo", "_SYSTEM_", $"{name} has joined the room");
+            await Clients.Group(groupName).SendAsync("echo", "_SYSTEM_", $"{name} has joined the room");
         }
     }
 }
