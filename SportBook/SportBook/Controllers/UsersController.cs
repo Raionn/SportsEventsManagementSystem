@@ -64,7 +64,7 @@ namespace SportBook.Controllers
             User currentUser = (from s in _context.User
                                 select s).Where(s => s.ExternalId == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).FirstOrDefault();
             ViewData["CurrentUser"] = currentUser;
-            return View();
+            return View(currentUser);
         }
         [Authorize]
         [HttpPost]
@@ -95,7 +95,7 @@ namespace SportBook.Controllers
                 return RedirectToAction(nameof(Profile));
             }
 
-            return View();
+            return View(user);
         }
 
         // POST: Users/Create

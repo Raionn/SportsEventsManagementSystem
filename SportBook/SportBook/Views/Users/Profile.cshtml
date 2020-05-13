@@ -25,16 +25,17 @@
     </div>
     <form class="form" asp-action="Profile">
         <div class="row">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="col-sm-3">
                 <div class="text-center">
                     <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail" alt="avatar">
                     <h6>Upload profile image</h6>
                     <input asp-for="PictureUrl" type="file" class="text-center center-block file-upload">
                     @*<div class="custom-file">
-                            <input asp-for="PictureUrl" type="file" class="custom-file-input" id="customFile">
-                            <label class="custom-file-label" for="customFile">Choose file</label>
-                        </div>
-                        <span asp-validation-for="PictureUrl" class="text-danger"></span>*@
+                    <input asp-for="PictureUrl" type="file" class="custom-file-input" id="customFile">
+                    <label class="custom-file-label" for="customFile">Choose file</label>
+                </div>
+                <span asp-validation-for="PictureUrl" class="text-danger"></span>*@
                 </div><br>
 
                 <ul class="list-group">
@@ -44,15 +45,15 @@
                 </ul>
 
                 @*<div class="panel panel-default">
-                        <div class="panel-heading">Social Media</div>
-                        <div class="panel-body">
-                            <i class="fa fa-facebook fa-2x"></i>
-                            <i class="fa fa-github fa-2x"></i>
-                            <i class="fa fa-twitter fa-2x"></i>
-                            <i class="fa fa-pinterest fa-2x"></i>
-                            <i class="fa fa-google-plus fa-2x"></i>
-                        </div>
-                    </div>*@
+                <div class="panel-heading">Social Media</div>
+                <div class="panel-body">
+                    <i class="fa fa-facebook fa-2x"></i>
+                    <i class="fa fa-github fa-2x"></i>
+                    <i class="fa fa-twitter fa-2x"></i>
+                    <i class="fa fa-pinterest fa-2x"></i>
+                    <i class="fa fa-google-plus fa-2x"></i>
+                </div>
+            </div>*@
 
             </div>
             <div class="col-sm-9">
@@ -62,6 +63,7 @@
                     <div class="col-xs-6">
                         <label asp-for="Username" class="control-label"></label>
                         <input asp-for="Username" class="form-control" value="@currentUser.Username" placeholder="Username">
+                        <span asp-validation-for="Username" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -69,6 +71,7 @@
                     <div class="col-xs-6">
                         <label asp-for="Firstname" class="control-label"></label>
                         <input asp-for="Firstname" class="form-control" value="@currentUser.Firstname" placeholder="First name">
+                        <span asp-validation-for="Firstname" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -76,6 +79,7 @@
                     <div class="col-xs-6">
                         <label asp-for="Lastname" class="control-label"></label>
                         <input asp-for="Lastname" class="form-control" value="@currentUser.Lastname" placeholder="Last name">
+                        <span asp-validation-for="Lastname" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -95,14 +99,13 @@
                     <span asp-validation-for="Birthdate" class="text-danger"></span>
                 </div>
                 @*<div class="form-group">
-                        <label asp-for="Birthdate" class="control-label"></label>
-                        <input asp-for="Birthdate" class="form-control" />
-                        <span asp-validation-for="Birthdate" class="text-danger"></span>
-                    </div>*@
+                <label asp-for="Birthdate" class="control-label"></label>
+                <input asp-for="Birthdate" class="form-control" />
+                <span asp-validation-for="Birthdate" class="text-danger"></span>
+            </div>*@
                 <input type="hidden" asp-for="UserId" value="@currentUser.UserId" />
                 <input type="hidden" asp-for="ExternalId" value="@currentUser.ExternalId" />
                 @* <input type="hidden" asp-for="PictureUrl" value="@currentUser.PictureUrl" />*@
-
                 <div class="form-group">
                     <div class="col-xs-12">
                         <br>

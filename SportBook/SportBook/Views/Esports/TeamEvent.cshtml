@@ -306,7 +306,7 @@
         </div>
     }*@
 
-<div id="chat" class="ml-3">
+<div id="chat" class="ml-3 w-50">
     @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
 </div>
 
