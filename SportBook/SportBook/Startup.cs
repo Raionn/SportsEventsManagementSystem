@@ -59,7 +59,9 @@ namespace SportBook
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            }).AddCookie()
+            }).AddCookie(options => {
+                options.LoginPath = "/Home/Welcome";
+            })
             .AddOpenIdConnect("Auth0", options =>
             {
                 // Set the authority to your Auth0 domain

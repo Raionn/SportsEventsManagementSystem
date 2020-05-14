@@ -42,6 +42,11 @@ namespace SportBook.Controllers
         {
             return View();
         }
+        [AllowAnonymous]
+        public IActionResult Welcome()
+        {
+            return View();
+        }
 
         public IActionResult Privacy()
         {
