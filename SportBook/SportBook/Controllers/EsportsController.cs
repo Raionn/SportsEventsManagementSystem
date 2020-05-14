@@ -439,6 +439,5 @@ namespace SportBook.Controllers
         {
             return ViewComponent("ScrimEnemyTeam", new { eventId, teamId });
         }
-        
     }
 }
