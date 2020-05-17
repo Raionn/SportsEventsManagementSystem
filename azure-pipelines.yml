@@ -48,107 +48,107 @@ stages:
     - publish: '$(Build.ArtifactStagingDirectory)'
       artifact: drop
 
-#   - job: BuildDacpac     #db stuff
-#     pool:
-#       vmImage: 'windows-2019'
-#     steps:
-#     - task: DotNetCoreCLI@2
-#       displayName: 'Restore project dependencies'
-#       inputs:
-#         command: 'restore'
-#         projects: '**/*.csproj'
+  - job: BuildDacpac     #db stuff
+    pool:
+      vmImage: 'windows-2019'
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore project dependencies'
+      inputs:
+        command: 'restore'
+        projects: '**/*.csproj'
+  
+    - task: MSBuild@1
+      displayName: 'Build the database project'
+      inputs:
+        solution: '**/*.sqlproj'
+  
+    - task: CopyFiles@2
+      displayName: 'Copy dacpac file to staging directory'
+      inputs:
+        contents: |
+          SportBook/Sportbook.Database/bin/**/*.dacpac
+        targetFolder: '$(Build.StagingDirectory)'
+  
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact'
+      inputs:
+        pathToPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: dropDacpac
+      condition: succeededOrFailed()
 
-#     - task: MSBuild@1
-#       displayName: 'Build the database project'
-#       inputs:
-#         solution: '**/*.sqlproj'
+- stage: DBAVerificationScript
+  displayName: 'Script database schema changes'
+  dependsOn: Build
+  jobs:
+  - deployment: DBAVerificationScript
+    pool:
+      vmImage: 'windows-2019'
+    variables:
+    - group: 'Release'
+    environment: 'dbaverificationscript'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: dropDacpac
+            patterns: '**/*'
+          - task: SqlAzureDacpacDeployment@1
+            displayName: Generate schema change script
+            inputs:
+              azureSubscription: 'Sportbook Resource Manager'
+              authenticationType: 'server'
+              serverName: '$(servername).database.windows.net'
+              databaseName: '$(databasename)'
+              sqlUsername: '$(adminlogin)'
+              sqlPassword: '$(adminPassword)'
+              deployType: 'DacpacTask'
+              deploymentAction: 'Script'
+              dacpacFile: '$(Pipeline.Workspace)/dropDacpac/SportBook/Sportbook.Database/bin/Debug/Sportbook.Database.dacpac'
+              ipDetectionMethod: 'AutoDetect'
+          - task: PowerShell@2
+            displayName: Show Auto Generated SQL Script
+            inputs:
+              targetType: 'inline'
+              script: | 
+                Write-Host "Auto Generated SQL Update Script:"
+                Get-Content d:\a\1\s\GeneratedOutputFiles\$(databasename)_Script.sql | foreach {Write-Output $_}
 
-#     - task: CopyFiles@2
-#       displayName: 'Copy dacpac file to staging directory'
-#       inputs:
-#         contents: |
-#           SportBook/Sportbook.Database/bin/**/*.dacpac
-#         targetFolder: '$(Build.StagingDirectory)'
-
-#     - task: PublishBuildArtifacts@1
-#       displayName: 'Publish Artifact'
-#       inputs:
-#         pathToPublish: '$(Build.ArtifactStagingDirectory)'
-#         artifactName: dropDacpac
-#       condition: succeededOrFailed()
-
-# - stage: DBAVerificationScript
-#   displayName: 'Script database schema changes'
-#   dependsOn: Build
-#   jobs:
-#   - deployment: DBAVerificationScript
-#     pool:
-#       vmImage: 'windows-2019'
-#     variables:
-#     - group: 'Release'
-#     environment: 'dbaverificationscript'
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
-#           - download: current
-#             artifact: dropDacpac
-#             patterns: '**/*'
-#           - task: SqlAzureDacpacDeployment@1
-#             displayName: Generate schema change script
-#             inputs:
-#               azureSubscription: 'Sportbook Resource Manager'
-#               authenticationType: 'server'
-#               serverName: '$(servername).database.windows.net'
-#               databaseName: '$(databasename)'
-#               sqlUsername: '$(adminlogin)'
-#               sqlPassword: '$(adminPassword)'
-#               deployType: 'DacpacTask'
-#               deploymentAction: 'Script'
-#               dacpacFile: '$(Pipeline.Workspace)/dropDacpac/SportBook/Sportbook.Database/bin/Debug/Sportbook.Database.dacpac'
-#               ipDetectionMethod: 'AutoDetect'
-#           - task: PowerShell@2
-#             displayName: Show Auto Generated SQL Script
-#             inputs:
-#               targetType: 'inline'
-#               script: | 
-#                 Write-Host "Auto Generated SQL Update Script:"
-#                 Get-Content d:\a\1\s\GeneratedOutputFiles\$(databasename)_Script.sql | foreach {Write-Output $_}
-
-# - stage: DBAVerificationApply
-#   displayName: 'Apply database schema changes'
-#   dependsOn: DBAVerificationScript
-#   jobs:
-#   - deployment: DBAVerificationApply
-#     pool:
-#       vmImage: 'windows-2019'
-#     variables:
-#     - group: 'Release'
-#     environment: 'dbaverificationapply'
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
-#           - download: current
-#             artifact: dropDacpac
-#             patterns: '**/*'
-#           - task: SqlAzureDacpacDeployment@1
-#             displayName: 'Deploy SQL schema'
-#             inputs:
-#               azureSubscription: 'Sportbook Resource Manager'
-#               authenticationType: 'server'
-#               serverName: '$(servername).database.windows.net'
-#               databaseName: '$(databasename)'
-#               sqlUsername: '$(adminlogin)'
-#               sqlPassword: '$(adminPassword)'
-#               deployType: 'DacpacTask'
-#               deploymentAction: 'Publish'
-#               dacpacFile: '$(Pipeline.Workspace)/dropDacpac/SportBook/Sportbook.Database/bin/Debug/Sportbook.Database.dacpac'
-#               ipDetectionMethod: 'AutoDetect'
+- stage: DBAVerificationApply
+  displayName: 'Apply database schema changes'
+  dependsOn: DBAVerificationScript
+  jobs:
+  - deployment: DBAVerificationApply
+    pool:
+      vmImage: 'windows-2019'
+    variables:
+    - group: 'Release'
+    environment: 'dbaverificationapply'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: dropDacpac
+            patterns: '**/*'
+          - task: SqlAzureDacpacDeployment@1
+            displayName: 'Deploy SQL schema'
+            inputs:
+              azureSubscription: 'Sportbook Resource Manager'
+              authenticationType: 'server'
+              serverName: '$(servername).database.windows.net'
+              databaseName: '$(databasename)'
+              sqlUsername: '$(adminlogin)'
+              sqlPassword: '$(adminPassword)'
+              deployType: 'DacpacTask'
+              deploymentAction: 'Publish'
+              dacpacFile: '$(Pipeline.Workspace)/dropDacpac/SportBook/Sportbook.Database/bin/Debug/Sportbook.Database.dacpac'
+              ipDetectionMethod: 'AutoDetect'
 #end of db stuff
 - stage: 'Deploy'
   displayName: 'Deploy the web application'
-  # dependsOn: DBAVerificationApply
+  dependsOn: DBAVerificationApply
   jobs:
   - deployment: Deploy
     pool:
