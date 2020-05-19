@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -14,11 +15,12 @@ using SportBook.Models;
 
 namespace SportBook.Controllers
 {
+    [Authorize(Roles ="user,admin")]
     [Route("[controller]/[action]")]
     public class TeamsController : Controller
     {
         private readonly SportbookDatabaseContext _context;
-        private ChallongeService chall;
+        private readonly ChallongeService chall;
         private readonly IHttpClientFactory _clientFactory;
         private readonly IConfiguration _configuration;
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +14,12 @@ using SportBook.Models;
 
 namespace SportBook.Controllers
 {
+    [Authorize(Roles="admin")]
     public class AdminController : Controller
     {
         #region Private members
         private readonly SportbookDatabaseContext _context;
-        private ChallongeService chall;
+        private readonly ChallongeService chall;
         private readonly IHttpClientFactory _clientFactory;
         private readonly IConfiguration _configuration;
         #endregion
@@ -769,6 +771,5 @@ namespace SportBook.Controllers
             return _context.Event.Any(e => e.EventId == id);
         }
         #endregion
-
     }
 }

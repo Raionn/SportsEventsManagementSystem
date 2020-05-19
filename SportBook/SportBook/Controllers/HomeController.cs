@@ -106,7 +106,7 @@ namespace SportBook.Controllers
         {
             if (obj != null && obj.Length > 0)
             {
-                var id = int.Parse(obj.Substring(0, obj.Length - 2));
+                var id = int.Parse(obj[0..^2]);
                 if (obj.Contains("T"))
                 {
                     var teamInvite = await _context.TeamInvitation.FindAsync(id);

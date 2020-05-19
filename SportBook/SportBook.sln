@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportBook", "SportBook\Spor
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Sportbook.Database", "Sportbook.Database\Sportbook.Database.sqlproj", "{0E1C902B-BA50-4CC8-9CE4-BFC841A3AEDC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportBook.Tests", "SportBook.Tests\SportBook.Tests.csproj", "{69DE51EF-D248-482A-9A41-4D3B75ABE1A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{0E1C902B-BA50-4CC8-9CE4-BFC841A3AEDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E1C902B-BA50-4CC8-9CE4-BFC841A3AEDC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0E1C902B-BA50-4CC8-9CE4-BFC841A3AEDC}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{69DE51EF-D248-482A-9A41-4D3B75ABE1A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69DE51EF-D248-482A-9A41-4D3B75ABE1A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69DE51EF-D248-482A-9A41-4D3B75ABE1A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69DE51EF-D248-482A-9A41-4D3B75ABE1A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

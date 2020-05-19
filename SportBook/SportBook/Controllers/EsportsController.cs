@@ -16,12 +16,12 @@ using SportBook.ViewModels;
 
 namespace SportBook.Controllers
 {
-    //[Authorize(Roles = "user, admin")]
+    [Authorize(Roles = "user, admin")]
     [Route("[controller]/[action]")]
     public class EsportsController : Controller
     {
         private readonly SportbookDatabaseContext _context;
-        private ChallongeService chall;
+        private readonly ChallongeService chall;
         private readonly IHttpClientFactory _clientFactory;
         private readonly IConfiguration _configuration;
 
@@ -114,18 +114,14 @@ namespace SportBook.Controllers
                 await _context.SaveChangesAsync();
                 if (!@event.IsTeamEvent)
                 {
-                    var lastEvent = _context.Event.OrderByDescending(x => x.EventId).FirstOrDefault();
-                    _context.Participant.Add(new Models.Participant() { FkEvent = lastEvent.EventId, FkUser = @event.FkOwner });
-                    await _context.SaveChangesAsync();
+                    _context.Participant.Add(new Models.Participant() { FkEvent = @event.EventId, FkUser = @event.FkOwner });
                 }
                 else
                 {
-                    var lastEvent = _context.Event.OrderByDescending(x => x.EventId).FirstOrDefault();
-                    _context.Participant.Add(new Models.Participant() { FkEvent = lastEvent.EventId, FkUser = user.UserId, FkTeam = teamId });
-                    await _context.SaveChangesAsync();
+                    _context.Participant.Add(new Models.Participant() { FkEvent = @event.EventId, FkUser = user.UserId, FkTeam = teamId });
                 }
 
-
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Esports));
             }
             User currentUser = (from s in _context.User select s).Where(s => s.ExternalId == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).FirstOrDefault();
@@ -234,18 +230,9 @@ namespace SportBook.Controllers
 
             return View(@eventData);
         }
-        public async Task<IActionResult> Tournaments(string name, string gameType)
+        public async Task<IActionResult> Tournaments()
         {
             var sportbookDatabaseContext = _context.Tournament.Include(t => t.FkGameTypeNavigation).Include(t => t.FkOwnerNavigation).Include(t => t.TournamentMember).OrderBy(t => t.StartTime);
-
-            if (!String.IsNullOrEmpty(name))
-            {
-                sportbookDatabaseContext = sportbookDatabaseContext.Where(s => s.Name.Contains(name)).Include(t => t.FkGameTypeNavigation).Include(t => t.FkOwnerNavigation).OrderBy(t => t.StartTime);
-            }
-            if (!String.IsNullOrEmpty(gameType))
-            {
-                sportbookDatabaseContext = sportbookDatabaseContext.Where(s => s.FkGameTypeNavigation.Name.Contains(gameType)).Include(t => t.FkGameTypeNavigation).Include(t => t.FkOwnerNavigation).OrderBy(t => t.StartTime);
-            }
 
             return View(await sportbookDatabaseContext.ToListAsync());
         }

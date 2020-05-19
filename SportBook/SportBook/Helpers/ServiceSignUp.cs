@@ -40,6 +40,7 @@ namespace SportBook.Helpers
 
             if (isNewUser)
             {
+                ticketReceivedContext.ReturnUri = "/Users/Profile";
                 username = claims.FirstOrDefault(x => x.Type.EndsWith("nickname")).Value;
                 //claims.First(x => x.Type == ClaimTypes.)
                 if (claims.Find(c => (c.Type == ClaimTypes.NameIdentifier)).Value.StartsWith("google"))

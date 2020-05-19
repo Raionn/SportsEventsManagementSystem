@@ -15,13 +15,13 @@ using SportBook.ViewModels;
 
 namespace SportBook.Controllers
 {
-    //[Authorize(Roles ="admin")]
+    [Authorize(Roles ="user,admin")]
     [Route("[controller]/[action]")]
     public class SportsController : Controller
     {
         private readonly SportbookDatabaseContext _context;
         private readonly IConfiguration _configuration;
-        private string google_key;
+        private readonly string google_key;
 
         public SportsController(SportbookDatabaseContext context, IConfiguration configuration)
         {
@@ -81,6 +81,8 @@ namespace SportBook.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(@event);
+                await _context.SaveChangesAsync();
+                _context.Participant.Add(new Models.Participant() { FkEvent = @event.EventId, FkUser = user.UserId });
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Sports));
             }
