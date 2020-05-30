@@ -16,6 +16,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.5/lib/darkmode-js.min.js"></script>
 </head>
+
 <body onload="checkDarkMode()">
     <header>
         @*delete bg-white for header to have darkmode*@
@@ -123,16 +124,23 @@
                     }
                 }, 300);
             });
-        var darkmode = new Darkmode();
+        var options = {
+            backgroundColor: '#cecec9',  // default: '#fff'
+        }
+        var darkmode = new Darkmode(options);
         document.getElementById('toggle--daynight').addEventListener('click', function () {
             darkmode.toggle();
             const x = document.getElementsByName("navBar");
             const m = document.getElementById("navDrop");
+            const f = document.getElementsByClassName("darkmode-background");
             if (darkmode.isActivated()) {
                 for (let e of x) {
                     e.classList.add("text-white");
                     e.classList.remove("text-dark");
-                    m.style.background = "#000000";
+                    m.style.background = "#313136";
+                }
+                for (let g of f) {
+                    g.style.background = "#cecec9";
                 }
             }
             else {
@@ -141,17 +149,27 @@
                     e.classList.add("text-dark");
                     m.style.background = "#FFFFFF";
                 }
+                for (let g of f) {
+                    g.style.background = "#FFFFFF";
+                }
             }
         });
 
         function checkDarkMode() {
             const x = document.getElementsByName("navBar");
             const m = document.getElementById("navDrop");
+            const f = document.getElementsByClassName("darkmode-background");
             if (darkmode.isActivated()) {
                 for (let e of x) {
                     e.classList.add("text-white");
                     e.classList.remove("text-dark");
-                    m.style.background = "#000000";
+                    m.style.background = "#313136";
+                }
+            }
+            else
+            {
+                for (let g of f) {
+                    g.style.background = "#FFFFFF";
                 }
             }
         }

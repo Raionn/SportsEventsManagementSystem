@@ -34,6 +34,10 @@ a {
     width: 50%;
 }
 
+.dropdown-item:hover {
+    background-color: chocolate !important;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
