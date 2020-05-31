@@ -1,8 +1,79 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-<div class="d-inline-flex p-2">
 
-    <a href="@Url.Action("Sports", "Sports")"><img class="text-left img-fluid img-thumbnail" src="~/Resources/Images/passion-1415656.jpg" style="height:80vh;width:50vw" /></a>
-    <a href="@Url.Action("Esports", "Esports")"><img class="text-right img-fluid  img-thumbnail" src="~/Resources/Images/computers-1227142.jpg" style="height:80vh;width:50vw" /></a>
+<style>
+    .someCont {
+    }
+
+        .someCont:hover .spanVis {
+            visibility: visible !important;
+        }
+    .someCont2 {
+    }
+
+        .someCont2:hover .spanVis2 {
+            visibility: visible !important;
+        }
+
+    img {
+        filter: sepia(100%);
+    }
+
+        img:hover {
+            filter: sepia(0);
+        }
+
+    .img-thumbnail {
+        background-color: chocolate;
+        border: none;
+    }
+</style>
+<div class="container-fluid mb-2 text-center">
+    <h2>
+        Welcome to Sportbook!
+    </h2>
+
+    <div class="col text-center">
+        <div class="row">
+        </div>
+        <div class="row mt-3">
+            <div class="col">
+
+                <div class="someCont" name="navBar">
+                    <a class="mt-3 mb-3" href="@Url.Action("Sports", "Sports")">
+                        <img class="card-img-top img-fluid img-thumbnail" src="~/Resources/Images/passion-1415656.jpg"/>
+                    </a>
+                    <div style="visibility:hidden" class="spanVis mt-3">
+                        <h4>Sports</h4><ul class="text-left">
+                            <li>Browse events through different locations</li>
+                            <li>Create your own event</li>
+                            <li>Chat with online members</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="someCont2" name="navBar">
+                    <a href="@Url.Action("Esports", "Esports")">
+                        <img class="card-img-top img-fluid img-thumbnail" src="~/Resources/Images/computers-1227142.jpg" />
+                    </a>
+                    <div style="visibility:hidden" class="spanVis2 mt-3">
+                        <h4>Esports</h4>
+                        <ul class="text-left">
+                            <li>Browse variety of games</li>
+                            <li>Gather teams and join tournaments</li>
+                            <li>Scrim against various teams</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@*<div class="d-inline-flex p-2">
+
+        <a href="@Url.Action("Sports", "Sports")"><img class="text-left img-fluid img-thumbnail" src="~/Resources/Images/passion-1415656.jpg" style="height:80vh;width:50vw" /></a>
+        <a href="@Url.Action("Esports", "Esports")"><img class="text-right img-fluid  img-thumbnail" src="~/Resources/Images/computers-1227142.jpg" style="height:80vh;width:50vw" /></a>
+    </div>*@

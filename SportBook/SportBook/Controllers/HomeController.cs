@@ -97,7 +97,7 @@ namespace SportBook.Controllers
                 }
 
             }
-            ViewData["events"] = returnEvents;
+            ViewData["events"] = returnEvents.GroupBy(x => x.Url).Select(y => y.First());
             return View();
         }
 
