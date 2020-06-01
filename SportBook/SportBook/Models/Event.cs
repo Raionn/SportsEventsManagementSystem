@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc;
 using SportBook.Helpers;
 
 namespace SportBook.Models
@@ -20,6 +21,7 @@ namespace SportBook.Models
         [RegularExpression(@"[A-Za-z0-9\s?.,!?]+", ErrorMessage = "Allowed letters,digits and ?.!, characters")]
         public string Title { get; set; }
         [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid number")]
+        [Range(1,9999, ErrorMessage = "Positive value under 9999")]
         [DisplayName("Max participants")]
         public int? MaxParticipantAmt { get; set; }
         [DataType(DataType.DateTime)]
@@ -27,13 +29,14 @@ namespace SportBook.Models
         [DisplayName("Start time")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         [DateValidator]
+        [Remote(action: "VerifyDateTime", controller: "Sports", AdditionalFields = nameof(EndTime) +","+ nameof(FkLocation))]
         public DateTime? StartTime { get; set; }
         [DataType(DataType.DateTime)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         [DisplayName("End time")]
         [Required(ErrorMessage = "This field is required")]
-        //[GreaterThan("StartTime", ErrorMessage ="End time must be greater than start time")]
         [DateValidator]
+        [Remote(action: "VerifyDateTime", controller: "Sports", AdditionalFields = nameof(StartTime)+ "," + nameof(FkLocation))]
         public DateTime? EndTime { get; set; }
         [DisplayName("Private")]
         public bool IsPrivate { get; set; }

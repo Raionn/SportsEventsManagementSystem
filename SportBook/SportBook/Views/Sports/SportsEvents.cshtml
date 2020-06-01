@@ -5,7 +5,8 @@
     var locations = ViewData["Locations"] as List<SportBook.ViewModels.LocationData>;
 }
 <script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
-
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 <h1>Create Event</h1>
 @if (!(Model == null || Model.FkLocation == null))
 {

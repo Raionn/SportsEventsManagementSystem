@@ -25,6 +25,7 @@ namespace SportBook.Models
         [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid number")]
         [Required(ErrorMessage = "This field is required")]
         [DisplayName("Max participants")]
+        [Range(1, 9999, ErrorMessage = "Positive value under 9999")]
         public int MaxParticipantAmt { get; set; }
         [DataType(DataType.DateTime)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd HH:mm}")]

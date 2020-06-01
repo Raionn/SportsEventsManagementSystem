@@ -11,7 +11,7 @@ namespace SportBook.Helpers
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             // your validation logic
-            if ((DateTime)value >= DateTime.Now && (DateTime)value <= DateTime.Now.AddYears(3))
+            if (value != null && (DateTime)value >= DateTime.Now && (DateTime)value <= DateTime.Now.AddYears(3))
             {
                 return ValidationResult.Success;
             }

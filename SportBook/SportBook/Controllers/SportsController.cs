@@ -97,6 +97,36 @@ namespace SportBook.Controllers
             return View(@event);
         }
 
+        [AcceptVerbs("GET", "POST")]
+        public IActionResult VerifyDateTime(string StartTime, string EndTime, string FkLocation)
+        {
+            if(StartTime != null && EndTime != null)
+            {
+                if (!DateTimeValidator(ref StartTime, ref EndTime, FkLocation))
+                {
+                    return Json($"Time frame {StartTime} - {EndTime} is taken");
+                }
+            }
+            return Json(true);
+        }
+        private bool DateTimeValidator(ref string startTime, ref string endTime, string FkLocation)
+        {
+            int fkKey = int.Parse(FkLocation);
+            var events = _context.Event.Where(x => x.FkLocation != null && x.FkLocation == fkKey).ToList();
+            var start = DateTime.Parse(startTime);
+            var end = DateTime.Parse(endTime);
+            foreach (var item in events)
+            {
+                if ((start < item.StartTime && end > item.EndTime) || (item.StartTime < start && end < item.EndTime) || (item.StartTime > start && end < item.EndTime && item.StartTime < end) || (item.StartTime < start && end > item.EndTime && item.EndTime > start))
+                {
+                    startTime = item.StartTime.Value.ToString("yyyy-MM-dd HH:mm");
+                    endTime = item.EndTime.Value.ToString("yyyy-MM-dd HH:mm");
+                    return false;
+                }
+                    
+            }
+            return true;
+        }
         public IActionResult Teams()
         {
             return View();
