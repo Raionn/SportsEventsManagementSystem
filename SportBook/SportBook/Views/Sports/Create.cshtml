@@ -7,7 +7,16 @@
 <script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
 <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-<h1>Create Event</h1>
+    <div class="d-flex mb-3">
+        <h2 class="ml-5">Select location on the map</h2>
+        <div class="ml-auto mr-5">
+            <a asp-action="Sports" class="btn btn-secondary ml-2"><i class="fa fa-list" style="color:white; isolation:isolate"></i></a>
+        </div>
+    </div>
+    <div class="ml-5 mr-5" id="map" style="width:auto;"></div>
+
+
+
 @if (!(Model == null || Model.FkLocation == null))
 {
     <script type="text/javascript">
@@ -17,7 +26,7 @@
     </script>
 }
 
-<form id="eventForm" asp-action="SportsEvents">
+<form id="eventForm" asp-action="Create">
     <div class="modal" id="myModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -115,7 +124,7 @@
     </div>
 </form>
 
-<div class="align-content-center " id="map"></div>
+
 
 <script async defer
     src= '@ViewData["GoogleApi"]'>

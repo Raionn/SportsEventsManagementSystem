@@ -121,6 +121,7 @@
                     }
                 }, 300);
             });
+
         var options = {
             backgroundColor: '#cecec9',  // default: '#fff'
         }
@@ -130,6 +131,7 @@
             const x = document.getElementsByName("navBar");
             const m = document.getElementById("navDrop");
             const f = document.getElementsByClassName("darkmode-background");
+            checkNavColor();
             if (darkmode.isActivated()) {
                 for (let e of x) {
                     e.classList.add("text-white");
@@ -149,8 +151,52 @@
                 for (let g of f) {
                     g.style.background = "#FFFFFF";
                 }
+                
             }
         });
+
+        $("[name='sportNav']").on("click", function () {
+            checkNavColor($(this));
+        });
+
+        function checkNavColor(data) {
+            const y = document.getElementsByName("sportNav");
+            const p = document.getElementsByClassName("nav-link active");
+            if (data === undefined) {
+                if (darkmode.isActivated()) {
+                    for (let g of y) {
+                        g.style.background = "#2d96e1";
+                    }
+                    for (let g of p) {
+                        g.style.background = "#31a9ff";
+                    }
+                }
+                else {
+                    for (let g of y) {
+                        g.style.background = "#FFFFFF";
+                    }
+                    for (let g of p) {
+                        g.style.background = "#FFFFFF";
+                    }
+                }
+            }
+            else {
+                if (darkmode.isActivated()) {
+                    for (let g of y) {
+                        g.style.background = "#2d96e1";
+                    }
+                    data[0].style.background = "#31a9ff";
+                }
+                else {
+                    for (let g of y) {
+                        g.style.background = "#FFFFFF";
+                    }
+                    data[0].style.background = "#FFFFFF";
+
+                }
+            }
+            
+        };
 
         function checkDarkMode() {
             const x = document.getElementsByName("navBar");
@@ -162,6 +208,7 @@
                     e.classList.remove("text-dark");
                     m.style.background = "#313136";
                 }
+                checkNavColor();
             }
             else {
                 for (let g of f) {

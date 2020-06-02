@@ -16,7 +16,6 @@ using SportBook.ViewModels;
 namespace SportBook.Controllers
 {
     [Authorize(Roles ="user,admin")]
-    [Route("[controller]/[action]")]
     public class SportsController : Controller
     {
         private readonly SportbookDatabaseContext _context;
@@ -29,7 +28,7 @@ namespace SportBook.Controllers
             _configuration = configuration;
             google_key = _configuration.GetValue<string>("ConnectionStrings:GOOGLE_API");
         }
-        //[Route("[action]")]           // MUST FIX THIS LATER
+        [Route("[action]")]           // MUST FIX THIS LATER
         public IActionResult Sports()
         {
             var userId = GetCurrentUser().UserId;
@@ -58,7 +57,8 @@ namespace SportBook.Controllers
             events = events.Except(myEvents).Except(joinedEvents).OrderBy(x => x.StartTime);
             return View(events);
         }
-        public IActionResult SportsEvents()
+        [Route("[controller]/[action]")]
+        public IActionResult Create()
         {
             var sportbookDatabaseContext = _context.Location.Include(t => t.FkGameTypeNavigation).Where(e => e.FkGameTypeNavigation.IsOnline == false);
             List<LocationData> locations = new List<LocationData>();
@@ -70,10 +70,10 @@ namespace SportBook.Controllers
             ViewData["GoogleApi"] = google_key;
             return View();
         }
-
+        [Route("[controller]/[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SportsEvents([Bind("Title,MaxParticipantAmt,StartTime,EndTime,IsPrivate,FkLocation,FkGameType")] Event @event)
+        public async Task<IActionResult> Create([Bind("Title,MaxParticipantAmt,StartTime,EndTime,IsPrivate,FkLocation,FkGameType")] Event @event)
         {
             @event.IsTeamEvent = false;
             var user = GetCurrentUser();
@@ -96,7 +96,7 @@ namespace SportBook.Controllers
             ViewData["GoogleApi"] = google_key;
             return View(@event);
         }
-
+        [Route("[controller]/[action]")]
         [AcceptVerbs("GET", "POST")]
         public IActionResult VerifyDateTime(string StartTime, string EndTime, string FkLocation)
         {
@@ -127,10 +127,6 @@ namespace SportBook.Controllers
             }
             return true;
         }
-        public IActionResult Teams()
-        {
-            return View();
-        }
 
         private User GetCurrentUser()
         {
@@ -159,6 +155,7 @@ namespace SportBook.Controllers
         }
 
         #region Event crud w.o create
+        [Route("[controller]/[action]")]
         public async Task<IActionResult> Edit(int? id)
         {
 
@@ -187,6 +184,7 @@ namespace SportBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("[controller]/[action]")]
         public async Task<IActionResult> Edit(int id, [Bind("Title,MaxParticipantAmt,StartTime,EndTime,IsPrivate,IsTeamEvent,EventId,FkOwner,FkLocation,FkGameType")] Event @event)
         {
             if (id != @event.EventId)
@@ -227,6 +225,7 @@ namespace SportBook.Controllers
         }
 
         // GET: Events/Delete/5
+        [Route("[controller]/[action]")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -254,6 +253,7 @@ namespace SportBook.Controllers
         // POST: Events/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Route("[controller]/[action]")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var eventParticipants = _context.Participant.Where(x => x.FkEvent == id);
@@ -272,20 +272,24 @@ namespace SportBook.Controllers
         }
 
         [HttpGet("{userId}")]
+        [Route("[controller]/[action]")]
         public IActionResult SportsEventMemberVC(int eventId, int userId)
         {
             return ViewComponent("EventMemberList", new { eventId, userId });
         }
 
         [HttpGet("{userId}")]
+        [Route("[controller]/[action]")]
         public IActionResult InvitableUserVC(int eventId, int userId)
         {
             return ViewComponent("InvitableUserList", new { eventId, userId });
         }
+        [Route("[controller]/[action]")]
         public IActionResult ChatroomVC(string chatGroup)
         {
             return ViewComponent("Chatroom", chatGroup);
         }
+        [Route("[controller]/[action]")]
         public async Task<IActionResult> ViewEvent(int? id)
         {
             if (id == null)

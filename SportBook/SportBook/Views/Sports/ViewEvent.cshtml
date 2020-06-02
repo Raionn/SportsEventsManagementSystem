@@ -14,18 +14,22 @@
         });
     </script>
 }
-
+<style>
+    .card{
+        background-color:chocolate !important;
+    }
+</style>
 <div class="d-flex">
     <h1>Event details</h1>
     <div class="ml-auto mr-5">
         @if (currentUser.UserId == Model.Event.FkOwner)
         {
-            <a class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-alt" style="color:white"></i></a>
-            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#editModal"><i class="fa fa-edit" style="color:white"></i></a>
-            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#myModal"><i class="fa fa-user-plus" style="color:white"></i></a>
+            <a class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-alt" style="color:white; isolation:isolate"></i></a>
+            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#editModal"><i class="fa fa-edit" style="color:white; isolation:isolate"></i></a>
+            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#myModal"><i class="fa fa-user-plus" style="color:white; isolation:isolate"></i></a>
         }
-        <a asp-action="Sports" class="btn btn-secondary ml-2"><i class="fa fa-list"></i></a>
-    </div>
+        <a asp-action="Sports" class="btn btn-secondary ml-2"><i class="fa fa-list" style="color:white; isolation:isolate"></i></a>
+    </div> 
 </div>
 
 <div class="modal" id="myModal">
@@ -144,7 +148,7 @@
 <div>
     <hr />
     <div class="row">
-        <div class="col ">
+        <div class="col " name="navBar">
             <div class="row">
                 <div class="p-2 font-weight-bold ml-3 flex-column col-md-4">
                     @Html.DisplayNameFor(model => model.Event.Title):
@@ -183,7 +187,7 @@
             <hr />
         </div>
 
-        <div class="col" id="participantList">
+        <div class="col" id="participantList" name="navBar">
             @await Component.InvokeAsync("EventMemberList", new { eventId = Model.Event.EventId, userId = 0 })
             @*<div class="row mr-3 p-2">
 
@@ -236,7 +240,7 @@ else if (Model.Participants.Any(x => x.FkUser == currentUser.UserId) && currentU
 
 <script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
 <div class="row">
-    <div class="col-xl-7 col-md-12 col-sm-12 ml-3" style="min-height:300px; overflow:visible !important" id="eventMap"></div>
+    <div class="col-xl-7 col-md-11 col-sm-11" style="min-height:300px; height:400px; overflow:visible !important; margin:auto" id="eventMap"></div>
 
     <div id="chat" class="col-xl-4 col-md-10 col-sm-10 p-2 m-2 m-md-auto m-sm-auto">
         @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
