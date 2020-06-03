@@ -4,7 +4,7 @@
 
 @foreach (var item in Model)
 {
-    <li class="list-group-item">
+    <li class="list-group-item" style="background-color:transparent;">
         <div class="d-flex">
             <div class="mr-2">
                 @item.FkUserNavigation.Username
@@ -12,7 +12,7 @@
 
             @if (item.FkUser != teamOwner.UserId && currentUser.UserId == teamOwner.UserId) //isOwner
             {
-                <a id="@item.FkUser" class="btn btn-secondary ml-auto mr-2 removeMember"><i class="fa fa-user-slash" style="color:white"></i></a>
+                <a id="@item.FkUser" class="btn btn-secondary ml-auto mr-2 removeMember"><i class="fa fa-user-slash" style="color:white; isolation:isolate"></i></a>
             }
         </div>
 

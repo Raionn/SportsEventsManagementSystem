@@ -17,7 +17,6 @@ using SportBook.ViewModels;
 namespace SportBook.Controllers
 {
     [Authorize(Roles = "user, admin")]
-    [Route("[controller]/[action]")]
     public class EsportsController : Controller
     {
         private readonly SportbookDatabaseContext _context;
@@ -32,6 +31,7 @@ namespace SportBook.Controllers
             _configuration = config;
             chall = new ChallongeService(_clientFactory, _configuration);
         }
+        [Route("[action]")]
         public IActionResult Esports()
         {
             var userId = GetCurrentUser().UserId;
@@ -59,6 +59,7 @@ namespace SportBook.Controllers
             events = events.Except(myEvents).Except(teamEvents).Except(joinedEvents).OrderBy(x => x.StartTime);
             return View(events);
         }
+        [Route("[controller]/[action]")]
         public IActionResult CreateEvent()
         {
             User currentUser = (from s in _context.User select s).Where(s => s.ExternalId == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).FirstOrDefault();
@@ -77,6 +78,7 @@ namespace SportBook.Controllers
             return View();
         }
         [HttpGet("{userId}")]
+        [Route("[controller]/[action]")]
         public IActionResult EventMemberVC(int eventId, int userId)
         {
             return ViewComponent("EventMemberList", new { eventId, userId });
@@ -95,6 +97,7 @@ namespace SportBook.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("[controller]/[action]")]
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateEvent([Bind("Title,MaxParticipantAmt,StartTime,EndTime,IsPrivate,IsTeamEvent,FkOwner,FkGameType")] Event @event)
         {
@@ -145,6 +148,7 @@ namespace SportBook.Controllers
             }
             return View(@event);
         }
+        [Route("[controller]/[action]")]
         public async Task<IActionResult> ViewEvent(int? id)
         {
             if (id == null)
@@ -176,7 +180,7 @@ namespace SportBook.Controllers
 
             return View(@eventData);
         }
-
+        [Route("[controller]/[action]")]
         public async Task<IActionResult> TeamEvent(int? id)
         {
             if (id == null)
@@ -230,16 +234,19 @@ namespace SportBook.Controllers
 
             return View(@eventData);
         }
+        [Route("[controller]/[action]")]
         public async Task<IActionResult> Tournaments()
         {
             var sportbookDatabaseContext = _context.Tournament.Include(t => t.FkGameTypeNavigation).Include(t => t.FkOwnerNavigation).Include(t => t.TournamentMember).OrderBy(t => t.StartTime);
 
             return View(await sportbookDatabaseContext.ToListAsync());
         }
+        [Route("[controller]/[action]")]
         public IActionResult ChatroomVC(string chatGroup)
         {
             return ViewComponent("Chatroom", chatGroup);
         }
+        [Route("[controller]/[action]")]
         public async Task<IActionResult> Tournament(int id)
         {
             var tournaments = _context.Tournament.Include(t => t.TournamentMember);
@@ -266,6 +273,7 @@ namespace SportBook.Controllers
             TournamentData data = new TournamentData(tournament, teams, tournamentMember);
             return View(data);
         }
+        [Route("[controller]/[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<Task> Tournament([Bind("TournamentMemberId", "FkTeam", "FkTournament")] TournamentMember tournamentMember)
@@ -280,7 +288,7 @@ namespace SportBook.Controllers
             }
             return Task.CompletedTask;
         }
-
+        [Route("[controller]/[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<Task> LeaveTournament([Bind("TournamentMemberId", "FkTeam", "FkTournament")] TournamentMember tournamentMember)
@@ -294,16 +302,18 @@ namespace SportBook.Controllers
             await _context.SaveChangesAsync();
             return Task.CompletedTask;
         }
-
+        [Route("[controller]/[action]")]
         public IActionResult Teams()
         {
             return View();
         }
+        [Route("[controller]/[action]")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        [Route("[controller]/[action]")]
         private User GetCurrentUser()
         {
             var externalId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
@@ -313,7 +323,7 @@ namespace SportBook.Controllers
             user.Wait();
             return user.Result;
         }
-
+        [Route("[controller]/[action]")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Title,MaxParticipantAmt,StartTime,EndTime,IsPrivate,IsTeamEvent,EventId,FkOwner,FkGameType")] Event @event)
@@ -391,6 +401,7 @@ namespace SportBook.Controllers
             }
 
         }
+        [Route("[controller]/[action]")]
         // POST: Events/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -409,18 +420,19 @@ namespace SportBook.Controllers
         {
             return _context.Event.Any(e => e.EventId == id);
         }
+        [Route("[controller]/[action]")]
         [HttpGet]
         public IActionResult TeamEventFormVC(int teamId)
         {
             return ViewComponent("TeamEventForm", new { teamId });
         }
-
+        [Route("[controller]/[action]")]
         [HttpGet("{userId}")]
         public IActionResult InvitableUserVC(int eventId, int userId)
         {
             return ViewComponent("InvitableUserList", new { eventId, userId });
         }
-
+        [Route("[controller]/[action]")]
         [HttpGet("{teamId}")]
         public IActionResult TeamEventEnemyVC(int eventId, int teamId)
         {

@@ -9,7 +9,7 @@
 
 <h4>Location</h4>
 <hr />
-<div class="row">
+<div class="row" name="navBar">
     <div class="col-md-4">
         <form asp-action="LocationsEdit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -29,18 +29,14 @@
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="LocationId" />
+            <input type="hidden" asp-for="FkGameType" />
             <div class="form-group">
                 <label asp-for="FkCity" class="control-label"></label>
                 <select asp-for="FkCity" class="form-control" asp-items="ViewBag.FkCity"></select>
                 <span asp-validation-for="FkCity" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FkGameType" class="control-label"></label>
-                <select asp-for="FkGameType" class="form-control" asp-items="ViewBag.FkGameType"></select>
-                <span asp-validation-for="FkGameType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-secondary" /> <a style="margin-left:5px" onclick="location.href='@Url.Action("Locations", "Admin")'" class="btn btn-secondary"><i class="fa fa-list"></i></a>
+                <input type="submit" value="Save" class="btn btn-secondary" /> <a style="margin-left:5px" onclick="location.href='@Url.Action("Locations", "Admin")'" class="btn btn-secondary"><i class="fa fa-list" style="color:white; isolation:isolate"></i></a>
             </div>
         </form>
     </div>

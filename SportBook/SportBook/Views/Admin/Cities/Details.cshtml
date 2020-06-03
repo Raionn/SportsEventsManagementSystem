@@ -10,7 +10,7 @@
 <div>
     <h4>City</h4>
     <hr />
-    <dl class="row">
+    <dl class="row" name="navBar">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
@@ -21,6 +21,6 @@
 </div>
 <br />
 <div>
-    <a class="btn btn-secondary" asp-action="CitiesEdit" asp-route-id="@Model.CityId">Edit</a>
-    <a style="margin-left:5px" onclick="location.href='@Url.Action("Cities", "Admin")'" class="btn btn-secondary"><i class="fa fa-list"></i></a>
+    <a class="btn btn-secondary" asp-action="CitiesEdit" asp-route-id="@Model.CityId" style="color:white; isolation:isolate">Edit</a>
+    <a style="margin-left:5px;color:white; isolation:isolate" onclick="location.href='@Url.Action("Cities", "Admin")'" class="btn btn-secondary"><i class="fa fa-list" style="color:white; isolation:isolate"></i></a>
 </div>

@@ -11,7 +11,7 @@
 <div>
     <h4>Event</h4>
     <hr />
-    <dl class="row">
+    <dl class="row" name="navBar">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
         </dt>
@@ -69,7 +69,7 @@
     </dl>
     
     <form asp-action="EventsDelete">
-        <input type="hidden" asp-for="EventId" />
-        <input type="submit" value="Delete" class="btn btn-secondary" /> <a style="margin-left:5px" onclick="location.href='@Url.Action("Events", "Admin")'" class="btn btn-secondary"><i class="fa fa-list"></i></a>
+        <input type="hidden" asp-for="EventId"/>
+        <input type="submit" value="Delete" class="btn btn-secondary" style="color:white; isolation:isolate"/> <a style="margin-left:5px;color:white; isolation:isolate" onclick="location.href='@Url.Action("Events", "Admin")'" class="btn btn-secondary"><i class="fa fa-list" style="color:white; isolation:isolate"></i></a>
     </form>
 </div>

@@ -18,9 +18,11 @@ namespace SportBook.Models
 
         public int EventId { get; set; }
         [MaxLength(60, ErrorMessage = "The {0} value cannot exceed {1} characters. ")]
+        [Required(ErrorMessage = "This field is required")]
         [RegularExpression(@"[A-Za-z0-9\s?.,!?]+", ErrorMessage = "Allowed letters,digits and ?.!, characters")]
         public string Title { get; set; }
         [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid number")]
+        [Required(ErrorMessage = "This field is required")]
         [Range(1,9999, ErrorMessage = "Positive value under 9999")]
         [DisplayName("Max participants")]
         public int? MaxParticipantAmt { get; set; }

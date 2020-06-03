@@ -15,17 +15,21 @@
         });
     </script>
 }
-
+<style>
+    .card {
+        background-color: #d39c59 !important;
+    }
+</style>
 <div class="d-flex">
     <h1>Event details</h1>
     <div class="ml-auto mr-5">
         @if (currentUser.UserId == Model.Event.FkOwner)
         {
-            <a class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-alt" style="color:white"></i></a>
-            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#editModal"><i class="fa fa-edit" style="color:white"></i></a>
-            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#myModal"><i class="fa fa-user-plus" style="color:white"></i></a>
+            <a class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-alt" style="color:white; isolation: isolate;"></i></a>
+            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#editModal"><i class="fa fa-edit" style="color:white; isolation: isolate;"></i></a>
+            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#myModal"><i class="fa fa-user-plus" style="color:white; isolation: isolate;"></i></a>
         }
-        <a asp-action="Esports" class="btn btn-secondary ml-2"><i class="fa fa-list"></i></a>
+        <a asp-action="Esports" class="btn btn-secondary ml-2"><i class="fa fa-list" style="color:white; isolation: isolate;"></i></a>
     </div>
 </div>
 
@@ -42,7 +46,8 @@
             <div class="modal-body">
                 <input class="form-control mb-2" id="myInput" type="text" placeholder="Search..">
                 <h4 class="align-content-center">Users</h4>
-                <ul class="list-group overflow-auto p-2" style="max-height:550px" id="invitableUserList">
+                <ul class="list-group overflow-auto p-2" style="        max-height: 550px
+" id="invitableUserList">
                     @await Component.InvokeAsync("InvitableUserList", new { eventId = Model.Event.EventId, userId = 0 })
                 </ul>
             </div>
@@ -143,7 +148,7 @@
 
 <div>
     <hr />
-    <div class="row">
+    <div class="row" name="navBar">
         <div class="col ">
             <div class="row">
                 <div class="p-2 font-weight-bold ml-3 flex-column col-md-4">
@@ -183,22 +188,22 @@
             <hr />
         </div>
 
-        <div class="col" id="participantList">
+        <div class="col" id="participantList" name="navBar">
             @await Component.InvokeAsync("EventMemberList", new { eventId = Model.Event.EventId, userId = 0 })
             @*<div class="row mr-3 p-2">
 
 
-                <div class="flex-column">
-                    <h2>
-                        Participants:
-                    </h2>
-                </div>
-                <div class="col-md-8">
-                    <ul class="list-group-flush" id="participantList">
-                        @await Component.InvokeAsync("EventMemberList", new { eventId = Model.Event.EventId, userId = 0 })
-                    </ul>
-                </div>
-            </div>*@
+                    <div class="flex-column">
+                        <h2>
+                            Participants:
+                        </h2>
+                    </div>
+                    <div class="col-md-8">
+                        <ul class="list-group-flush" id="participantList">
+                            @await Component.InvokeAsync("EventMemberList", new { eventId = Model.Event.EventId, userId = 0 })
+                        </ul>
+                    </div>
+                </div>*@
         </div>
     </div>
 </div>
@@ -208,8 +213,8 @@
     <div class="text-center">
         <div class="col align-content-lg-center text-center">
             @*<div class="flex-row p-2" id="joinLeaveText">
-                You have been invited to join this team
-            </div>*@
+                    You have been invited to join this team
+                </div>*@
 
             <div class="flex-row p-2">
                 <input id="joinLeaveBtn" type="button" onclick="joinEvent()" value="Join" class="btn btn-success" />
@@ -224,8 +229,8 @@ else if (Model.Participants.Any(x => x.FkUser == currentUser.UserId) && currentU
     <div class="text-center">
         <div class="col align-content-lg-center text-center">
             @*<div class="flex-row p-2" id="joinLeaveText">
-                Are you sure you want to leave?
-            </div>*@
+                    Are you sure you want to leave?
+                </div>*@
 
             <div class="flex-row p-2">
                 <input id="joinLeaveBtn" type="button" onclick="leaveEvent()" value="Leave" class="btn btn-danger" />
@@ -235,10 +240,15 @@ else if (Model.Participants.Any(x => x.FkUser == currentUser.UserId) && currentU
     </div>
 }
 <script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
-
-<div id="chat" class="ml-3 w-50">
-    @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
+<div class="row">
+    <div id="chat" class="col-xl-4 col-md-8 col-sm-10 p-2 m-2 ml-md-4 m-sm-auto ml-lg-4">
+        @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
+    </div>
 </div>
+
+@*<div id="chat" class="ml-3 w-50">
+    @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
+</div>*@
 
 <script>
     $('body').on('click', '.removeMember', function () { RemoveEventMember($(this)); return false;});

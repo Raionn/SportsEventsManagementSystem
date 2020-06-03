@@ -9,7 +9,7 @@
 
 <h4>Event</h4>
 <hr />
-<div class="row">
+<div class="row" name="navBar">
     <div class="col-md-4">
         <form asp-action="EventsEdit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -58,7 +58,7 @@
             <input type="hidden" asp-for="FkLocation" />
             <input type="hidden" asp-for="FkGameType" />
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-secondary" /> <a style="margin-left:5px" onclick="location.href='@Url.Action("Events", "Admin")'" class="btn btn-secondary"><i class="fa fa-list"></i></a>
+                <input type="submit" value="Save" class="btn btn-secondary" /> <a style="margin-left:5px" onclick="location.href='@Url.Action("Events", "Admin")'" class="btn btn-secondary"><i class="fa fa-list" style="color:white; isolation:isolate"></i></a>
             </div>
         </form>
     </div>

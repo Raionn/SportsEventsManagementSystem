@@ -13,10 +13,10 @@
 
     @*<script src="~/lib/popper.js/umd/popper.min.js"></script>*@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.5/lib/darkmode-js.min.js"></script>
 </head>
-
 <body onload="checkDarkMode()">
     <header>
         @*delete bg-white for header to have darkmode*@
@@ -132,6 +132,8 @@
             const x = document.getElementsByName("navBar");
             const m = document.getElementById("navDrop");
             const f = document.getElementsByClassName("darkmode-background");
+            const u = document.getElementById("vc");
+            PopOverColor();
             if (darkmode.isActivated()) {
                 for (let e of x) {
                     e.classList.add("text-white");
@@ -153,7 +155,42 @@
                 }
             }
         });
-
+        function PopOverColor() {
+            const y = document.getElementsByClassName("popover-body");
+            const p = document.getElementsByClassName("popover-header");
+            const u = document.getElementsByClassName("inviteAccept");
+                if (darkmode.isActivated()) {
+                    for (let g of y) {
+                        g.style.background = "#444444";
+                    }
+                    for (let g of p) {
+                        g.style.background = "#313136";
+                        g.classList.remove("text-dark");
+                        g.classList.add("text-white");
+                    }
+                    for (let g of u) {
+                        g.style.background = "#444444";
+                        g.classList.remove("text-dark");
+                        g.classList.add("text-white");
+                    }
+                }
+                else {
+                    for (let g of y) {
+                        g.style.background = "#FFFFFF";
+                    }
+                    for (let g of p) {
+                        g.style.background = "#F7F7F7";
+                        g.classList.remove("text-white");
+                        g.classList.add("text-dark");
+                    }
+                    for (let g of u) {
+                        g.style.background = "#FFFFFF";
+                        g.classList.remove("text-white");
+                        g.classList.add("text-dark");
+                    }
+                }
+            
+        };
         function checkDarkMode() {
             const x = document.getElementsByName("navBar");
             const m = document.getElementById("navDrop");
@@ -164,6 +201,7 @@
                     e.classList.remove("text-dark");
                     m.style.background = "#313136";
                 }
+                PopOverColor();
             }
             else
             {

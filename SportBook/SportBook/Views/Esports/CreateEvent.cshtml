@@ -13,7 +13,7 @@
 <div class="d-flex ml-2 mr-2">
     <h1>Create Esports Event</h1>
     <div class="ml-auto mr-5">
-        <a asp-action="Esports" class="btn btn-secondary ml-2"><i class="fa fa-list"></i></a>
+        <a asp-action="Esports" class="btn btn-secondary ml-2"><i class="fa fa-list" style="color:white; isolation: isolate;"></i></a>
     </div>
 </div>
 
@@ -23,15 +23,17 @@
 <div class="d-flex">
     <ul class="nav nav-tabs nav-justified w-100">
         <li class="nav-item">
-            <a class="nav-link active" id="createEvent-tab" data-toggle="tab" href="#createEvent" role="tab" aria-controls="createEvent" aria-selected="true" style="text-decoration:none; color:black; font-size:larger">Create Event</a>
+            <a class="nav-link active" name="sportNav" id="createEvent-tab" data-toggle="tab" href="#createEvent" role="tab" aria-controls="createEvent" aria-selected="true" style="text-decoration:none; color:black; font-size:larger">Create Event</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="createTeamEvent-tab" data-toggle="tab" href="#createTeamEvent" role="tab" aria-controls="createTeamEvent" aria-selected="false" style="text-decoration:none; color:black; font-size:larger">Create Team Event</a>
+            <a class="nav-link" name="sportNav" id="createTeamEvent-tab" data-toggle="tab" href="#createTeamEvent" role="tab" aria-controls="createTeamEvent" aria-selected="false" style="text-decoration:none; color:black; font-size:larger">Create Team Event</a>
         </li>
     </ul>
-</div>
 
-<div class="tab-content align-content-center" id="myTabContent">
+</div>
+<hr />
+
+<div class="tab-content align-content-center mt-2" id="myTabContent" name="navBar">
     @if ((bool)isSecondFailed)
     {
         <div class="tab-pane fade" id="createEvent" role="tabpanel" aria-labelledby="createEvent-tab">
@@ -256,7 +258,7 @@
     $('#toggle2').on('click', function () {
         $('#datepicker2').datetimepicker('toggle')
     })
-    
+
 
     $('body').on('click', '#datepicker3', function () {
         $('#datepicker3').datetimepicker({
@@ -298,11 +300,11 @@
     });
     $('body').on('click', '#formSubmitButton', function () {
         { SubmitForm(); return false; }
-        
+
     });
 
-    function SubmitForm() {      
+    function SubmitForm() {
         $("#teamEventForm").submit();
     }
-    
+
 </script>

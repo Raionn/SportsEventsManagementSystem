@@ -6,11 +6,20 @@
     var teams = ViewData["Teams"] as IEnumerable<SportBook.Models.Team>;
 }
 
+    <style>
+        .card {
+            background-color: #d39c59 !important;
+        }
+        .card:hover {
+            background: #b97c31 !important;
+        }
+    </style>
 
 <div class="d-flex">
     <h1>My Teams</h1>
     <div class="ml-auto mr-5">
-        <a data-toggle="modal" data-target="#myModal" style="margin-left:5px" class="btn btn-secondary"><i class="fa fa-plus" style="color:white;"></i></a>
+        <a data-toggle="modal" data-target="#myModal" style="margin-left:5px" class="btn btn-secondary"><i class="fa fa-plus" style="        color: white;
+        isolation: isolate"></i></a>
     </div>
 </div>
 
@@ -69,7 +78,15 @@
         {
             <a asp-action="Details" asp-route-id="@item.TeamId" style="text-decoration: none; color: black;">
                 <div class="card mb-4 bg-light" style="max-width:400px">
-                    <img class="card-img-top img-fluid" src="~/Resources/Images/league-of-legends.jpg" alt="Card image cap"> @*@Html.DisplayFor(modelItem => item.LogoUrl)*@
+                    @if (item.FkGameType == 2)
+                    {
+                        <img class="card-img-top img-fluid" src="~/Resources/Images/league-of-legends.jpg" alt="Card image cap"> @*@Html.DisplayFor(modelItem => item.LogoUrl)*@
+                    }
+                    else
+                    {
+                        <img class="card-img-top img-fluid" src="~/Resources/Images/csgo.jpg" alt="Card image cap"> @*@Html.DisplayFor(modelItem => item.LogoUrl)*@
+                    }
+
                     <div class="card-body">
                         <h4 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h4>
                         <p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>

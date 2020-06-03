@@ -526,8 +526,9 @@ namespace SportBook.Controllers
         // GET: Tournaments/Create
         public IActionResult TournamentsCreate()
         {
+            var user = GetCurrentUser();
             ViewData["FkGameType"] = new SelectList(GetOnlineGames(), "GameTypeId", "Name");
-            ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username", GetCurrentUser());
+            ViewData["FkOwner"] = new SelectList(_context.User, "UserId", "Username", user.UserId);
             return View("~/Views/Admin/Tournaments/Create.cshtml");
         }
 

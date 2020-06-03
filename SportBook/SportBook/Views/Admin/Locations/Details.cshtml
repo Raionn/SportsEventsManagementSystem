@@ -10,7 +10,7 @@
 <div>
     <h4>Location</h4>
     <hr />
-    <dl class="row">
+    <dl class="row" name="navBar">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Latitude)
         </dt>
@@ -44,6 +44,6 @@
     </dl>
 </div>
 <div>
-    <a class="btn btn-secondary" asp-action="LocationsEdit" asp-route-id="@Model.LocationId">Edit</a>              
-    <a style="margin-left:5px" onclick="location.href='@Url.Action("Locations", "Admin")'" class="btn btn-secondary"><i class="fa fa-list"></i></a>
+    <a class="btn btn-secondary" asp-action="LocationsEdit" asp-route-id="@Model.LocationId" style="color:white; isolation:isolate">Edit</a>              
+    <a style="margin-left:5px ;color:white; isolation:isolate" onclick="location.href='@Url.Action("Locations", "Admin")'" class="btn btn-secondary"><i class="fa fa-list" style="color:white; isolation:isolate"></i></a>
 </div>

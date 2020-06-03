@@ -14,11 +14,18 @@
 }
 <style>
     .card {
-        height: 650px
+        height: 650px;
+        background-color: #d39c59 !important;
+    }
+    .card-header {
+        background-color: #e3820b;
+    }
+    .card-body {
+        background-color: #d39c59;
     }
 </style>
 
-<div class="card mb-4" style="background-color:white !important; height:auto;">
+<div class="card mb-4" style="background-color:#e3820b !important; height:auto;">
     <div class="card-header">
         <div class="d-flex">
             <h3 class="p-2">@Html.DisplayFor(model => model.Tournament.Name)</h3>

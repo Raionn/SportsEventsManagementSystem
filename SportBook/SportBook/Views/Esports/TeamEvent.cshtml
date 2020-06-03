@@ -24,20 +24,24 @@
         });
     </script>
 }
-
+<style>
+    .card {
+        background-color: #d39c59 !important;
+    }
+</style>
 <div class="d-flex">
     <h1>Scrim details</h1>
     <div class="ml-auto mr-5">
         @if (currentUser.UserId == Model.Event.FkOwner)
         {
-            <a class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-alt" style="color:white"></i></a>
-            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#editModal"><i class="fa fa-edit" style="color:white"></i></a>
+            <a class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-alt" style="color:white; isolation: isolate;"></i></a>
+            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#editModal"><i class="fa fa-edit" style="color:white; isolation: isolate;"></i></a>
         }
         @if (pCount == 1)
         {
             @if (!teamMembers.Any(x => x.FkUser == currentUser.UserId))
             {
-                <a class="btn btn-secondary ml-2" data-toggle="modal" id="bothModalElement" data-target="#joinModal"><i class="fa fa-plus" style="color:white"></i></a>
+                <a class="btn btn-secondary ml-2" data-toggle="modal" id="bothModalElement" data-target="#joinModal"><i class="fa fa-plus" style="color:white; isolation: isolate;"></i></a>
             }
         }
         else
@@ -45,10 +49,10 @@
             var enemyTeamMembers = ViewData["enemyMembers"] as IEnumerable<SportBook.Models.TeamMember>;
             @if (enemyTeamMembers.Any(x => x.FkUser == currentUser.UserId))
             {
-                <a class="btn btn-secondary ml-2" data-toggle="modal" id="bothModalElement" data-target="#quitModal"><i class="fa fa-user-minus" style="color:white"></i></a>
+                <a class="btn btn-secondary ml-2" data-toggle="modal" id="bothModalElement" data-target="#quitModal"><i class="fa fa-user-minus" style="color:white; isolation: isolate;"></i></a>
             }
         }
-        <a asp-action="Esports" class="btn btn-secondary ml-2"><i class="fa fa-list"></i></a>
+        <a asp-action="Esports" class="btn btn-secondary ml-2"><i class="fa fa-list" style="color:white; isolation: isolate;"></i></a>
     </div>
 </div>
 <div class="modal " id="joinModal">
@@ -190,7 +194,7 @@
 
 <div>
     <hr />
-    <div class="row">
+    <div class="row" name="navBar">
         <div class="flex-column col-md-8 col-xl-6 col-sm-8">
             <div class="row">
                 <div class="p-2 font-weight-bold ml-3 flex-column col-md-4">
@@ -240,7 +244,7 @@
                     <ul class="list-group-flush">
                         @foreach (var item in teamMembers)
                         {
-                            <li class="list-group-item">
+                            <li class="list-group-item" style="background-color:transparent;">
                                 @item.FkUserNavigation.Username
                             </li>
                         }
@@ -257,14 +261,14 @@
                         <ul class="list-group-flush" id="participantList">
                             @foreach (var item in enemyTeamMembers)
                             {
-                                <li class="list-group-item">
+                                <li class="list-group-item" style="background-color:transparent;">
                                     @item.FkUserNavigation.Username
                                 </li>
                             }
                         </ul>
                         @if (currentUser.UserId == Model.Event.FkOwner) //isOwner
                         {
-                            <a class="btn btn-secondary ml-auto mr-2 removeMember"><i class="fa fa-user-slash" style="color:white"></i></a>
+                            <a class="btn btn-secondary ml-auto mr-2 removeMember"><i class="fa fa-user-slash" style="color:white; isolation:isolate;"></i></a>
                         }
                     }
 
@@ -305,10 +309,14 @@
             </div>
         </div>
     }*@
-
-<div id="chat" class="ml-3 w-50">
-    @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
+<div class="row">
+    <div id="chat" class="col-xl-4 col-md-8 col-sm-10 p-2 m-2 ml-md-4 m-sm-auto ml-lg-4">
+        @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
+    </div>
 </div>
+@*<div id="chat" class="ml-3 w-50" name="navBar">
+    @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
+</div>*@
 
 <script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
 

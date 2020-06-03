@@ -17,17 +17,22 @@
     </script>
 }
 
+<style>
+    .card {
+        background-color: chocolate !important;
+    }
+</style>
 
 <div class="d-flex">
     <h1>Team details</h1>
     <div class="ml-auto mr-5">
         @if (currentUser.UserId == Model.FkOwner)
         {
-            <a class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-alt" style="color:white"></i></a>
-            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#myModal"><i class="fa fa-edit" style="color:white"></i></a>
-            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#inviteToTeamModal"><i class="fa fa-user-plus" style="color:white"></i></a>
+            <a class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-alt" style="color:white;isolation:isolate"></i></a>
+            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#myModal"><i class="fa fa-edit" style="color:white;isolation:isolate"></i></a>
+            <a class="btn btn-secondary ml-2" data-toggle="modal" data-target="#inviteToTeamModal"><i class="fa fa-user-plus" style="color:white; isolation:isolate;"></i></a>
         }
-        <a asp-action="Index" class="btn btn-secondary ml-2"><i class="fa fa-list"></i></a>
+        <a asp-action="Index" class="btn btn-secondary ml-2"><i class="fa fa-list" style="color:white;isolation:isolate"></i></a>
     </div>
 </div>
 
@@ -118,7 +123,7 @@
 
 <div>
     <hr />
-    <div class="row">
+    <div class="row" name="navBar">
         <div class="col ">
             <div class="row">
                 <div class="p-2 font-weight-bold ml-3 flex-column col-md-4">
