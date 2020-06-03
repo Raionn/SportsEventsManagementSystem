@@ -69,7 +69,7 @@ namespace SportBook.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Profile([Bind("Username,Email,Firstname,Lastname,Birthdate,ExternalId,PictureUrl, UserId")] User user)
+        public async Task<IActionResult> Profile([Bind("Username,Email,Firstname,Lastname,Birthdate,ExternalId,PictureUrl,UserId")] User user)
         {
             ViewData["CurrentUser"] = user;
             if (ModelState.IsValid)
@@ -77,15 +77,13 @@ namespace SportBook.Controllers
                 try
                 {
                     _context.Update(user);
-                    await _context.SaveChangesAsync();
-                    
+                    await _context.SaveChangesAsync();                    
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!UserExists(user.UserId))
                     {
                         return NotFound();
-
                     }
                     else
                     {
@@ -94,7 +92,6 @@ namespace SportBook.Controllers
                 }
                 return RedirectToAction(nameof(Profile));
             }
-
             return View(user);
         }
 
