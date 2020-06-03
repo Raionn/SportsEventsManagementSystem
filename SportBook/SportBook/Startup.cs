@@ -50,6 +50,9 @@ namespace SportBook
             services.AddHttpClient();
             services.AddTransient<IValidator<Event>, EventDateValidator>();
 
+            services.AddOptions();
+            services.Configure<AzureStorageConfig>(Configuration.GetSection("AzureStorageConfig")); // configuration is not fetched?
+
             // changed to Transient to allow concurrent logins, https://github.com/dotnet/efcore/issues/6488
             services.AddTransient<IServiceSignUp, ServiceSignUp>();
             IServiceProvider serviceProvider = services.BuildServiceProvider();
@@ -90,7 +93,7 @@ namespace SportBook
                 };
                 options.Events = new OpenIdConnectEvents
                 {
-                    OnTicketReceived = serviceSignUp.CreateOnSignUp,
+                   OnTicketReceived = serviceSignUp.CreateOnSignUp,
                    // handle the logout redirection
                    OnRedirectToIdentityProviderForSignOut = (context) =>
                    {

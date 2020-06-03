@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -9,7 +10,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Controller;
+using SportBook.Helpers;
 using SportBook.Models;
 
 namespace SportBook.Controllers
@@ -18,10 +21,12 @@ namespace SportBook.Controllers
     public class UsersController : Controller
     {
         private readonly SportbookDatabaseContext _context;
+        private readonly AzureStorageConfig storageConfig;
 
-        public UsersController(SportbookDatabaseContext context)
+        public UsersController(SportbookDatabaseContext context, IOptions<AzureStorageConfig> config)
         {
             _context = context;
+            storageConfig = config.Value;
         }
 
         // GET: Users
@@ -69,7 +74,7 @@ namespace SportBook.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Profile([Bind("Username,Email,Firstname,Lastname,Birthdate,ExternalId,PictureUrl, UserId")] User user)
+        public async Task<IActionResult> Profile([Bind("Username,Email,Firstname,Lastname,Birthdate,ExternalId,UserId")] User user)
         {
             ViewData["CurrentUser"] = user;
             if (ModelState.IsValid)
@@ -96,6 +101,50 @@ namespace SportBook.Controllers
             }
 
             return View(user);
+        }
+
+        //[HttpPost("[action]")]
+        [HttpPost]
+        public async Task<IActionResult> UploadImage(IFormFileCollection file)
+        {
+            var temp = Request;
+            bool isUploaded = false;
+            var formFile = file[0];
+
+                if (formFile == null)
+                    return BadRequest("No files received from the upload");
+
+                if (storageConfig.AccountKey == string.Empty || storageConfig.AccountName == string.Empty)
+                    return BadRequest("sorry, can't retrieve your azure storage details from appsettings.js, make sure that you add azure storage details there");
+
+                if (storageConfig.ImageContainer == string.Empty)
+                    return BadRequest("Please provide a name for your image container in the azure blob storage");
+
+                if (StorageHelper.IsImage(formFile))
+                {
+                    if (formFile.Length > 0)
+                    {
+                        using (Stream stream = formFile.OpenReadStream())
+                        {
+                            isUploaded = await StorageHelper.UploadFileToStorage(stream, formFile.FileName, storageConfig);
+                        }
+                    }
+                }
+                else
+                {
+                    return new UnsupportedMediaTypeResult();
+                }
+
+                if (isUploaded)
+                {
+                    return new AcceptedResult();
+                }
+                else
+                    return BadRequest("Look like the image couldnt upload to the storage");
+            
+
+                //return BadRequest(ex.Message);
+            
         }
 
         // POST: Users/Create
