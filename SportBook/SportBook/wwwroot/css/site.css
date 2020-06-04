@@ -295,6 +295,11 @@ textarea:focus {
     outline: none !important;
 }
 
+.chat-timestamp {
+    margin: 10px 0;
+    font-size: 14px;
+}
+
 .system-message {
     /*background: #87CEFA;*/
     font-size: 14px;
@@ -330,7 +335,7 @@ textarea:focus {
     margin-bottom: auto;
     margin-right: 10px;
     border-radius: 10px;
-    background-color: #68ceff;
+    background-color: #bd8424;
     padding: 5px;
     position: relative;
     word-wrap: break-word;
