@@ -18,16 +18,17 @@
         }
 
     img {
-        filter: sepia(100%);
+        filter: grayscale(100%);
     }
 
         img:hover {
-            filter: sepia(0);
+            filter: grayscale(0);
         }
 
     .img-thumbnail {
         background-color: chocolate;
         border: none;
+        height: auto;
     }
 </style>
 <div class="container-fluid mb-2 text-center">
@@ -57,7 +58,7 @@
             <div class="col">
                 <div class="someCont2" name="navBar">
                     <a href="@Url.Action("Esports", "Esports")">
-                        <img class="card-img-top img-fluid img-thumbnail" src="~/Resources/Images/computers-1227142.jpg" />
+                        <img class="card-img-top img-fluid img-thumbnail" src="~/Resources/Images/gaming.jpg" />
                     </a>
                     <div style="visibility:hidden" class="spanVis2 mt-3 sub-list" id="dropDownList2">
                         <h4 style="text-align:center">Esports</h4>
@@ -74,23 +75,36 @@
 </div>
 <script>
     $(function () {
-        $(".someCont").hover(function () {
-            $("#dropDownList1 li").each(function (i) {
-                $(this).delay(200 * i).fadeIn(500);
-            });
-        });
+        $(".someCont").hover(
+            function () {
+                $("#dropDownList1 li").each(function (i) {
+                    $(this).delay(200 * i).fadeIn(400);
+                });
+            },
+            function () {
+                $("#dropDownList1 li").each(function (i) {
+                    $(this).delay(0 * i).fadeOut(0);
+                });
+            },
+        );
     });
     $(function () {
-        $(".someCont2").hover(function () {
-            $("#dropDownList2 li").each(function (i) {
-                $(this).delay(200 * i).fadeIn(500);
-            });
-        });
+        $(".someCont2").hover(
+            function () {
+                $("#dropDownList2 li").each(function (i) {
+                    $(this).delay(200 * i).fadeIn(400);
+                });
+            },
+            function () {
+                $("#dropDownList2 li").each(function (i) {
+                    $(this).delay(0 * i).fadeOut(0);
+                });
+            },
+        );
     });
 </script>
 
 @*<div class="d-inline-flex p-2">
-
-        <a href="@Url.Action("Sports", "Sports")"><img class="text-left img-fluid img-thumbnail" src="~/Resources/Images/passion-1415656.jpg" style="height:80vh;width:50vw" /></a>
-        <a href="@Url.Action("Esports", "Esports")"><img class="text-right img-fluid  img-thumbnail" src="~/Resources/Images/computers-1227142.jpg" style="height:80vh;width:50vw" /></a>
-    </div>*@
+    <a href="@Url.Action("Sports", "Sports")"><img class="text-left img-fluid img-thumbnail" src="~/Resources/Images/passion-1415656.jpg" style="height:80vh;width:50vw" /></a>
+    <a href="@Url.Action("Esports", "Esports")"><img class="text-right img-fluid  img-thumbnail" src="~/Resources/Images/computers-1227142.jpg" style="height:80vh;width:50vw" /></a>
+</div>*@

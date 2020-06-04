@@ -274,8 +274,7 @@ namespace SportBook.Controllers
             return _context.Event.Any(e => e.EventId == id);
         }
 
-        [HttpGet("{userId}")]
-        [Route("[controller]/[action]")]
+        [Route("[controller]/[action]/{userId}")]
         public IActionResult SportsEventMemberVC(int eventId, int userId)
         {
             return ViewComponent("EventMemberList", new { eventId, userId });

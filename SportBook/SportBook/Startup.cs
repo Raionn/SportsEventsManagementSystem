@@ -133,8 +133,9 @@ namespace SportBook
             }
             app.UseHttpsRedirection();
 
-            //app.UseStaticFiles();         replaced by UseFileServer() (for SignalR support)
-            
+            //app.UseStaticFiles();         //replaced by UseFileServer() (for SignalR support)
+            app.UseFileServer();
+
             app.UseRouting();
 
             app.UseAuthentication();
@@ -156,7 +157,6 @@ namespace SportBook
 
             //string auth0ClientSecret = secret.Value;
 
-            app.UseFileServer();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
