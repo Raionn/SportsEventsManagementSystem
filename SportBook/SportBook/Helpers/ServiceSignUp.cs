@@ -55,6 +55,10 @@ namespace SportBook.Helpers
                 if (claims.Find(c => (c.Type == ClaimTypes.NameIdentifier)).Value.StartsWith("auth0"))
                     email = claims.FirstOrDefault(x => x.Type.StartsWith("name")).Value;
                 var pictureURL = claims.FirstOrDefault(x => x.Type.EndsWith("picture")).Value;
+                if (String.IsNullOrEmpty(pictureURL))
+                {
+                    pictureURL = "http://ssl.gstatic.com/accounts/ui/avatar_2x.png";
+                }
                 User user = new User() { Firstname = firstName, Lastname = lastName, ExternalId = userOId, Username = username, Email =  email, PictureUrl = pictureURL};
                 //insert new value into DB
                 _context.Add(user);
