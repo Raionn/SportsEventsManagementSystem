@@ -132,6 +132,7 @@
             const x = document.getElementsByName("navBar");
             const m = document.getElementById("navDrop");
             const f = document.getElementsByClassName("darkmode-background");
+            const t = document.getElementsByClassName("modal-content");
             checkNavColor();
             if (darkmode.isActivated()) {
                 for (let e of x) {
@@ -142,6 +143,11 @@
                 for (let g of f) {
                     g.style.background = "#cecec9";
                 }
+                for (let g of t) {
+                    g.style.background = "#313136";
+                    g.classList.add("text-white");
+                    g.classList.remove("text-dark");
+                }
             }
             else {
                 for (let e of x) {
@@ -151,6 +157,11 @@
                 }
                 for (let g of f) {
                     g.style.background = "#FFFFFF";
+                }
+                for (let e of t) {
+                    e.classList.remove("text-white");
+                    e.classList.add("text-dark");
+                    e.style.background = "#FFFFFF";
                 }
                 
             }
@@ -219,6 +230,7 @@
                     g.style.borderStyle = "inset";
 
                 }
+
             }
             else {
                 for (let g of y) {
@@ -229,6 +241,7 @@
                     g.classList.remove("text-white");
                     g.classList.add("text-dark");
                 }
+
             }
 
         };
@@ -238,11 +251,17 @@
             const x = document.getElementsByName("navBar");
            const m = document.getElementById("navDrop");
             const f = document.getElementsByClassName("darkmode-background");
+            const u = document.getElementsByClassName("modal-content");
             if (darkmode.isActivated()) {
                 for (let e of x) {
                     e.classList.add("text-white");
                     e.classList.remove("text-dark");
                     m.style.background = "#313136";
+                }
+                for (let g of u) {
+                    g.style.background = "#313136";
+                    g.classList.add("text-white");
+                    g.classList.remove("text-dark");
                 }
                 checkNavColor();
             }

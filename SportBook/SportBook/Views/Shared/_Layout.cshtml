@@ -132,7 +132,7 @@
             const x = document.getElementsByName("navBar");
             const m = document.getElementById("navDrop");
             const f = document.getElementsByClassName("darkmode-background");
-            const u = document.getElementById("vc");
+            const u = document.getElementsByClassName("modal-content");
             if (darkmode.isActivated()) {
                 for (let e of x) {
                     e.classList.add("text-white");
@@ -141,6 +141,11 @@
                 }
                 for (let g of f) {
                     g.style.background = "#cecec9";
+                }
+                for (let g of u) {
+                    g.style.background = "#313136";
+                    g.classList.add("text-white");
+                    g.classList.remove("text-dark");
                 }
             }
             else {
@@ -151,6 +156,11 @@
                 }
                 for (let g of f) {
                     g.style.background = "#FFFFFF";
+                }
+                for (let e of u) {
+                    e.classList.remove("text-white");
+                    e.classList.add("text-dark");
+                    e.style.background = "#FFFFFF";
                 }
             }
         });
@@ -195,11 +205,17 @@
             const x = document.getElementsByName("navBar");
             const m = document.getElementById("navDrop");
             const f = document.getElementsByClassName("darkmode-background");
+            const u = document.getElementsByClassName("modal-content");
             if (darkmode.isActivated()) {
                 for (let e of x) {
                     e.classList.add("text-white");
                     e.classList.remove("text-dark");
                     m.style.background = "#313136";
+                }
+                for (let g of u) {
+                    g.style.background = "#313136";
+                    g.classList.add("text-white");
+                    g.classList.remove("text-dark");
                 }
             }
             else {
