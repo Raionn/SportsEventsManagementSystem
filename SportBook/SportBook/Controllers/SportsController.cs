@@ -100,11 +100,14 @@ namespace SportBook.Controllers
         [AcceptVerbs("GET", "POST")]
         public IActionResult VerifyDateTime(string StartTime, string EndTime, string FkLocation)
         {
-            if(StartTime != null && EndTime != null)
+            if (FkLocation != null)
             {
-                if (!DateTimeValidator(ref StartTime, ref EndTime, FkLocation))
+                if (StartTime != null && EndTime != null)
                 {
-                    return Json($"Time frame {StartTime} - {EndTime} is taken");
+                    if (!DateTimeValidator(ref StartTime, ref EndTime, FkLocation))
+                    {
+                        return Json($"Time frame {StartTime} - {EndTime} is taken");
+                    }
                 }
             }
             return Json(true);
