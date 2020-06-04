@@ -198,7 +198,42 @@
             }
             
         };
+        function PopOverColor() {
+            const y = document.getElementsByClassName("popover-body");
+            const p = document.getElementsByClassName("popover-header");
+            const u = document.getElementsByClassName("inviteAccept");
+            if (darkmode.isActivated()) {
+                for (let g of y) {
+                    g.style.background = "#444444";
+                }
+                for (let g of p) {
+                    g.style.background = "#313136";
+                    g.classList.remove("text-dark");
+                    g.classList.add("text-white");
+                }
+                for (let g of u) {
+                    g.style.background = "#444444";
+                    g.classList.remove("text-dark");
+                    g.classList.add("text-white");
+                    g.style.borderColor = "white";
+                    g.style.borderStyle = "inset";
 
+                }
+            }
+            else {
+                for (let g of y) {
+                    g.style.background = "#FFFFFF";
+                }
+                for (let g of p) {
+                    g.style.background = "#F7F7F7";
+                    g.classList.remove("text-white");
+                    g.classList.add("text-dark");
+                }
+            }
+
+        };
+
+        $('body').on('mouseover', '#invitations', function () { PopOverColor(); });
         function checkDarkMode() {
             const x = document.getElementsByName("navBar");
            const m = document.getElementById("navDrop");

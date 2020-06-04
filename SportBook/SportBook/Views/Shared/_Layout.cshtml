@@ -36,11 +36,11 @@
                         <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Home" asp-action="Schedule">Schedule</a>
                     </li>
                     @*<li class="nav-item">
-                        <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Events" asp-action="Index">Events</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
-                    </li>*@
+                            <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Events" asp-action="Index">Events</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" name="navBar" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
+                        </li>*@
                     @if (User.IsInRole("admin"))
                     {
                         <li class="nav-item">
@@ -133,7 +133,6 @@
             const m = document.getElementById("navDrop");
             const f = document.getElementsByClassName("darkmode-background");
             const u = document.getElementById("vc");
-            PopOverColor();
             if (darkmode.isActivated()) {
                 for (let e of x) {
                     e.classList.add("text-white");
@@ -159,38 +158,39 @@
             const y = document.getElementsByClassName("popover-body");
             const p = document.getElementsByClassName("popover-header");
             const u = document.getElementsByClassName("inviteAccept");
-                if (darkmode.isActivated()) {
-                    for (let g of y) {
-                        g.style.background = "#444444";
-                    }
-                    for (let g of p) {
-                        g.style.background = "#313136";
-                        g.classList.remove("text-dark");
-                        g.classList.add("text-white");
-                    }
-                    for (let g of u) {
-                        g.style.background = "#444444";
-                        g.classList.remove("text-dark");
-                        g.classList.add("text-white");
-                    }
+            if (darkmode.isActivated()) {
+                for (let g of y) {
+                    g.style.background = "#444444";
                 }
-                else {
-                    for (let g of y) {
-                        g.style.background = "#FFFFFF";
-                    }
-                    for (let g of p) {
-                        g.style.background = "#F7F7F7";
-                        g.classList.remove("text-white");
-                        g.classList.add("text-dark");
-                    }
-                    for (let g of u) {
-                        g.style.background = "#FFFFFF";
-                        g.classList.remove("text-white");
-                        g.classList.add("text-dark");
-                    }
+                for (let g of p) {
+                    g.style.background = "#313136";
+                    g.classList.remove("text-dark");
+                    g.classList.add("text-white");
                 }
-            
+                for (let g of u) {
+                    g.style.background = "#444444";
+                    g.classList.remove("text-dark");
+                    g.classList.add("text-white");
+                    g.style.borderColor = "white";
+                    g.style.borderStyle = "inset";
+
+                }
+            }
+            else {
+                for (let g of y) {
+                    g.style.background = "#FFFFFF";
+                }
+                for (let g of p) {
+                    g.style.background = "#F7F7F7";
+                    g.classList.remove("text-white");
+                    g.classList.add("text-dark");
+                }
+            }
+
         };
+
+        $('body').on('mouseover', '#invitations', function () { PopOverColor(); });
+
         function checkDarkMode() {
             const x = document.getElementsByName("navBar");
             const m = document.getElementById("navDrop");
@@ -201,10 +201,8 @@
                     e.classList.remove("text-dark");
                     m.style.background = "#313136";
                 }
-                PopOverColor();
             }
-            else
-            {
+            else {
                 for (let g of f) {
                     g.style.background = "#FFFFFF";
                 }
