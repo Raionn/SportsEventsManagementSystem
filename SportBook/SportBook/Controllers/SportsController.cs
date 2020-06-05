@@ -33,7 +33,7 @@ namespace SportBook.Controllers
         {
             var userId = GetCurrentUser().UserId;
 
-            var events = _context.Event.Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation).Where(e => e.FkGameTypeNavigation.IsOnline == false);
+            var events = _context.Event.Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation).Where(e => e.FkGameTypeNavigation.IsOnline == false).Where(x => x.EndTime > DateTime.Now);
 
             var participants = new Dictionary<int, int>();
             var eventList = events.ToList();
@@ -54,7 +54,8 @@ namespace SportBook.Controllers
 
             User currentUser = (from s in _context.User select s).Where(s => s.ExternalId == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).FirstOrDefault();
             ViewData["CurrentUser"] = currentUser;
-            events = events.Except(myEvents).Except(joinedEvents).OrderBy(x => x.StartTime);
+            //events = events.Except(myEvents).Except(joinedEvents).OrderBy(x => x.StartTime);
+            events = events.OrderBy(x => x.StartTime);
             return View(events);
         }
         [Route("[controller]/[action]")]

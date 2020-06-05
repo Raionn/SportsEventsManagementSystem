@@ -35,7 +35,7 @@ namespace SportBook.Controllers
         public IActionResult Esports()
         {
             var userId = GetCurrentUser().UserId;
-            var events = _context.Event.Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation).Where(e => e.FkGameTypeNavigation.IsOnline);
+            var events = _context.Event.Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation).Where(e => e.FkGameTypeNavigation.IsOnline).Where(x => x.EndTime > DateTime.Now);
             User currentUser = (from s in _context.User select s).Where(s => s.ExternalId == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).FirstOrDefault();
             ViewData["CurrentUser"] = currentUser;
             var participants = new Dictionary<int, int>();
@@ -53,10 +53,11 @@ namespace SportBook.Controllers
                                on first.EventId equals second.FkEvent
                                select first; ;
             ViewData["myEvents"] = myEvents.OrderBy(x => x.StartTime);
-            ViewData["teamEvents"] = teamEvents.OrderBy(x => x.StartTime).Except(myEvents).Except(joinedEvents);
+            ViewData["teamEvents"] = teamEvents.OrderBy(x => x.StartTime);
             ViewData["joinedEvents"] = joinedEvents.OrderBy(x => x.StartTime).Except(myEvents);
             ViewData["Participants"] = participants;
-            events = events.Except(myEvents).Except(teamEvents).Except(joinedEvents).OrderBy(x => x.StartTime);
+            //events = events.Except(myEvents).Except(teamEvents).Except(joinedEvents).OrderBy(x => x.StartTime);
+            events = events.Except(teamEvents).OrderBy(x => x.StartTime);
             return View(events);
         }
         [Route("[controller]/[action]")]
