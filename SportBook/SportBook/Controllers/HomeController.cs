@@ -61,7 +61,7 @@ namespace SportBook.Controllers
                             on first.EventId equals second.FkEvent
                             select first;
             var joinedEvents = eventData.Include(e => e.FkGameTypeNavigation);
-            var createdEvents = _events.Include(e => e.FkGameTypeNavigation).Where(e => e.FkOwner == GetCurrentUser().UserId);
+            //var createdEvents = _events.Include(e => e.FkGameTypeNavigation).Where(e => e.FkOwner == GetCurrentUser().UserId);
             var returnEvents = new List<ScheduleData>();
             foreach (var item in joinedEvents)
             {
@@ -83,21 +83,21 @@ namespace SportBook.Controllers
                     item.EndTime, "../Sports/ViewEvent?id=" + item.EventId.ToString(), "info"));
                 }
             }
-            foreach (var item in createdEvents)
-            {
-                if (item.FkGameTypeNavigation.IsOnline)
-                {
-                    returnEvents.Add(new ScheduleData(item.Title, item.StartTime,
-                    item.EndTime, "../Esports/ViewEvent?id=" + item.EventId.ToString(), "important"));
-                }
-                else
-                {
-                    returnEvents.Add(new ScheduleData(item.Title, item.StartTime,
-                    item.EndTime, "../Sports/ViewEvent?id=" + item.EventId.ToString(), "important"));
-                }
+            //foreach (var item in createdEvents)
+            //{
+            //    if (item.FkGameTypeNavigation.IsOnline)
+            //    {
+            //        returnEvents.Add(new ScheduleData(item.Title, item.StartTime,
+            //        item.EndTime, "../Esports/ViewEvent?id=" + item.EventId.ToString(), "important"));
+            //    }
+            //    else
+            //    {
+            //        returnEvents.Add(new ScheduleData(item.Title, item.StartTime,
+            //        item.EndTime, "../Sports/ViewEvent?id=" + item.EventId.ToString(), "important"));
+            //    }
 
-            }
-            ViewData["events"] = returnEvents.GroupBy(x => x.Url).Select(y => y.First());
+            //}
+            ViewData["events"] = returnEvents;
             return View();
         }
 

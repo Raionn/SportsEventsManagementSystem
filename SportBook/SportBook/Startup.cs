@@ -50,6 +50,12 @@ namespace SportBook
             services.AddHttpClient();
             services.AddTransient<IValidator<Event>, EventDateValidator>();
 
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
             // changed to Transient to allow concurrent logins, https://github.com/dotnet/efcore/issues/6488
             services.AddTransient<IServiceSignUp, ServiceSignUp>();
             IServiceProvider serviceProvider = services.BuildServiceProvider();
@@ -132,6 +138,7 @@ namespace SportBook
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+            app.UseCookiePolicy();
 
             //app.UseStaticFiles();         //replaced by UseFileServer() (for SignalR support)
             app.UseFileServer();
