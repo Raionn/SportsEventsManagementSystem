@@ -24,7 +24,7 @@ namespace SportBook.ViewComponents
             ViewData["teamId"] = teamId;
             var team = _context.Team.Find(teamId);
             var sportsGameTypes = _context.GameType.Where(x => x.IsOnline == true);
-            ViewData["FkGameType"] = new SelectList(sportsGameTypes, "GameTypeId", "Name", sportsGameTypes.Where(x => x.GameTypeId == team.FkGameType));
+            ViewData["FkGameType"] = new SelectList(sportsGameTypes, "GameTypeId", "Name", sportsGameTypes.Where(x => x.GameTypeId == team.FkGameType).FirstOrDefault().GameTypeId);
 
             return View();
         }
