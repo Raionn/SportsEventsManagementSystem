@@ -185,6 +185,7 @@
         function checkNavColor(data) {
             const y = document.getElementsByName("sportNav");
             const p = document.getElementsByClassName("nav-link active");
+            const r = document.getElementsByClassName("invertNav");
             if (data === undefined) {
                 if (darkmode.isActivated()) {
                     for (let g of y) {
@@ -193,6 +194,9 @@
                     for (let g of p) {
                         g.style.background = "#31a9ff";
                     }
+                    for (let g of r) {
+                        g.style.filter = "invert(100%)";
+                    }
                 }
                 else {
                     for (let g of y) {
@@ -200,6 +204,9 @@
                     }
                     for (let g of p) {
                         g.style.background = "#FFFFFF";
+                    }
+                    for (let g of r) {
+                        g.style.filter = "invert(0%)";
                     }
                 }
             }

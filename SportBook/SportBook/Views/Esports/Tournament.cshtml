@@ -3,9 +3,10 @@
     ViewData["Title"] = "Tournament";
     Layout = "~/Views/Shared/_EsportsLayout.cshtml";
     var myTeam = ViewData["myTeam"] as SportBook.Models.Team;
+    var teams = ViewData["tournamentTeams"] as IEnumerable<SportBook.ViewModels.TeamWithMembers>;
 }
 
-<link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+@*<link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />*@
 @if (Model.TournamentMember != null && Model.TournamentMember.FkTournament != 0)
 {
     <div class="d-flex">
@@ -17,9 +18,11 @@
         height: 650px;
         background-color: #d39c59 !important;
     }
+
     .card-header {
         background-color: #e3820b;
     }
+
     .card-body {
         background-color: #d39c59;
     }
@@ -73,9 +76,9 @@
                                     }
                                     else
                                     {
-                                <div class="modal-body">
-                                    <h6>You have no teams with required game type!</h6>
-                                </div>
+                                        <div class="modal-body">
+                                            <h6>You have no teams with required game type!</h6>
+                                        </div>
                                         @*<input type="hidden" asp-for="TournamentMember.TournamentMemberId" />*@
                                         <!-- Modal footer -->
                                         <div class="modal-footer">
@@ -115,53 +118,144 @@
 </div>
 
 
-
-
 <div class="row">
-    @if (Model.Tournament.TournamentMember.Count < 2)
-    {
-        <h2 class=" ml-3 text-danger">
-            Brackets not ready! Atleast 2 teams need to register!
-        </h2>
-    }
-    else
-    {
-        <iframe class="col-xl-7 col-md-12 col-sm-12 " src="@Model.Tournament.TournamentUrl/module" style="width:auto" height="650" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
-    }
+    <div class="col-xl-7 col-md-12 col-sm-12 ">
+        <div class="d-flex">
+            <ul class="nav nav-tabs nav-justified w-100">
+                <li class="nav-item">
+                    <a class="nav-link active invertNav" name="sportNav" id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="true" style="text-decoration:none; color:black; font-size:larger">Participants</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link invertNav" name="sportNav" id="team-tab" data-toggle="tab" href="#team" role="tab" aria-controls="team" aria-selected="false" style="text-decoration:none; color:black; font-size:larger">Brackets</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link invertNav" name="sportNav" id="joined-tab" data-toggle="tab" href="#joined" role="tab" aria-controls="joined" aria-selected="false" style="text-decoration:none; color:black; font-size:larger">Rules</a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab" name="navBar">
+                <div class="container-fluid w-100 p-0">
+                    @{int i = 0;}
+                    <div class="accordion overflow-auto" id="accordion_@i" style="max-height:610px">
+                        @foreach (var item in teams)
+                        {
 
-    <div id="chat"  class="col-xl-4 col-md-10 col-sm-10 p-2 m-2 m-md-auto m-sm-auto w-100">
+                            <div class="card" id="card_@i" style="height:initial;">
+                                <a data-toggle="collapse" data-target="#collapseOne_@i" href="#collapseOne_@i" style="text-decoration:none; color:black;">
+                                    <div class="card-header">
+                                        <h4 class="card-title">
+                                            @Html.DisplayFor(modelItem => item.Team.Name)
+                                        </h4>
+                                    </div>
+                                </a>
+                                <div id="collapseOne_@i" class="collapse in">
+                                    <div class="card-body">
+                                        <ul style="list-style-type: none;">
+                                            @foreach (var member in item.TeamMembers)
+                                            {
+                                                <li>
+                                                    <img class="img-fluid rounded-circle mb-1 mr-1" style="max-height:30px;max-width:30px" src="@member.FkUserNavigation.PictureUrl" />
+                                                    @member.FkUserNavigation.Username
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            i++;
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="team" role="tabpanel" aria-labelledby="team-tab">
+
+                @if (Model.Tournament.TournamentMember.Count < 2)
+                {
+                    <h2 class=" ml-3 text-danger">
+                        Brackets not ready! Atleast 2 teams need to register!
+                    </h2>
+                }
+                else
+                {
+                    <iframe src="@Model.Tournament.TournamentUrl/module" style="width:100%" height="650" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
+                }
+
+            </div>
+            <div class="tab-pane fade" id="joined" role="tabpanel" aria-labelledby="joined-tab" name="navBar">
+                <div class="container border">
+
+                    This tournament is only open for players in these regions: Europe                    <br />
+                    1. General Conditions                    <br />
+
+                    1.1. CS:GO 5v5 Versus games are online tournaments                    <br />
+
+                    1.2. 5v5 maps: de_vertigo, de_dust2, de_inferno, de_mirage, de_nuke, de_overpass, de_train                    <br />
+
+                    1.3. Servers: EU West.                    <br />
+
+                    1.4. Method of competition: 5 versus 5.                    <br />
+
+
+                    2. Tournament Conduct Format                    <br />
+
+
+
+                    2.1. Teams face each other in a Single Elimination format.                    <br />
+
+
+
+                    2.2. Format "Best of 1". and final best of 3                    <br />
+
+
+                    3. Game Rules                    <br />
+
+
+
+                    3.1. At the start of the tournament you will show add your enemy team and the higher seed will host the lobby. If a player does not enter the lobby in 10 minutes (problems with the Internet, client updates, or other technical issues are not acceptable and players are responsible to ready up for every match in time), the player receives a technical defeat.                    <br />
+
+
+
+                    3.2. The main communication channel during the competition is the battlefy chat on the bracket and also our Discord server.                    <br />
+
+                    Discord - <a href="https://discord.gg/cducrBK" target="_blank">https://discord.gg/cducrBK</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="chat" class="col-xl-4 col-md-10 col-sm-9 p-4 p-sm-2 m-md-auto m-sm-auto m-auto mr-lg-auto mr-xl-4 w-100" style="max-width:500px">
         @await Component.InvokeAsync("Chatroom", new { chatGroup = ("tournament_" + Model.Tournament.TournamentId) })
     </div>
 </div>
 
 
-    @section Scripts {
-        <script>
-            $(document).ready(function () {
-                $('[data-toggle="popover"]').popover();
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+
+        completed = () => {
+            location.reload();
+        };
+
+        completedLeave = () => {
+            location.reload()
+        };
+
+
+        //(function () {
+        //    function displaymsg() {
+        //        $("#tournament").modal('hide');
+        //    }
+        //    document.getElementById('tournament').onsubmit = displaymsg;
+        //})();
+
+        $(function () {
+            $(".custom-close").on('submit', function () {
+                $('#myModal').modal('hide');
             });
+        });
 
-            completed = () => {
-                location.reload();
-            };
-
-            completedLeave = () => {
-                location.reload()
-            };
-
-
-            //(function () {
-            //    function displaymsg() {
-            //        $("#tournament").modal('hide');
-            //    }
-            //    document.getElementById('tournament').onsubmit = displaymsg;
-            //})();
-
-            $(function () {
-                $(".custom-close").on('submit', function () {
-                    $('#myModal').modal('hide');
-                });
-            });
-
-        </script>
-    }
+    </script>
+}
