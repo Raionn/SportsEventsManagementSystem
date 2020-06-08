@@ -1,0 +1,60 @@
+﻿@model IEnumerable<SportBook.Models.Event>
+@{ 
+    var selectedLocationId = Convert.ToInt32(ViewData["SelectedLocation"]);
+    var participants = ViewData["Participants"] as Dictionary<int, int>;
+}
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                Participants
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsPrivate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FkGameTypeNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="allS">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @participants[item.EventId] / @Html.DisplayFor(modelItem => item.MaxParticipantAmt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndTime)
+                </td>
+                <td style="isolation: isolate;">
+                    @Html.DisplayFor(modelItem => item.IsPrivate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.Name)
+                </td>
+                <td>
+                    <a asp-action="ViewEvent" asp-route-id="@item.EventId" class="btn btn-secondary ml-2"><i class="fa fa-info" style="color:white; isolation: isolate;"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

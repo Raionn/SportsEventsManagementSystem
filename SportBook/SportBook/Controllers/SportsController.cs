@@ -33,7 +33,11 @@ namespace SportBook.Controllers
         {
             var userId = GetCurrentUser().UserId;
 
-            var events = _context.Event.Include(e => e.FkGameTypeNavigation).Include(e => e.FkLocationNavigation).Include(e => e.FkOwnerNavigation).Where(e => e.FkGameTypeNavigation.IsOnline == false).Where(x => x.EndTime > DateTime.Now);
+            var events = _context.Event.Include(e => e.FkGameTypeNavigation)
+                                       .Include(e => e.FkLocationNavigation)
+                                       .Include(e => e.FkOwnerNavigation)
+                                       .Where(e => e.FkGameTypeNavigation.IsOnline == false)
+                                       .Where(x => x.EndTime > DateTime.Now);
 
             var participants = new Dictionary<int, int>();
             var eventList = events.ToList();
@@ -51,11 +55,25 @@ namespace SportBook.Controllers
             ViewData["myEvents"] = myEvents.OrderBy(x => x.StartTime);
             ViewData["joinedEvents"] = joinedEvents.OrderBy(x => x.StartTime).Except(myEvents);
             ViewData["Participants"] = participants;
+            ViewData["GoogleApi"] = google_key;
 
             User currentUser = (from s in _context.User select s).Where(s => s.ExternalId == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).FirstOrDefault();
             ViewData["CurrentUser"] = currentUser;
             //events = events.Except(myEvents).Except(joinedEvents).OrderBy(x => x.StartTime);
             events = events.OrderBy(x => x.StartTime);
+
+            var locationsData = _context.Location.Include(t => t.FkGameTypeNavigation)
+                                                 .Where(loc => loc.FkGameTypeNavigation.IsOnline == false)
+                                                 .Where(loc => _context.Event.First(ev => ((ev.FkLocation == loc.LocationId) && (ev.EndTime > DateTime.Now))) != null)
+                                                 .ToList();
+            List<LocationData> locations = new List<LocationData>();
+            foreach (var item in locationsData)
+            {
+                locations.Add(new LocationData(item.Longitude, item.Latitude, item.Address, item.FkGameTypeNavigation.Name,
+                                               item.LocationId, item.FkGameType, events.Count(evnt => evnt.FkLocation == item.LocationId)));
+            }
+            ViewData["Locations"] = locations;
+
             return View(events);
         }
         [Route("[controller]/[action]")]
@@ -279,6 +297,12 @@ namespace SportBook.Controllers
         public IActionResult SportsEventMemberVC(int eventId, int userId)
         {
             return ViewComponent("EventMemberList", new { eventId, userId });
+        }
+
+        [Route("[controller]/[action]")]
+        public IActionResult LocationEventListVC(int selectedLocationId)
+        {
+            return ViewComponent("LocationEventList", new { selectedLocationId });
         }
 
         [HttpGet("{userId}")]

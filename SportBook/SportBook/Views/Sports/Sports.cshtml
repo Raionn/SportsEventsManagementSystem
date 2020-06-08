@@ -6,6 +6,7 @@
     var joinedEvents = ViewData["joinedEvents"] as IEnumerable<SportBook.Models.Event>;
     var currentUser = ViewData["CurrentUser"] as SportBook.Models.User;
     var participants = ViewData["Participants"] as Dictionary<int, int>;
+    var locations = ViewData["Locations"] as List<SportBook.ViewModels.LocationData>;
 }
 
 <head>
@@ -27,6 +28,29 @@
                 </div>
             </div>
         </p>
+    </div>
+</div>
+
+<button class="btn btn-secondary" id="eventDisplay" onclick="changeDisplayToMap()" onload="setInitialElements()"><i class="fa fa-map" id="btnInnerIcon"></i></button>
+
+<div class="modal" id="locationEventModal">
+    <div class="modal-dialog modal-dialog-centered" style="min-width:fit-content;">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Events</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div id="locationEventList">
+                    @await Component.InvokeAsync("LocationEventList", new { selectedLocationId = 0 })            
+                </div>
+            </div>
+            @*<div class="modal-footer">
+                
+            </div>*@
+        </div>
     </div>
 </div>
 
@@ -234,7 +258,30 @@
         </table>
     </div>
 </div>
+
+<div class="col-xl-7 col-md-11 col-sm-11" style="min-height:300px; height:500px; overflow:visible !important; margin:auto" id="eventMap"></div>
+
+<script async defer
+    src='@ViewData["GoogleApi"]'>
+</script>
+
 <script>
+    // #eventMap initially invisible by default
+    $('#eventMap').hide();
+
+    function changeDisplayToMap() {
+        $('#myTabContent').hide();
+        $('#eventMap').show();
+        document.getElementById("eventDisplay").setAttribute("onClick", "changeDisplayToList()");
+        document.getElementById("btnInnerIcon").setAttribute("class", "fa fa-list");
+    }
+    function changeDisplayToList() {
+        $('#eventMap').hide();
+        $('#myTabContent').show();
+        document.getElementById("eventDisplay").setAttribute("onClick", "changeDisplayToMap()");
+        document.getElementById("btnInnerIcon").setAttribute("class", "fa fa-map");
+    }
+
     $(document).ready(function () {
         $("#myInput").on("keyup", function () {
             var value = $(this).val().toLowerCase();
@@ -249,4 +296,47 @@
             });
         });
     });
+</script>
+
+<script>
+    // Initialize and add the map
+    function initMap() {
+        let locationsObj = @Html.Raw(Json.Serialize(locations));
+        let kaunas = { lat: locationsObj[0].latitude, lng: locationsObj[0].longitude };
+        let map = new google.maps.Map(
+            document.getElementById('eventMap'), { zoom: 6, center: kaunas });
+        lmao(map);
+    }
+    function lmao(map) {
+        var locationsObj = @Html.Raw(Json.Serialize(locations));
+        let allMarkers = [];
+        // Create some markers
+        for (var i = 0; i < locationsObj.length; i++) {
+            let pos = { lat: locationsObj[i].latitude, lng: locationsObj[i].longitude };
+            let marker = new google.maps.Marker({ position: pos, map: map });
+            marker.myData = i;
+            allMarkers.push(marker);
+            let infowindow = new google.maps.InfoWindow({
+                content: locationsObj[i].address + '</br>' +
+                         '<h5>' + locationsObj[i].game + '</h5>' +
+                    '<div class="alert alert-success">Upcoming events: ' + locationsObj[i].eventCount + '</div>',
+                map: map
+            });
+            marker.addListener('mouseover', function () {
+                infowindow.open(map, this);
+            });
+            marker.addListener('mouseout', function () {
+                infowindow.close();
+            });
+            google.maps.event.addListener(marker, 'click', function (e) {
+                var clicked = this;
+                var link = "@Url.Action("LocationEventListVC", "Sports", new { selectedLocationId = "-1" })";
+                link = link.replace("-1", locationsObj[clicked.myData].locationId);
+                link = link.replace("amp;", "");
+                $("#locationEventList").load(link, function () { });
+                $('#locationEventModal').modal('show');
+
+            });
+        }
+    };
 </script>
