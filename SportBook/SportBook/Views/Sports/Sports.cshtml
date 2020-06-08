@@ -9,6 +9,14 @@
     var locations = ViewData["Locations"] as List<SportBook.ViewModels.LocationData>;
 }
 
+<style>
+    modal-list {
+        min-width: -moz-max-content;
+        min-width: -webkit-max-content;
+        min-width: intrinsic;
+    }
+</style>
+
 <head>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta name="viewport" content="width=device-width">
@@ -34,7 +42,7 @@
 <button class="btn btn-secondary" id="eventDisplay" onclick="changeDisplayToMap()" onload="setInitialElements()"><i class="fa fa-map" id="btnInnerIcon"></i></button>
 
 <div class="modal" id="locationEventModal">
-    <div class="modal-dialog modal-dialog-centered" style="min-width:fit-content;">
+    <div class="modal-dialog modal-dialog-centered modal-list">
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
