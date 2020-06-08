@@ -244,9 +244,10 @@
                     <ul class="list-group-flush">
                         @foreach (var item in teamMembers)
                         {
-                            <li class="list-group-item" style="background-color:transparent;">
-                                @item.FkUserNavigation.Username
-                            </li>
+                        <li class="list-group-item text-left" style="background-color:transparent;">
+                            <img class="img-fluid rounded-circle mb-1 mr-1" style="max-height:30px;max-width:30px" src="@item.FkUserNavigation.PictureUrl" />
+                            @item.FkUserNavigation.Username
+                        </li>
                         }
                     </ul>
                 </div>
@@ -261,9 +262,10 @@
                         <ul class="list-group-flush" id="participantList">
                             @foreach (var item in enemyTeamMembers)
                             {
-                                <li class="list-group-item" style="background-color:transparent;">
-                                    @item.FkUserNavigation.Username
-                                </li>
+                            <li class="list-group-item text-left" style="background-color:transparent;">
+                                <img class="img-fluid rounded-circle mb-1 mr-1" style="max-height:30px;max-width:30px" src="@item.FkUserNavigation.PictureUrl" />
+                                @item.FkUserNavigation.Username
+                            </li>
                             }
                         </ul>
                         @if (currentUser.UserId == Model.Event.FkOwner) //isOwner

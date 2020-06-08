@@ -245,7 +245,6 @@ else if (Model.Participants.Any(x => x.FkUser == currentUser.UserId) && currentU
         @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
     </div>
 </div>
-
 @*<div id="chat" class="ml-3 w-50">
     @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
 </div>*@

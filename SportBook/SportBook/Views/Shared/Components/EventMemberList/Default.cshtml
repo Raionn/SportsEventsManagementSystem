@@ -41,12 +41,14 @@
             {
                 <li class="list-group-item" style="background-color:transparent;">
                     <div class="d-flex">
+                        <img class="img-fluid rounded-circle mb-1 mr-1" style="max-height:30px;max-width:30px" src="@item.FkUserNavigation.PictureUrl" />
                         <div class="mr-2">
                             @item.FkUserNavigation.Username
                         </div>
 
                         @if (item.FkUser != teamOwner.UserId && currentUser.UserId == teamOwner.UserId) //isOwner
                         {
+
                             <a id="@item.FkUser" class="btn btn-secondary ml-auto mr-2 removeMember"><i class="fa fa-user-slash" style="color:white"></i></a>
                         }
                     </div>
