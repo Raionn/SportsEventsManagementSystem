@@ -148,7 +148,7 @@ stages:
 #end of db stuff
 - stage: 'Deploy'
   displayName: 'Deploy the web application'
-  dependsOn: DBAVerificationApply
+  # dependsOn: DBAVerificationApply
   jobs:
   - deployment: Deploy
     pool:
