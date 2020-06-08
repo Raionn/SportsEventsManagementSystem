@@ -9,13 +9,13 @@
     var locations = ViewData["Locations"] as List<SportBook.ViewModels.LocationData>;
 }
 
-<style>
+@*<style>
     modal-list {
         min-width: -moz-max-content;
         min-width: -webkit-max-content;
         min-width: intrinsic;
     }
-</style>
+</style>*@
 
 <head>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -42,7 +42,7 @@
 <button class="btn btn-secondary" id="eventDisplay" onclick="changeDisplayToMap()" onload="setInitialElements()"><i class="fa fa-map" id="btnInnerIcon"></i></button>
 
 <div class="modal" id="locationEventModal">
-    <div class="modal-dialog modal-dialog-centered modal-list">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
@@ -50,7 +50,7 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <!-- Modal body -->
-            <div class="modal-body">
+            <div class="modal-body overflow-auto">
                 <div id="locationEventList">
                     @await Component.InvokeAsync("LocationEventList", new { selectedLocationId = 0 })            
                 </div>
