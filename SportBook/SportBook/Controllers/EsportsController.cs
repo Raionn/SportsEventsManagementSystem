@@ -253,6 +253,10 @@ namespace SportBook.Controllers
             var tournaments = _context.Tournament.Include(t => t.TournamentMember);
             var tournament = await tournaments.Where(t => t.TournamentId == id).FirstOrDefaultAsync();
             var tournamentTeams = _context.TournamentMember.Where(x => x.FkTournament == id);
+            var tournamentMembers = from first in _context.Team
+                                    join second in tournamentTeams
+                                            on first.TeamId equals second.FkTeam
+                                    select first;
             var user = GetCurrentUser();
             var userTeams = _context.Team.Where(x => x.TeamMember.Any(y => y.FkUser == user.UserId) && x.FkGameType == tournament.FkGameType);
             var tournamentMember = new TournamentMember();
@@ -271,6 +275,13 @@ namespace SportBook.Controllers
             }
             var teams = new SelectList(userTeams, "TeamId", "Name");
 
+            var teamsWithMembers = new List<TeamWithMembers>();
+            var justAList = tournamentMembers.ToList();
+            foreach (var item in justAList)
+            {
+                teamsWithMembers.Add(new TeamWithMembers(_context.TeamMember.Where(p => p.FkTeam == item.TeamId).Include(x => x.FkUserNavigation).ToList(), item));
+            }
+            ViewData["tournamentTeams"] = teamsWithMembers;
             TournamentData data = new TournamentData(tournament, teams, tournamentMember);
             return View(data);
         }
