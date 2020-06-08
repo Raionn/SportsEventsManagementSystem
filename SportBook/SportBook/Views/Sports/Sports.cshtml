@@ -39,10 +39,8 @@
     </div>
 </div>
 
-<button class="btn btn-secondary" id="eventDisplay" onclick="changeDisplayToMap()" onload="setInitialElements()"><i class="fa fa-map" id="btnInnerIcon"></i></button>
-
 <div class="modal" id="locationEventModal">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
@@ -55,15 +53,12 @@
                     @await Component.InvokeAsync("LocationEventList", new { selectedLocationId = 0 })            
                 </div>
             </div>
-            @*<div class="modal-footer">
-                
-            </div>*@
         </div>
     </div>
 </div>
 
 <div class="d-flex">
-    <ul class="nav nav-tabs nav-justified w-100">
+    <ul class="nav nav-tabs nav-justified w-100 mr-3" id="navTabs">
         <li class="nav-item">
             <a class="nav-link active" name="sportNav" id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="true" style="text-decoration:none; color:black; font-size:larger">All Events</a>
         </li>
@@ -75,7 +70,26 @@
         </li>
     </ul>
     <div class="ml-auto ">
-        <button style="margin-left:5px" onclick="location.href='@Url.Action("Create", "Sports")'" class="btn btn-secondary"><i class="fa fa-plus" style="color:white; isolation: isolate;"></i></button>
+        <button class="btn btn-secondary"
+                id="eventDisplay"
+                onclick="changeDisplayToMap()"
+                onload="setInitialElements()">
+            <i class="fa fa-map"
+               style="color:white;
+               isolation: isolate;"
+               id="btnInnerIcon">
+            </i>
+        </button>
+    </div>
+    <div>
+        <button style="margin-left:5px"
+                onclick="location.href='@Url.Action("Create", "Sports")'"
+                class="btn btn-secondary">
+            <i class="fa fa-plus"
+               style="color:white;
+               isolation: isolate;">
+            </i>
+        </button>
     </div>
 </div>
 
@@ -267,7 +281,7 @@
     </div>
 </div>
 
-<div class="col-xl-7 col-md-11 col-sm-11" style="min-height:300px; height:500px; overflow:visible !important; margin:auto" id="eventMap"></div>
+<div class="ml-5 mr-5 mt-2" style="width:auto; height:800px" id="eventMap"></div>
 
 <script async defer
     src='@ViewData["GoogleApi"]'>
@@ -278,6 +292,7 @@
     $('#eventMap').hide();
 
     function changeDisplayToMap() {
+        $('#navTabs').hide();
         $('#myTabContent').hide();
         $('#eventMap').show();
         document.getElementById("eventDisplay").setAttribute("onClick", "changeDisplayToList()");
@@ -285,6 +300,7 @@
     }
     function changeDisplayToList() {
         $('#eventMap').hide();
+        $('#navTabs').show();
         $('#myTabContent').show();
         document.getElementById("eventDisplay").setAttribute("onClick", "changeDisplayToMap()");
         document.getElementById("btnInnerIcon").setAttribute("class", "fa fa-map");
@@ -343,7 +359,7 @@
                 link = link.replace("amp;", "");
                 $("#locationEventList").load(link, function () { });
                 $('#locationEventModal').modal('show');
-
+                
             });
         }
     };

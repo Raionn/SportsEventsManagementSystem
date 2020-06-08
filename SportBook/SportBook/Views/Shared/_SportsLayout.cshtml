@@ -171,11 +171,13 @@
                     e.classList.add("text-dark");
                     e.style.background = "#FFFFFF";
                 }
-                
+
             }
         });
 
-        $("[name='sportNav']").on("click", function () {
+        $("[name='sportNav']").on("click", function (event) {
+            event.preventDefault();
+            console.log("vyksta");
             checkNavColor($(this));
         });
 
@@ -215,7 +217,7 @@
 
                 }
             }
-            
+
         };
         function PopOverColor() {
             const y = document.getElementsByClassName("popover-body");
@@ -253,11 +255,16 @@
             }
 
         };
+        $('#locationEventModal').on('shown.bs.modal', function () {
+            console.log("veikia");
+            checkDarkMode();
+            console.log(this);
+        });
 
         $('body').on('mouseover', '#invitations', function () { PopOverColor(); });
         function checkDarkMode() {
             const x = document.getElementsByName("navBar");
-           const m = document.getElementById("navDrop");
+            const m = document.getElementById("navDrop");
             const f = document.getElementsByClassName("darkmode-background");
             const u = document.getElementsByClassName("modal-content");
             if (darkmode.isActivated()) {

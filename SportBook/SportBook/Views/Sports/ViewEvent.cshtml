@@ -6,14 +6,7 @@
     var currentUser = ViewData["CurrentUser"] as SportBook.Models.User;
     var eventInvites = ViewData["EventInvites"] as IEnumerable<SportBook.Models.EventInvitation>;
 }
-@if ((bool)ViewData["isFailed"] == true)
-{
-    <script type="text/javascript">
-        $(window).on('load', function () {
-            $('#editModal').modal('show');
-        });
-    </script>
-}
+
 <style>
     .card {
         background-color: #d39c59 !important;
