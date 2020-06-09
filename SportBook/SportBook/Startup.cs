@@ -48,6 +48,7 @@ namespace SportBook
                                options.UseSqlServer(connectionString));
             services.AddControllersWithViews().AddFluentValidation();
             services.AddHttpClient();
+            services.AddTransient<EmailHelper>();
             services.AddTransient<IValidator<Event>, EventDateValidator>();
 
             services.Configure<CookiePolicyOptions>(options =>

@@ -259,7 +259,7 @@
                     {
                         var enemyTeamMembers = ViewData["enemyMembers"] as IEnumerable<SportBook.Models.TeamMember>;
                         <h2>@enemyTeam.Name</h2>
-                        <ul class="list-group-flush" id="participantList">
+                        <ul class="list-group-flush enemyTeamId" id="@enemyTeam.TeamId">
                             @foreach (var item in enemyTeamMembers)
                             {
                             <li class="list-group-item text-left" style="background-color:transparent;">
@@ -339,7 +339,7 @@
     });
     $('#quitModalSubmit').on('click', function () {
 
-        var teamId = '@teamId';
+        var teamId = $(".enemyTeamId").attr('id');;
 
         var link = "@Url.Action("TeamEventEnemyVC", "Esports", new { eventId = Model.Event.EventId , teamId = "-1" })";
         link = link.replace("-1", teamId);

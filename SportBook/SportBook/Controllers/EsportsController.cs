@@ -223,7 +223,7 @@ namespace SportBook.Controllers
             ViewData["CurrentUser"] = currentUser;
             ViewData["eventTeam"] = team;
             ViewData["isFailed"] = false;
-            var sportbookDatabaseContext = _context.Team.Include(t => t.FkGameTypeNavigation).Include(t => t.FkOwnerNavigation);
+            var sportbookDatabaseContext = _context.Team.Where(x => x.FkGameType == @event.FkGameType).Include(t => t.FkGameTypeNavigation).Include(t => t.FkOwnerNavigation);
             var teamsParticipations = _context.TeamMember.Where(t => t.FkUser == currentUser.UserId);
             var data = from first in sportbookDatabaseContext
                        join second in teamsParticipations
