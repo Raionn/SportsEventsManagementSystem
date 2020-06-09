@@ -175,12 +175,6 @@
             }
         });
 
-        $("[name='sportNav']").on("click", function (event) {
-            event.preventDefault();
-            console.log("vyksta");
-            checkNavColor($(this));
-        });
-
         function checkNavColor(data) {
             const y = document.getElementsByName("sportNav");
             const p = document.getElementsByClassName("nav-link active");
@@ -256,9 +250,7 @@
 
         };
         $('#locationEventModal').on('shown.bs.modal', function () {
-            console.log("veikia");
-            checkDarkMode();
-            console.log(this);
+            setTimeout(checkDarkMode, 300);
         });
 
         $('body').on('mouseover', '#invitations', function () { PopOverColor(); });
