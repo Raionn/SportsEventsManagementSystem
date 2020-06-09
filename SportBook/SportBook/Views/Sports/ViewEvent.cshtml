@@ -233,9 +233,9 @@ else if (Model.Participants.Any(x => x.FkUser == currentUser.UserId) && currentU
 
 <script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
 <div class="row">
-    <div class="col-xl-7 col-md-11 col-sm-11" style="min-height:300px; height:400px; overflow:visible !important; margin:auto" id="eventMap"></div>
+    <div class="col-xl-7 col-md-11 col-sm-11 m-auto" style="max-width: 700px; min-height:300px; height:400px; overflow:visible !important; margin:auto" id="eventMap"></div>
 
-    <div id="chat" class="col-xl-4 col-md-10 col-sm-10 p-2 m-2 m-md-auto m-sm-auto">
+    <div id="chat" class="col-xl-4 col-md-10 col-sm-9 p-4 p-sm-2 m-2 ml-xl-auto mr-xl-5 m-auto" style="max-width:500px">
         @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
     </div>
 </div>

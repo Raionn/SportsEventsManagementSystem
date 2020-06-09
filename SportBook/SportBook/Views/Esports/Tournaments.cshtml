@@ -18,6 +18,12 @@
 </div>
 
 <style>
+    .list-group-horizontal-lg {
+        list-style: none;
+        display: inline-grid;
+        grid-template-columns: repeat(3, auto);
+        grid-auto-flow: row;
+    }
     .glyphicon {
         margin-right: 5px;
     }
@@ -77,51 +83,56 @@
         </p>
     </form>*@
 
-<div class="container ml-2 mr-2" id="Search">
-    <div class="row list-group">
+<div class="container-fluid ml-1 mr-1 ml-sm-2 mr-sm-2" id="Search">
+    <div class="list-group-horizontal-lg list-group list-group-horizontal-xl overflow-auto">
+
+        @{ int i = 0;}
         @foreach (var item in Model)
         {
-            <div class="item list-group-item">
-                <a asp-action="Tournament" asp-route-id="@item.TournamentId" style="text-decoration:none; color:black">
-                    <div class="thumbnail" style="min-height:250px">
-                        @if (item.FkGameType == 2)
-                        {
-                            <img class="group list-group-image" src="~/Resources/Images/league-of-legends.jpg" alt="" />
-                        }
-                        else
-                        {
-                            <img class="group list-group-image" src="~/Resources/Images/csgo.jpg" alt="" />
-                        }
+            i++;
 
-                        <div class="caption d-flex flex-column col-md-7 h-100 mb-0" style="min-height:250px">
-                            <div class="d-flex flex-row">
-                                <h4 class="group inner list-group-item-heading mb-auto p-2 align-items-start">
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </h4>
-                                <div class="ml-auto p-2">
-                                    @Html.DisplayFor(modelItem => item.StartTime)
-                                </div>
-                            </div>
 
-                            <p class="group inner list-group-item-text align-items-center p-2 align-content-center">
-                                @Html.DisplayFor(modelItem => item.Description)
-                            </p>
-                            <div class="mt-auto p-2">
+                <div class="item list-group-item m-xl-2 m-lg-2 col-xl-4 col-md-5 col-sm-10" style="max-width:445px; min-width:445px; width:445px;">
+                    <a asp-action="Tournament" asp-route-id="@item.TournamentId" style="text-decoration:none; color:black">
+                        <div class="thumbnail" style="min-height:250px">
+                            @if (item.FkGameType == 2)
+                            {
+                                <img class="group list-group-image" src="~/Resources/Images/league-of-legends.jpg" alt="" />
+                            }
+                            else
+                            {
+                                <img class="group list-group-image" src="~/Resources/Images/csgo.jpg" alt="" />
+                            }
+
+                            <div class="caption d-flex flex-column col-md-12 mb-0" style="min-height:250px; max-height:523px;">
                                 <div class="d-flex flex-row">
-                                    <h4 class="mr-auto">
-                                        @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.Name)
+                                    <h4 class="group inner list-group-item-heading mb-auto p-2 align-items-start">
+                                        @Html.DisplayFor(modelItem => item.Name)
                                     </h4>
-                                    <p class="lead ml-auto">
-                                        @Html.DisplayFor(modelItem => item.TournamentMember.Count) / @Html.DisplayFor(modelItem => item.MaxParticipantAmt)
-                                    </p>
+                                    <div class="ml-auto p-2">
+                                        @Html.DisplayFor(modelItem => item.StartTime)
+                                    </div>
+                                </div>
+
+                                <p class="group inner list-group-item-text align-items-center p-2 align-content-center">
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </p>
+                                <div class="mt-auto p-2">
+                                    <div class="d-flex flex-row">
+                                        <h4 class="mr-auto">
+                                            @Html.DisplayFor(modelItem => item.FkGameTypeNavigation.Name)
+                                        </h4>
+                                        <p class="lead ml-auto">
+                                            @Html.DisplayFor(modelItem => item.TournamentMember.Count) / @Html.DisplayFor(modelItem => item.MaxParticipantAmt)
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </a>
-            </div>
-        }
+                    </a>
+                </div>
 
+        }
     </div>
 </div>
 

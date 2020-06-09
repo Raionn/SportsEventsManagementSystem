@@ -312,7 +312,7 @@
         </div>
     }*@
 <div class="row">
-    <div id="chat" class="col-xl-4 col-md-8 col-sm-10 p-2 m-2 ml-md-4 m-sm-auto ml-lg-4">
+    <div id="chat" class="col-xl-4 col-md-8 col-sm-9 p-4 p-sm-2 m-2 ml-md-4 m-sm-auto ml-lg-4" style="max-width:500px">
         @await Component.InvokeAsync("Chatroom", new { chatGroup = ("event_" + Model.Event.EventId) })
     </div>
 </div>
