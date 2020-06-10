@@ -18,12 +18,7 @@
 </div>
 
 <style>
-    .list-group-horizontal-lg {
-        list-style: none;
-        display: inline-grid;
-        grid-template-columns: repeat(3, auto);
-        grid-auto-flow: row;
-    }
+
     .glyphicon {
         margin-right: 5px;
     }
@@ -84,7 +79,7 @@
     </form>*@
 
 <div class="container-fluid ml-1 mr-1 ml-sm-2 mr-sm-2" id="Search">
-    <div class="list-group-horizontal-lg list-group list-group-horizontal-xl overflow-auto">
+    <div class="list-group-horizontal-lg list-group overflow-auto">
 
         @{ int i = 0;}
         @foreach (var item in Model)
