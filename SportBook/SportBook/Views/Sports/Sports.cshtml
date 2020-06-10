@@ -57,6 +57,24 @@
     </div>
 </div>
 
+<div class="modal" id="locationSuggestionModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Location request</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body overflow-auto">
+                <div id="locationSuggestionForm">
+                    @await Component.InvokeAsync("LocationSuggestion", new { addr = "", latitude = Decimal.Zero, longitude = Decimal.Zero })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="d-flex">
     <ul class="nav nav-tabs nav-justified w-100 mr-3" id="navTabs">
         <li class="nav-item">
@@ -323,13 +341,80 @@
 </script>
 
 <script>
+    var markers = [];
+    var marker = null;
+    var address = "";
+    function clearMarkers() {
+        marker.setMap(null);
+        marker = null;
+        //for (var i = 0; i < markers.length; i++) {
+        //  markers[i].setMap(null);
+        //}
+    }
     // Initialize and add the map
     function initMap() {
         let locationsObj = @Html.Raw(Json.Serialize(locations));
         let kaunas = { lat: locationsObj[0].latitude, lng: locationsObj[0].longitude };
+        var infoWindowNewLoc = new google.maps.InfoWindow({content: '', position: kaunas});
         let map = new google.maps.Map(
             document.getElementById('eventMap'), { zoom: 6, center: kaunas });
+        var geocoder = new google.maps.Geocoder;
+        var test = "asd";
         lmao(map);
+        map.addListener('rightclick', function(mapsMouseEvent) {
+        // Close the current InfoWindow.
+            infoWindowNewLoc.close();
+            // Create a new InfoWindow.
+            infoWindowNewLoc = new google.maps.InfoWindow({ position: mapsMouseEvent.latLng });
+            var clickedLocation = mapsMouseEvent.latLng;
+            geocodeLatLng(geocoder, map, infoWindowNewLoc, clickedLocation);
+            google.maps.event.addListener(infoWindowNewLoc, 'domready', function () {
+                $('#submitLocation').click(function () {
+                    var clicked = this;
+                    var lat = mapsMouseEvent.latLng.lat;
+                    var lon = mapsMouseEvent.latLng.lng;
+                    var link = "@Url.Action("LocationSuggestionVC", "Sports", new { addr = "_address_", latitude = "_latitude_", longitude = "_longitude_"})";
+                    link = link.replace("_address_", address.toString()).replace("_latitude_", lat).replace("_longitude_", lon);
+                    link = link.replace(/ /g, "_");
+                    link = link.replace(/amp;/g, "");
+                    //window.location.href = link;
+                    console.log(link);
+                    $("#locationSuggestionForm").load(link, function () { });
+                    $('#locationSuggestionModal').modal('show');  
+                });
+            });
+            //infoWindowNewLoc.open(map);
+        });
+    }
+    // Reverse Geocoding
+    function geocodeLatLng(geocoder, map, infowindow, latlng) {
+        geocoder.geocode({'location': latlng}, function(results, status) {
+            if (status === 'OK') {
+                if (results[0]) {
+                    map.setZoom(16);
+                    map.setCenter(latlng);
+                    if (marker !== null) {
+                        clearMarkers();
+                        address = "";
+                    }
+                    marker = new google.maps.Marker({
+                        position: latlng,
+                        map: map
+                    });
+                    //markers.push(marker);
+                    //google.maps.event.addListener(infowindow, 'closeclick', function () {
+                    //    marker.setMap(null); //removes the marker
+                    //});
+                    address = results[0].formatted_address;
+                    infowindow.setContent('<div class="text-center mb-1">' + '<p> <h5>' + results[0].formatted_address + '</h5> </p>' + '<button class="btn btn-secondary" id="submitLocation">Suggest location</button>' + '</div>');
+                    infowindow.open(map, marker);
+                } else {
+                    window.alert('No results found');
+                }
+            } else {
+                window.alert('Geocoder failed due to: ' + status);
+            }
+        });
     }
     function lmao(map) {
         var locationsObj = @Html.Raw(Json.Serialize(locations));
@@ -358,8 +443,7 @@
                 link = link.replace("-1", locationsObj[clicked.myData].locationId);
                 link = link.replace("amp;", "");
                 $("#locationEventList").load(link, function () { });
-                $('#locationEventModal').modal('show');
-                
+                $('#locationEventModal').modal('show');                
             });
         }
     };

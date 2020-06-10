@@ -1,0 +1,31 @@
+﻿@model SportBook.Models.Location
+@{
+    var gameTypes = ViewData["GameTypes"] as List<SportBook.Models.GameType>;
+}
+
+<form id="locationForm" asp-action="LocationCreate">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Address" class="control-label"></label>
+        <input asp-for="Address" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="FkGameType" class="control-label"></label>
+        <select asp-for="FkGameType" class="form-control" asp-items="ViewBag.GameTypes"></select>
+    </div>
+    <input type="hidden" asp-for="Latitude" id="locationLat" />
+    <input type="hidden" asp-for="Longitude" id="locationLon" />
+    <input type="hidden" asp-for="FkCity" id="cityId" />
+    @*<div class="form-group">
+        <label asp-for="Latitude" class="control-label"></label>
+        <input id="locationLatitude" class="form-control" value="@Model.Latitude" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="Longitude" class="control-label"></label>
+        <input id="locationLongitude" value="@Model.Longitude" class="form-control" readonly />
+    </div>*@
+    <input type="hidden" asp-for="LocationId" />
+    <div class="form-group">
+        <input id="btnSave" type="submit" value="Submit" class="btn btn-secondary" />
+    </div>
+</form>

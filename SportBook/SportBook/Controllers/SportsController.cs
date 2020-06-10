@@ -293,6 +293,25 @@ namespace SportBook.Controllers
             return _context.Event.Any(e => e.EventId == id);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LocationCreate([Bind("Latitude,Longitude,Address,LocationId,FkCity,FkGameType")] Location location)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(location);
+                await _context.SaveChangesAsync();
+            }
+            return View(nameof(Sports));
+        }
+
+        [Route("[controller]/[action]")]
+        public IActionResult LocationSuggestionVC(string addr, decimal latitude, decimal longitude)
+        {
+            addr = addr.Replace("_", " ");
+            return ViewComponent("LocationSuggestion", new { addr, latitude, longitude });
+        }
+
         [Route("[controller]/[action]/{userId}")]
         public IActionResult SportsEventMemberVC(int eventId, int userId)
         {
