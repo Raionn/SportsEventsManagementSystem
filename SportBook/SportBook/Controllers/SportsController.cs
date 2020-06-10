@@ -302,7 +302,7 @@ namespace SportBook.Controllers
                 _context.Add(location);
                 await _context.SaveChangesAsync();
             }
-            return View(nameof(Sports));
+            return RedirectToAction(nameof(Sports));
         }
 
         [Route("[controller]/[action]")]
